@@ -34,6 +34,8 @@ class utilities
 	*/
 
 public:
+	static vector<point> city;
+	
 	static LD euclidian_distance(point a, point b)
 	{
 		/*
@@ -44,7 +46,7 @@ public:
 		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
 	}
 
-	static LD Fx_fit(vector<point>& city, vector<int>& vet, int n, bool ok)
+	static LD Fx_fit(vector<int> path, int n, vector<bool> contain)
 	{
 		/*
 			Objective:
@@ -52,15 +54,20 @@ public:
 		*/
 
 		LD fit = 0;
+
 		for (int i = 0; i < n - 1; i++)
 		{
-			fit += utilities::euclidian_distance(city[vet[i]], city[vet[i + 1]]);
+			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
 		}
 
-		if (ok)
+		for (int i = 0; i < n; i++)
 		{
-			fit = INF - fit;
-			return fit;
+			if (!contain[i])
+			{
+
+				fit = INF - fit;
+				return fit;
+			}
 		}
 
 		return fit;
