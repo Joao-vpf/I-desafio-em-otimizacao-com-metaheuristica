@@ -8,6 +8,7 @@
 #include <vector>
 #include <math.h>
 
+#define PARAMS_FILE "params.txt"
 #define LL long long
 #define ULL unsigned long long
 #define LD long double
@@ -23,8 +24,8 @@ struct point {
 class utilities
 {
 	/*
-		Objetivo:
-			Classe tem o objetivo de ter funções que seram utilizadas para outras heuristicas.
+		Objective:
+			Class with useful functions.
 	*/
 
 public:
@@ -33,20 +34,21 @@ public:
 		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
 	}
 
-	static LD Fx_cust(vector<point>& city, vector<int>& vet, int n, bool ok)
+	static LD Fx_fit(vector<point>& city, vector<int>& vet, int n, bool ok)
 	{
-		LD cust = 0;
+		LD fit = 0;
 		for (int i = 0; i < n - 1; i++)
 		{
-			cust += utilities::euclidian_distance(city[vet[i]], city[vet[i + 1]]);
+			fit += utilities::euclidian_distance(city[vet[i]], city[vet[i + 1]]);
 		}
 
 		if (ok)
 		{
-			cust = INF - cust;
-			return cust;
+			fit = INF - fit;
+			return fit;
 		}
-		return cust;
+
+		return fit;
 	}
 
 	static int random_range(int start, int end)
@@ -93,8 +95,7 @@ struct GA_Params
 
 	int max_generations;
 	int max_population;
-	int swap_rate;
-	bool roulette;
+	int roulette;
 	int opt_path_swap_it;
 	int tx_elite;
 	bool verbose;
@@ -104,6 +105,7 @@ struct GA_Params
 	int tx_mutation_AHCAVG;
 	int fix_init;
 	vector<string> cross_active;
+	int number_active_cross;
 
 	GA_Params()
 	{
@@ -116,11 +118,11 @@ struct GA_Params
 		verbose = false;
 		tx_mutation_AHCAVG = 20;
 		balance = 0;
-		roulette = true;
-		swap_rate = 40;
+		roulette = 40;
 		opt_path_swap_it = 50;
 		alpha = 50;
 		cross_active = { "BCR", "AHCAVG","CX" };
+		number_active_cross = 3;
 	}
 
 
@@ -149,8 +151,10 @@ struct params
 		genetic = 1;
 	}
 
-	params(ifstream control_params)
+	params(string source = PARAMS_FILE)
 	{
+		ifstream control_params(source);
+		genetic = 1;
 		string in_param;
 		int value;
 		while (control_params >> in_param)
@@ -183,20 +187,11 @@ struct params
 				continue;
 			}
 
-			if (in_param == "genetic.swap_rate")
-			{
-				control_params >> value;
-				if (value >= 0)
-				{
-					ga_p.swap_rate = value;
-				}
-				continue;
-			}
-
 			if (in_param == "genetic.roulette")
 			{
 				control_params >> value;
-				ga_p.swap_rate = value;
+				if (ga_p.roulette >= 0 and ga_p.roulette <= 100)
+					ga_p.roulette = value;
 				continue;
 			}
 
@@ -239,7 +234,7 @@ struct params
 			if (in_param == "genetic.tx_mutation_AHCAVG")
 			{
 				control_params >> value;
-				if(ga_p.tx_mutation_AHCAVG >=0)
+				if(ga_p.tx_mutation_AHCAVG >=0 and ga_p.tx_mutation_AHCAVG <= 100)
 					ga_p.tx_mutation_AHCAVG = value;
 				continue;
 			}
@@ -293,6 +288,9 @@ struct params
 				continue;
 			}
 		}
+		
+		ga_p.number_active_cross = ga_p.cross_active.size();
 	}
-	
-} param;
+		
+};
+params param;

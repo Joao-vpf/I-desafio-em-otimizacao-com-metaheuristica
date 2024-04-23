@@ -3,9 +3,8 @@
 
 class gene
 {
-	vector<int> path;
-
-	static void bcr(gene* mother)
+	
+	void bcr(gene* mother)
 	{//Best Cost Route crossover
 		int nodes = mother.get_nodes();;
 		children.init(nodes);
@@ -38,7 +37,7 @@ class gene
 
 	}
 
-	static void arithmetic_average(gene* mother)
+	void arithmetic_average(gene* mother)
 	{//arithmetic_average
 
 		int father_gene = params_active_ga.tx_parents / params_active_ga.alpha, mom_gene = params_active_ga.tx_parents, nodes = mother.get_nodes();;
@@ -91,7 +90,7 @@ class gene
 		children.fx_cust(matrix_adj);
 	}
 
-	static void cx(gene* mother)
+	void cx(gene* mother)
 	{ //Cycle Crossover
 		size_t nodes = mother.get_nodes();
 		T bastard;
@@ -161,9 +160,31 @@ class gene
 
 public:
 	LL fit = 0;
-	gene* operator +(gene mother)
+	vector<int> path;
+
+	gene* operator + (gene* mother)
 	{
+		gene* child = new gene;
+		int idx = utilities::random_range(0, param.ga_p.number_active_cross);
 		
+		if (idx == -1)
+			return 0;
+
+		string cross = param.ga_p.cross_active[idx];
+
+		if (cross == "BCR")
+			return 
+		
+		if (cross == "AHCAVG")
+			return 
+
+		return 
+	}
+		
+	void copy(gene* mother)
+	{
+		this->path = mother->path;
+		this->fit = mother->fit;
 	}
 
 };
@@ -171,18 +192,18 @@ public:
 class genetic
 {
 	int n;
-	vector<gene> genes;
+	vector<gene*> genes;
 
-	bool order(gene a, gene b)
+	bool order(gene* a, gene* b)
 	{
-		return a.fit > b.fit;
+		return a->fit > b->fit;
 	}
 
 public:
 	genetic() 
 	{
 		n = param.ga_p.max_population;
-		genes = vector<gene>(n);
+		genes.assign(n,0);
 	}
 
 	void active()
@@ -191,16 +212,19 @@ public:
 		{
 
 			sort(genes.begin(), genes.end(), order);
-			vector<gene> new_generation(n);
+			vector<gene*> new_generation(n);
 			
 			for (int i = 0; i < param.ga_p.tx_elite; i++)
 			{
-				new_generation[i] = genes[i];
+				new_generation[i] = new gene;
+				new_generation[i]->copy(genes[i]);
 			}
 
 			for (int i = param.ga_p.tx_elite; i < n; i++)
 			{
-				int l = utilities::random_range(0, ());
+				int l = utilities::random_range(0, (param.ga_p.balance>0 ? n/ param.ga_p.balance : n));
+				int r = utilities::random_range(0, (param.ga_p.balance > 0 ? n / param.ga_p.balance : n));
+				new_generation[i] = genes[l] + genes[r];
 			}
 		}
 	}
