@@ -17,6 +17,11 @@
 using namespace std;
 
 struct point {
+	/*
+		Objective:
+			A structure to represent a point in the Cartesian plane with coordinates X and Y.
+	*/
+
 	LD X, Y;
 	point(LD x, LD y) : X(x), Y(y){}
 };
@@ -31,11 +36,21 @@ class utilities
 public:
 	static LD euclidian_distance(point a, point b)
 	{
+		/*
+			Objective:
+				Calculate the Euclidean distance between two points.	
+		*/
+
 		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
 	}
 
 	static LD Fx_fit(vector<point>& city, vector<int>& vet, int n, bool ok)
 	{
+		/*
+			Objective:
+				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+		*/
+
 		LD fit = 0;
 		for (int i = 0; i < n - 1; i++)
 		{
@@ -143,6 +158,15 @@ struct GA_Params
 
 struct params
 {
+	/*
+		Objective:
+			This structure is responsible for storing the parameters of the selected algorithm and the settings related to its execution.
+		
+		Attributes:
+			genetic = Indicate whether the algorithm to be used is genetic or not.
+			ga_p = Contains the specific parameters of the genetic algorithm.
+	*/
+
 	bool genetic;
 	GA_Params ga_p;
 
@@ -153,6 +177,11 @@ struct params
 
 	params(string source = PARAMS_FILE)
 	{
+		/*
+			Objective:
+				An alternate constructor that allows initializing the parameters from a text file.
+		*/
+
 		ifstream control_params(source);
 		genetic = 1;
 		string in_param;
