@@ -4,93 +4,82 @@
 class gene
 {
 	
-	void bcr(gene* mother)
+	void bcr(gene* child, gene* mother)
 	{//Best Cost Route crossover
-		int nodes = mother.get_nodes();;
-		children.init(nodes);
+		int cut = utilities::random_range(1, nodes);
 
-		int cut = random_range(1, nodes - 1);
 		for (int i = 0; i < cut; i++)
 		{
-			children.insert_gene(i, father.get_microgene(i));
+			child->insert(i, this->path[i]);
 		}
 
 		for (int i = 0; i < nodes and cut < nodes; i++)
 		{
-			if (!children.has_microgene(mother.get_microgene(i)))
+			if (!child->contain[mother->path[i]])
 			{
-				children.insert_gene(cut++, mother.get_microgene(i));
+				child->insert(cut++, mother->path[i]);
 			}
 		}
 
 		while (cut < nodes)
 		{
-			int microgene_mutant = random_range(0, nodes);
-			if (!children.has_microgene(microgene_mutant))
+			int microgene_mutant = utilities::random_range(0, nodes);
+			if (!child->repath[microgene_mutant])
 			{
-				children.insert_gene(cut++, microgene_mutant);
+				child->insert(cut++, microgene_mutant);
 			}
 		}
 
-		children.insert_gene(nodes, children.get_microgene(0));
-		children.fx_cust(matrix_adj);
-
+		child->fit = utilities::Fx_fit(child->path, nodes, child->contain);
 	}
 
-	void arithmetic_average(gene* mother)
+	void arithmetic_average(gene* child, gene* mother)
 	{//arithmetic_average
 
-		int father_gene = params_active_ga.tx_parents / params_active_ga.alpha, mom_gene = params_active_ga.tx_parents, nodes = mother.get_nodes();;
-		children.init(nodes);
+		int father_gene = param.ga_p.tx_mutation_AHCAVG * param.ga_p.alpha / 100;
+		int rate = utilities::random_range(0, 100);
 
-		int rate = random_range(0, 100);
-		if (params_active_ga.fix != -1)
+		if (param.ga_p.fix_init != -1 or rate <= father_gene)
 		{
-			rate = random_range(0, mom_gene);
-		}
-
-		if (rate <= father_gene)
-		{
-			children.insert_gene(0, father.get_microgene(0));
+			child->insert(0, this->path[0]);
 		}
 		else
 		{
-			if (rate <= mom_gene)
+			if (rate <= param.ga_p.tx_mutation_AHCAVG)
 			{
-				children.insert_gene(0, mother.get_microgene(0));
+				child->insert(0, mother->path[0]);
 			}
 			else
 			{
-				children.insert_gene(0, random_range(0, nodes));
+				child->insert(0, utilities::random_range(0, nodes));
 			}
 		}
 
 		for (int i = 1; i < nodes; i++)
 		{
-			rate = random_range(0, 100);
+			rate = utilities::random_range(0, 100);
 
 			if (rate <= father_gene)
 			{
-				children.insert_gene(i, father.get_microgene(i));
+				child->insert(i, this->path[i]);
 			}
 			else
 			{
-				if (rate <= mom_gene)
+				if (rate <= param.ga_p.tx_mutation_AHCAVG)
 				{
-					children.insert_gene(i, mother.get_microgene(i));
+					child->insert(i, mother->path[i]);
 				}
 				else
 				{
-					children.insert_gene(i, random_range(0, nodes));
+					child->insert(i, utilities::random_range(0, nodes));
 				}
 			}
 		}
 
-		children.insert_gene(nodes, children.get_microgene(0));
-		children.fx_cust(matrix_adj);
+		child->fit = utilities::Fx_fit(child->path, nodes, child->contain);
 	}
-
-	void cx(gene* mother)
+	/*
+	void cx(gene* child, gene* mother)
 	{ //Cycle Crossover
 		size_t nodes = mother.get_nodes();
 		T bastard;
@@ -157,14 +146,23 @@ class gene
 			children = bastard;
 		}
 	}
-
+	*/
 public:
+	int nodes;
 	LL fit = 0;
-	vector<int> path;
+	vector<int> path, repath;
+	vector<bool> contain;
+
+	gene(int n)
+	{
+		nodes = n;
+		path.assign(n, -1);
+		contain.assign(n, 0);
+	}
 
 	gene* operator + (gene* mother)
 	{
-		gene* child = new gene;
+		gene* child = new gene(nodes);
 		int idx = utilities::random_range(0, param.ga_p.number_active_cross);
 		
 		if (idx == -1)
@@ -173,25 +171,44 @@ public:
 		string cross = param.ga_p.cross_active[idx];
 
 		if (cross == "BCR")
-			return 
+			bcr(child, mother);
 		
-		if (cross == "AHCAVG")
-			return 
-
-		return 
+		//if (cross == "AHCAVG")
+			
+		return child;
 	}
 		
 	void copy(gene* mother)
 	{
+		this->contain = mother->contain;
+		this->repath = mother->repath;
+		this->nodes = mother->nodes;
 		this->path = mother->path;
 		this->fit = mother->fit;
 	}
 
+	bool not_repeat_insert(int i, int x)
+	{
+		if (contain[x])
+			return false;
+	
+		contain[x] = true;
+		path[i] = x;
+		repath[x] = i;
+	}
+
+	void insert(int i, int x)
+	{
+		contain[x] = true;
+		path[i] = x;
+		repath[x] = i;
+	}
 };
 
 class genetic
 {
-	int n;
+	int population;
+	int n_cities;
 	vector<gene*> genes;
 
 	bool order(gene* a, gene* b)
@@ -199,33 +216,84 @@ class genetic
 		return a->fit > b->fit;
 	}
 
-public:
-	genetic() 
-	{
-		n = param.ga_p.max_population;
-		genes.assign(n,0);
-	}
 
-	void active()
+	void simulation()
 	{
-		for (int it = 0; it < param.ga_p.max_generations; it++)
+		for (int it = 1; it <= population; it++)
 		{
 
 			sort(genes.begin(), genes.end(), order);
-			vector<gene*> new_generation(n);
-			
+			vector<gene*> new_generation(population);
+
 			for (int i = 0; i < param.ga_p.tx_elite; i++)
 			{
-				new_generation[i] = new gene;
+				new_generation[i] = new gene(n_cities);
 				new_generation[i]->copy(genes[i]);
 			}
 
-			for (int i = param.ga_p.tx_elite; i < n; i++)
+			for (int i = param.ga_p.tx_elite; i < population; i++)
 			{
-				int l = utilities::random_range(0, (param.ga_p.balance>0 ? n/ param.ga_p.balance : n));
+				int l = utilities::random_range(0, (param.ga_p.balance > 0 ? n / param.ga_p.balance : n));
 				int r = utilities::random_range(0, (param.ga_p.balance > 0 ? n / param.ga_p.balance : n));
 				new_generation[i] = genes[l] + genes[r];
 			}
+
+
+			if (param.ga_p.verbose == 1 and it%1000 == 0)
+			{
+				print_verbose(it / 1000 + 1);
+			}
 		}
+	}
+
+	void init()
+	{
+		for (int i = 0; i < population; i++)
+		{
+			genes[i] = new gene(n_cities);
+			int j = 0; 
+		}
+	}
+	
+	void print_verbose(int x)
+	{
+		cout << "Generation " << x << ":\n";
+		cout << "Best: " << genes[0]->fit << " cust\n";
+		
+		if (param.ga_p.simple_verbose == 0)
+		{
+			cout << "Current Population: \n";
+			for (auto e : genes)
+			{
+				cout << "Best: " << e->fit << " cust\n";
+				cout << "Path: ";
+				for (int i = 0; i < population; i++)
+				{
+					cout << e->path[i];
+					if (i + 1 < population)
+					{
+						cout << " -> ";
+					}
+				}
+				cout << endl;
+			}
+		}
+
+	}
+
+public:
+	genetic(int number_of_cities) 
+	{
+		n_cities = number_of_cities;
+		population = param.ga_p.max_population;
+		genes.assign(population,0);
+	}
+
+	LD activate()
+	{
+		init();
+		simulation();
+		sort(genes.begin(), genes.end(), order);
+		return genes[0]->fit;
 	}
 };
