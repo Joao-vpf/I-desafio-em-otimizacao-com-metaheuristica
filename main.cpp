@@ -3,12 +3,11 @@
 
 int utilities::n_cities;
 vector<point> utilities::city;
-params utilities::param;
+params utilities::param(PARAMS_FILE);
 
 int main()
 {
 	utilities::input_points();
-	utilities::param = params(PARAMS_FILE);
 	TSP a;
 	a.run();
 }

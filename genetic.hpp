@@ -326,7 +326,10 @@ class genetic
 
 	void simulation()
 	{
-	
+		/*
+			Objective:
+		*/
+
 		for (int it = 1; it <= utilities::param.ga_p.max_generations; it++)
 		{	
 			sort(genes.begin(), genes.end(), order);

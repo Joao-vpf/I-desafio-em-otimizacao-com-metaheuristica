@@ -86,7 +86,7 @@ struct GA_Params
 	}
 };
 
-struct params
+class params
 {
 	/*
 		Objective:
@@ -96,13 +96,13 @@ struct params
 			genetic = Indicate whether the algorithm to be used is genetic or not.
 			ga_p = Contains the specific parameters of the genetic algorithm.
 	*/
-
+public:
 	bool genetic;
 	GA_Params ga_p;
 
 	params()
 	{
-		genetic = 1;
+		genetic = true;
 	}
 
 	params(string source)
@@ -111,20 +111,26 @@ struct params
 			Objective:
 				An alternate constructor that allows initializing the parameters from a text file.
 		*/
-	
+
 		ifstream control_params(source);
-		genetic = 1;
 		string in_param;
+		control_params >> in_param;
+
+        if (in_param == "genetic") {
+            genetic = true;
+            params::genetic_params(control_params);
+        }
+		
+	}
+	
+	void genetic_params(ifstream& control_params){
+
+		string in_param;
+		control_params >> in_param;
 		int value;
+
 		while (control_params >> in_param)
 		{
-			if (in_param == "genetic")
-			{
-				int value;
-				control_params >> value;
-				genetic = value;
-				continue;
-			}
 
 			if (in_param == "genetic.max_generations")
 			{
@@ -256,8 +262,8 @@ struct params
 		}
 
 		ga_p.number_active_cross = ga_p.cross_active.size();
-	}
 
+	}
 };
 
 
@@ -307,6 +313,7 @@ public:
 		{
 			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
 		}
+		cout<<n;
 
 		fit += utilities::euclidian_distance(city[path[n-1]], city[path[0]]);
 
