@@ -1,0 +1,5 @@
+genetic.cross_active.CX 0
+genetic.cross_active.BCR 1
+genetic.cross_active.AHCAVG 1
+genetic.verbose 1
+genetic.simple_verbose 1

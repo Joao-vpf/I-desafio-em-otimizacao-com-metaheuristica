@@ -9,90 +9,13 @@
 #include <math.h>
 
 #define PARAMS_FILE "params.txt"
+#define INPUT_FILE "input.txt"
 #define LL long long
 #define ULL unsigned long long
 #define LD long double
 #define INF 1e16
 
 using namespace std;
-
-struct point {
-	/*
-		Objective:
-			A structure to represent a point in the Cartesian plane with coordinates X and Y.
-	*/
-
-	LD X, Y;
-	point(LD x, LD y) : X(x), Y(y){}
-};
-
-class utilities
-{
-	/*
-		Objective:
-			Class with useful functions.
-	*/
-
-public:
-	static vector<point> city;
-	
-	static LD euclidian_distance(point a, point b)
-	{
-		/*
-			Objective:
-				Calculate the Euclidean distance between two points.	
-		*/
-
-		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
-	}
-
-	static LD Fx_fit(vector<int> path, int n, vector<bool> contain)
-	{
-		/*
-			Objective:
-				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
-		*/
-
-		LD fit = 0;
-
-		for (int i = 0; i < n - 1; i++)
-		{
-			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
-		}
-
-		for (int i = 0; i < n; i++)
-		{
-			if (!contain[i])
-			{
-
-				fit = INF - fit;
-				return fit;
-			}
-		}
-
-		return fit;
-	}
-
-	static int random_range(int start, int end)
-	{
-		/*
-			Objective:
-				Find a random number between the start and end (excluding the end).
-		*/
-
-		if (start > end)
-		{
-			swap(start, end);
-		}
-
-		int range = end - start;
-
-		if(range >0)
-			return start + rand() % range;
-		
-		return start - 1;
-	}
-};
 
 struct GA_Params
 {
@@ -131,18 +54,18 @@ struct GA_Params
 
 	GA_Params()
 	{
-		tx_elite = 10;
+		tx_elite = 5;
 		verbose = 0;
 		simple_verbose = 1;
 		fix_init = -1;
-		max_generations = 10000;
+		max_generations = 50000;
 		max_population = 100;
 		verbose = false;
-		tx_mutation_AHCAVG = 20;
+		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 40;
 		opt_path_swap_it = 50;
-		alpha = 50;
+		alpha = 70;
 		cross_active = { "BCR", "AHCAVG","CX" };
 		number_active_cross = 3;
 	}
@@ -168,7 +91,7 @@ struct params
 	/*
 		Objective:
 			This structure is responsible for storing the parameters of the selected algorithm and the settings related to its execution.
-		
+
 		Attributes:
 			genetic = Indicate whether the algorithm to be used is genetic or not.
 			ga_p = Contains the specific parameters of the genetic algorithm.
@@ -182,13 +105,13 @@ struct params
 		genetic = 1;
 	}
 
-	params(string source = PARAMS_FILE)
+	params(string source)
 	{
 		/*
 			Objective:
 				An alternate constructor that allows initializing the parameters from a text file.
 		*/
-
+	
 		ifstream control_params(source);
 		genetic = 1;
 		string in_param;
@@ -240,6 +163,13 @@ struct params
 				}
 				continue;
 			}
+			
+			if (in_param == "genetic.verbose")
+			{
+				control_params >> value;
+				ga_p.verbose = value;
+				continue;
+			}
 
 			if (in_param == "genetic.simple_verbose")
 			{
@@ -261,16 +191,16 @@ struct params
 			if (in_param == "genetic.balance")
 			{
 				control_params >> value;
-				if(ga_p.balance >= 0 and ga_p.balance <= 100)
+				if (ga_p.balance >= 0 and ga_p.balance <= 100)
 					ga_p.balance = value;
-				
+
 				continue;
 			}
 
 			if (in_param == "genetic.tx_mutation_AHCAVG")
 			{
 				control_params >> value;
-				if(ga_p.tx_mutation_AHCAVG >=0 and ga_p.tx_mutation_AHCAVG <= 100)
+				if (ga_p.tx_mutation_AHCAVG >= 0 and ga_p.tx_mutation_AHCAVG <= 100)
 					ga_p.tx_mutation_AHCAVG = value;
 				continue;
 			}
@@ -324,9 +254,106 @@ struct params
 				continue;
 			}
 		}
-		
+
 		ga_p.number_active_cross = ga_p.cross_active.size();
 	}
-		
+
 };
-params param;
+
+
+struct point {
+	/*
+		Objective:
+			A structure to represent a point in the Cartesian plane with coordinates X and Y.
+	*/
+
+	LD X, Y;
+	point(LD x, LD y) : X(x), Y(y) {}
+};
+
+
+class utilities
+{
+	/*
+		Objective:
+			Class with useful functions.
+	*/
+
+public:
+	static params param;
+	static int n_cities;
+	static vector<point> city;
+
+	static LD euclidian_distance(point a, point b)
+	{
+		/*
+			Objective:
+				Calculate the Euclidean distance between two points.
+		*/
+
+		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
+	}
+
+	static LD Fx_fit(vector<int> path, int n, vector<bool> contain)
+	{
+		/*
+			Objective:
+				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+		*/
+
+		LD fit = 0;
+
+		for (int i = 0; i < n - 1; i++)
+		{
+			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
+		}
+
+		fit += utilities::euclidian_distance(city[path[n-1]], city[path[0]]);
+
+		for (int i = 0; i < n; i++)
+		{
+			if (!contain[i])
+			{
+
+				fit = INF - fit;
+				return fit;
+			}
+		}
+
+		return fit;
+	}
+
+	static int random_range(int start, int end)
+	{
+		/*
+			Objective:
+				Find a random number between the start and end (excluding the end).
+		*/
+
+		if (start > end)
+		{
+			swap(start, end);
+		}
+
+		int range = end - start;
+
+		if (range > 0)
+			return start + rand() % range;
+
+		return start;
+	}
+
+	static void input_points(string source = INPUT_FILE)
+	{
+		ifstream input(source);
+		int n;
+		input >> n;
+		n_cities = n;
+		while (n--)
+		{
+			LD x, y;
+			input >> x >> y;
+			city.push_back(point(x, y));
+		}
+	}
+};
