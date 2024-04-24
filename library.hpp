@@ -313,7 +313,6 @@ public:
 		{
 			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
 		}
-		cout<<n;
 
 		fit += utilities::euclidian_distance(city[path[n-1]], city[path[0]]);
 
