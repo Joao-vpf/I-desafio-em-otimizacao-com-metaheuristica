@@ -6,6 +6,12 @@ class gene
 	/* 
 		Objective:
 		
+		Attributes:
+			nodes = Number of index in gene.
+			LD fit = 0;
+			vector<int> path, repath;
+			vector<bool> contain;
+
 	*/
 
 	void bcr(gene& child, gene mother)
@@ -206,7 +212,7 @@ public:
 	{
 		/*
 			Objective:
-			
+				Gene class constructor.
 		*/
 
 		nodes = n;
@@ -219,7 +225,7 @@ public:
 	{
 		/*
 			Objective:
-			
+				Method that creates a random path.
 		*/
 
 		path[0] = initial;
@@ -243,7 +249,7 @@ public:
 	{
 		/*
 			Objective:
-			
+				Method that chooses which crossover will be made.
 		*/
 
 		gene child(nodes);
@@ -268,6 +274,11 @@ public:
 		
 	void mutation_swap()
 	{
+		/*
+			Objective:
+				Optimization method in the function that chooses two random index from the gene and exchanges their values.
+		*/
+
 		int idxA = utilities::random_range(1, nodes - 2);
 		int idxB = utilities::random_range(1, nodes - 2);
 		swap(this->path[idxA], this->path[idxB]);
@@ -279,6 +290,7 @@ public:
 	{
 		/*
 			Objective:
+				Function that inserts in position i of the gene but prevents repeated values.
 		*/
 
 		if (contain[x])
@@ -294,6 +306,7 @@ public:
 	{
 		/*
 			Objective:
+				Function that inserts an item at position i of the gene.
 		*/
 
 		contain[x] = true;

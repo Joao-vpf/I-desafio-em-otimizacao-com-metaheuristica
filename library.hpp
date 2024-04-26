@@ -63,7 +63,7 @@ struct GA_Params
 		verbose = false;
 		tx_mutation_AHCAVG =  20;
 		balance = 0;
-		roulette = 40;
+		roulette = 60;
 		opt_path_swap_it = 50;
 		alpha = 70;
 		cross_active = { "BCR", "AHCAVG","CX" };
@@ -304,7 +304,7 @@ public:
 	{
 		/*
 			Objective:
-				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveledm and contain (vector<bool>) what indicates whether element i is active.
 		*/
 
 		LD fit = 0;
@@ -325,6 +325,25 @@ public:
 				return fit;
 			}
 		}
+
+		return fit;
+	}
+
+	static LD Fx_fit(vector<int> path, int n)
+	{
+		/*
+			Objective:
+				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+		*/
+
+		LD fit = 0;
+
+		for (int i = 0; i < n - 1; i++)
+		{
+			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
+		}
+
+		fit += utilities::euclidian_distance(city[path[n-1]], city[path[0]]);
 
 		return fit;
 	}
