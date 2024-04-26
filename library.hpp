@@ -17,6 +17,25 @@
 
 using namespace std;
 
+struct annealing_params{
+	/*
+        Objective:
+            A struct responsible for storing parameters for the annealing algorithm.
+
+        Attributes:
+            t0 - Initial temperature
+            tf - Final temperature
+            l - Number of iterations (exchanges) to be performed on the current solution
+            alfa - Temperature variation rate
+    */
+
+	LD t0;
+    LD tf;
+    int l;
+    LD alfa;
+
+};
+
 struct GA_Params
 {
 	/*
