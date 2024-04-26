@@ -3,8 +3,18 @@
 
 class gene
 {
+	/* 
+		Objective:
+		
+	*/
+
 	void bcr(gene& child, gene mother)
-	{//Best Cost Route crossover
+	{
+		/* Best Cost Route crossover
+			Objective:
+			
+		*/
+
 		int cut = utilities::random_range(1, nodes);
 
 		for (int i = 0; i < cut; i++)
@@ -33,7 +43,11 @@ class gene
 	}
 
 	void arithmetic_average(gene& child, gene mother)
-	{//arithmetic_average
+	{
+		/* Arithmetic Average
+			Objective:
+			
+		*/
 
 		int father_gene =  utilities::param.ga_p.tx_mutation_AHCAVG *  utilities::param.ga_p.alpha / 100;
 		int rate = utilities::random_range(0, 100);
@@ -80,7 +94,12 @@ class gene
 	
 
 	void cx(gene& child, gene mother)
-	{ //Cycle Crossover
+	{ 
+		/* Cycle Crossover
+			Objective:
+			
+		*/
+
 		gene bastard(nodes);
 		bastard.random_path(mother.path[0]);
 		child.random_path(this->path[0]);
@@ -144,6 +163,11 @@ class gene
 
 	void opt_path()
 	{
+		/*
+			Objective:
+			
+		*/
+
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
 			vector<int> path_copy = path;
@@ -180,6 +204,11 @@ public:
 
 	gene(int n)
 	{
+		/*
+			Objective:
+			
+		*/
+
 		nodes = n;
 		path.assign(n, -1);
 		repath.assign(n, -1);
@@ -188,6 +217,11 @@ public:
 
 	void random_path(const int& initial)
 	{
+		/*
+			Objective:
+			
+		*/
+
 		path[0] = initial;
 		repath[initial] = 0;
 		contain[initial] = 1;
@@ -207,6 +241,11 @@ public:
 
 	gene operator + (gene mother)
 	{
+		/*
+			Objective:
+			
+		*/
+
 		gene child(nodes);
 		int idx = utilities::random_range(0,  utilities::param.ga_p.number_active_cross);
 		
@@ -238,6 +277,10 @@ public:
 
 	bool not_repeat_insert(int i, int x)
 	{
+		/*
+			Objective:
+		*/
+
 		if (contain[x])
 			return false;
 
@@ -249,6 +292,10 @@ public:
 
 	void insert(int i, int x)
 	{
+		/*
+			Objective:
+		*/
+
 		contain[x] = true;
 		path[i] = x;
 		repath[x] = i;
@@ -257,18 +304,37 @@ public:
 
 bool order(const gene& a,const gene& b)
 {
+	
+	/*
+		Objective:
+			Function with the logic used to order genes.
+	*/
+
 	return a.fit< b.fit;
 }
 
 class genetic
 {
+	
+	/*
+		Objective:
+			Class with the objective of executing the heuristics algorithm.
+	*/
+
 	int population;
 	int n_cities;
 	vector<gene> genes;
+	bool _active = false;
 
 	
-	vector <LD> calculate_relative_cust()
+	vector <LD> calculate_relative_fit()
 	{
+		
+		/*
+			Objective:
+				Function to calculate the relative fit to be used in the roulette method.
+		*/
+
 		LD max_fitness = INF;
 
 		vector<LD> relative_fitness;
@@ -283,9 +349,14 @@ class genetic
 
 	void roulette_wheel_selection(int& father, int& mother)
 	{
+		/*
+			Objective:
+				Function to choose all genes using the roulette wheel method.
+		*/
+
 		ULL random_value = rand();
 		ULL cumulative_probability = 0;
-		vector<LD> relative_fitness = calculate_relative_cust();
+		vector<LD> relative_fitness = calculate_relative_fit();
 		
 		for (int i = 0; i < utilities::param.ga_p.max_population; i++)
 		{
@@ -328,6 +399,7 @@ class genetic
 	{
 		/*
 			Objective:
+				Function with the objective of simulating the generations of the algorithm, choosing between the active crossover types and optimizers.
 		*/
 
 		for (int it = 1; it <= utilities::param.ga_p.max_generations; it++)
@@ -376,6 +448,11 @@ class genetic
 
 	void init()
 	{
+		/*
+			Objective:
+				Function to initialize the gene vector with allowed paths.
+		*/
+
 		for (int i = 0; i < population; i++)
 		{
 			int j = 0;
@@ -397,6 +474,11 @@ class genetic
 	
 	void print_verbose(int x)
 	{
+		/*
+			Objective:
+				Function to print the best current fit and the path of this gene.
+		*/
+
 		cout << "Generation " << x << ":\n";
 		cout << "Best: " << genes[0].fit << " cust\n";
 		
@@ -423,16 +505,57 @@ class genetic
 public:
 	genetic(int number_of_cities) 
 	{
+		/*
+			Objective:
+				Genetic class constructor.
+		*/
+
 		n_cities = number_of_cities;
 		population =  utilities::param.ga_p.max_population;
 		genes.assign(population,gene(n_cities));
 	}
 
+	LD best_fit()
+	{
+		/*
+			Objective:
+				Function that returns the best fit found.
+		*/
+
+		if(!_active)
+		{
+			return INF;
+		}
+
+		return genes[0].fit;
+	}
+
+	vector<int> best_path()
+	{
+		/*
+			Objective:
+				Function that returns the path with the best fit.
+		*/
+
+		if(!_active)
+		{
+			return vector<int>(0);
+		}
+
+		return genes[0].path;
+	}
+
 	LD activate()
 	{
+		/*
+			Objective:
+				Function with the aim of activating the genetic algorithm.
+		*/
+
 		init();
 		simulation();
 		sort(genes.begin(), genes.end(), order);
+		_active = true;
 		return genes[0].fit;
 	}
 };
