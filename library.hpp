@@ -17,6 +17,25 @@
 
 using namespace std;
 
+struct annealing_params{
+	/*
+        Objective:
+            A struct responsible for storing parameters for the annealing algorithm.
+
+        Attributes:
+            t0 - Initial temperature
+            tf - Final temperature
+            l - Number of iterations (exchanges) to be performed on the current solution
+            alfa - Temperature variation rate
+    */
+
+	LD t0;
+    LD tf;
+    int l;
+    LD alfa;
+
+};
+
 struct GA_Params
 {
 	/*
@@ -325,6 +344,25 @@ public:
 				return fit;
 			}
 		}
+
+		return fit;
+	}
+
+	static LD Fx_fit(vector<int> path, int n)
+	{
+		/*
+			Objective:
+				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+		*/
+
+		LD fit = 0;
+
+		for (int i = 0; i < n - 1; i++)
+		{
+			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
+		}
+
+		fit += utilities::euclidian_distance(city[path[n-1]], city[path[0]]);
 
 		return fit;
 	}
