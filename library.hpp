@@ -348,6 +348,25 @@ public:
 		return fit;
 	}
 
+	static LD Fx_fit(vector<int> path, int n)
+	{
+		/*
+			Objective:
+				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+		*/
+
+		LD fit = 0;
+
+		for (int i = 0; i < n - 1; i++)
+		{
+			fit += utilities::euclidian_distance(city[path[i]], city[path[i + 1]]);
+		}
+
+		fit += utilities::euclidian_distance(city[path[n-1]], city[path[0]]);
+
+		return fit;
+	}
+
 	static int random_range(int start, int end)
 	{
 		/*
