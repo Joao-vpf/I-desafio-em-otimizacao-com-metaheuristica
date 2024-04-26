@@ -54,14 +54,14 @@ struct GA_Params
 
 	GA_Params()
 	{
-		tx_elite = 10;
+		tx_elite = 7;
 		verbose = 0;
 		simple_verbose = 1;
 		fix_init = -1;
 		max_generations = 50000;
 		max_population = 100;
 		verbose = false;
-		tx_mutation_AHCAVG =  10;
+		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 60;
 		opt_path_swap_it = 50;
@@ -131,24 +131,27 @@ public:
 
 		while (control_params >> in_param)
 		{
+			if(in_param == "genetic.tx_elite")
+			{
+				control_params >> value;
+				if(value > 0 and value < 101)
+					ga_p.tx_elite = value;
+				continue;
+			}
 
 			if (in_param == "genetic.max_generations")
 			{
 				control_params >> value;
 				if (value > 0)
-				{
 					ga_p.max_generations = value;
-				}
 				continue;
 			}
 
 			if (in_param == "genetic.max_population")
 			{
 				control_params >> value;
-				if (value > 0)
-				{
+				if (value >= 10)
 					ga_p.max_population = value;
-				}
 				continue;
 			}
 
@@ -261,8 +264,8 @@ public:
 			}
 		}
 
+		ga_p.tx_elite = (ga_p.tx_elite*ga_p.max_population)/100;
 		ga_p.number_active_cross = ga_p.cross_active.size();
-
 	}
 };
 

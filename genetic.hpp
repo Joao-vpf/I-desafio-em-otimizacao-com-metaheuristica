@@ -232,13 +232,16 @@ public:
 		path[0] = initial;
 		repath[initial] = 0;
 		contain[initial] = 1;
+		
 		for (int i = 1; i < nodes; i++)
 		{
 			int idx = utilities::random_range(0, nodes);
+
 			while (contain[idx])
 			{
 				idx = utilities::random_range(0, nodes);
 			}
+
 			path[i] = idx;
 			repath[idx] = i;
 			contain[idx] = 1;
@@ -482,6 +485,7 @@ class genetic
 					j++;
 				}
 			}
+
 			genes[i].fit = utilities::Fx_fit(genes[i].path, n_cities, genes[i].contain);
 		}
 	}
