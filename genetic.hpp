@@ -443,7 +443,7 @@ class genetic
 				}
 				new_generation[i] = genes[father] + genes[mother];
 			}
-			
+
 			for (int i =  utilities::param.ga_p.tx_elite; i <  utilities::param.ga_p.max_population; i++)
 			{
 				int rate = utilities::random_range(0, 100);
@@ -455,7 +455,7 @@ class genetic
 
 			genes = new_generation;
 
-			if ( utilities::param.ga_p.verbose == 1 and it%1000 == 0)
+			if (utilities::param.ga_p.verbose == 1 and it%1000 == 0)
 			{
 				print_verbose(it / 1000);
 			}

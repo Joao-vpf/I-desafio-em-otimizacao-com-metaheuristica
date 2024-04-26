@@ -9,6 +9,7 @@
 #include <math.h>
 
 #define PARAMS_FILE "params.txt"
+#define BEST_PARAMS_FILE "best_params.txt"
 #define INPUT_FILE "input.txt"
 #define LL long long
 #define ULL unsigned long long
@@ -122,6 +123,7 @@ public:
 	params()
 	{
 		genetic = true;
+		srand(time(0));
 	}
 
 	params(string source)
@@ -133,22 +135,23 @@ public:
 
 		ifstream control_params(source);
 		string in_param;
-		control_params >> in_param;
-
-        if (in_param == "genetic") {
-            genetic = true;
-            params::genetic_params(control_params);
-        }
-		
+		srand(time(0));
+		while(control_params >> in_param)
+		{
+			if (in_param == "genetic") 
+			{
+				genetic = true;
+				params::genetic_params(control_params);
+			}
+		}
 	}
 	
 	void genetic_params(ifstream& control_params){
 
 		string in_param;
-		control_params >> in_param;
 		int value;
 
-		while (control_params >> in_param)
+		while (control_params >> in_param && in_param != "end")
 		{
 			if(in_param == "genetic.tx_elite")
 			{
@@ -219,7 +222,7 @@ public:
 			if (in_param == "genetic.balance")
 			{
 				control_params >> value;
-				if (ga_p.balance >= 0 and ga_p.balance <= 100)
+				if (ga_p.balance >= 0 and ga_p.balance < 4)
 					ga_p.balance = value;
 
 				continue;

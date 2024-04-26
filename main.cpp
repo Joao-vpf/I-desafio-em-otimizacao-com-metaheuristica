@@ -9,5 +9,6 @@ int main()
 {
 	utilities::input_points();
 	TSP a;
-	a.run();
+//	a.run();
+	a.best_params_ga();
 }
