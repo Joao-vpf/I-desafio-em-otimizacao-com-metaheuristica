@@ -8,9 +8,10 @@ class gene
 		
 		Attributes:
 			nodes = Number of index in gene.
-			LD fit = 0;
-			vector<int> path, repath;
-			vector<bool> contain;
+			fit = Number indicating the value of the path.
+			path = Vector that stores the current path.
+			repath =  Vector that stores the city index.
+			contain = Vector that stores the contain city on path.
 
 	*/
 
@@ -18,7 +19,7 @@ class gene
 	{
 		/* Best Cost Route crossover
 			Objective:
-			
+				Function that performs the crossover with the Best Cost Route crossover method.
 		*/
 
 		int cut = utilities::random_range(1, nodes);
@@ -52,7 +53,7 @@ class gene
 	{
 		/* Arithmetic Average
 			Objective:
-			
+				Function that performs the crossover with the Arithmetic Average method.
 		*/
 
 		int father_gene =  utilities::param.ga_p.tx_mutation_AHCAVG *  utilities::param.ga_p.alpha / 100;
@@ -103,7 +104,7 @@ class gene
 	{ 
 		/* Cycle Crossover
 			Objective:
-			
+				Function that performs the crossover with the Cycle Crossover method.
 		*/
 
 		gene bastard(nodes);
@@ -171,7 +172,7 @@ class gene
 	{
 		/*
 			Objective:
-			
+				Function that aims to update the path by simulating some internal changes.
 		*/
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)

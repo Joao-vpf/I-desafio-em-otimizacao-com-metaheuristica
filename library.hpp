@@ -54,14 +54,14 @@ struct GA_Params
 
 	GA_Params()
 	{
-		tx_elite = 5;
+		tx_elite = 10;
 		verbose = 0;
 		simple_verbose = 1;
 		fix_init = -1;
 		max_generations = 50000;
 		max_population = 100;
 		verbose = false;
-		tx_mutation_AHCAVG =  20;
+		tx_mutation_AHCAVG =  10;
 		balance = 0;
 		roulette = 60;
 		opt_path_swap_it = 50;
