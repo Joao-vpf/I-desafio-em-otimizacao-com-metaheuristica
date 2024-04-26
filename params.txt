@@ -1,5 +1,12 @@
+genetic
 genetic.cross_active.CX 0
 genetic.cross_active.BCR 1
 genetic.cross_active.AHCAVG 1
 genetic.verbose 1
 genetic.simple_verbose 1
+genetic.tx_elite 10
+genetic.tx_mutation_AHCAVG 10
+genetic.roulette 60
+genetic.opt_path_swap_it 40
+genetic.max_population 100
+genetic.alpha 70
