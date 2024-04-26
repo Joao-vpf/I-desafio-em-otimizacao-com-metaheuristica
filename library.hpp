@@ -228,7 +228,7 @@ public:
 			if (in_param == "genetic.tx_mutation_AHCAVG")
 			{
 				control_params >> value;
-				if (ga_p.tx_mutation_AHCAVG >= 0 and ga_p.tx_mutation_AHCAVG <= 100)
+				if (ga_p.tx_mutation_AHCAVG >= 0 and ga_p.tx_mutation_AHCAVG < 100)
 					ga_p.tx_mutation_AHCAVG = value;
 				continue;
 			}

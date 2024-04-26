@@ -56,7 +56,7 @@ class gene
 				Function that performs the crossover with the Arithmetic Average method.
 		*/
 
-		int father_gene =  utilities::param.ga_p.tx_mutation_AHCAVG *  utilities::param.ga_p.alpha / 100;
+		int father_gene = ((100 - utilities::param.ga_p.tx_mutation_AHCAVG) *  utilities::param.ga_p.alpha) / 100;
 		int rate = utilities::random_range(0, 100);
 
 		if (utilities::param.ga_p.fix_init != -1 or rate <= father_gene)
@@ -65,7 +65,7 @@ class gene
 		}
 		else
 		{
-			if (rate <=  100-utilities::param.ga_p.tx_mutation_AHCAVG)
+			if (rate <=  100 - father_gene)
 			{
 				child.insert(0, mother.path[0]);
 			}
@@ -85,7 +85,7 @@ class gene
 			}
 			else
 			{
-				if (rate <=  100-utilities::param.ga_p.tx_mutation_AHCAVG)
+				if (rate <=  100 - father_gene)
 				{
 					child.insert(i, mother.path[i]);
 				}
