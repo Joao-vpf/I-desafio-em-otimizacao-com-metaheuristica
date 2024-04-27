@@ -156,7 +156,7 @@ public:
 			if(in_param == "genetic.tx_elite")
 			{
 				control_params >> value;
-				if(value > 0 and value < 101)
+				if(value > 1 and value < 101)
 					ga_p.tx_elite = value;
 				continue;
 			}
