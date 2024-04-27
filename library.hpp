@@ -6,6 +6,7 @@
 #include <fstream>
 #include <algorithm>
 #include <vector>
+#include <set>
 #include <math.h>
 
 #define PARAMS_FILE "params.txt"
@@ -55,6 +56,9 @@ struct GA_Params
 			balance = Defines in relation to the good percentage of the population that will be used for the new generation (0 defines as no elitism for generation).
 			tx_mutation_AHCAVG = Defines the mutation rate in the arithmetic_average.
 			fix_init = Defines whether there will be an initial number as fixed (-1 defines as not existing).
+			P_value = Defines how many parents were considered.
+			P_limiar = Defines the minimum quantity required for the city and to appear in the same position as the parents.
+			VR = Boolean that indicates whether the Voting Recombination Crossover is active.
 			cross_active = Stores which crossovers are active ("BCR" -> Best Cost Route crossover, "AHCAVG" -> Arithmetic Average, "CX" -> Cycle Crossover).
 	*/
 
@@ -69,6 +73,9 @@ struct GA_Params
 	int balance;
 	int tx_mutation_AHCAVG;
 	int fix_init;
+	int P_value;
+	int P_limiar;
+	bool VR;
 	vector<string> cross_active;
 	int number_active_cross;
 
@@ -84,10 +91,13 @@ struct GA_Params
 		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 60;
+		P_value = 4;
+		P_limiar = 3;
+		VR = 1;
 		opt_path_swap_it = 50;
 		alpha = 70;
-		cross_active = { "BCR", "AHCAVG","CX" };
-		number_active_cross = 3;
+		cross_active = { "BCR", "AHCAVG","CX", "VR"};
+		number_active_cross = 4;
 	}
 
 
@@ -253,6 +263,22 @@ public:
 				continue;
 			}
 
+			if (in_param == "genetic.P_value")
+			{
+				control_params >> value;
+				if(ga_p.P_value > 1)
+					ga_p.P_value = value;
+				continue;
+			}
+
+			if (in_param == "genetic.P_limiar")
+			{
+				control_params >> value;
+				if (value > 0)
+					ga_p.P_limiar = value;
+				continue;
+			}
+
 			if (in_param == "genetic.cross_active.BCR")
 			{
 				control_params >> value;
@@ -294,8 +320,27 @@ public:
 				}
 				continue;
 			}
-		}
 
+			
+			if (in_param == "genetic.cross_active.VR")
+			{
+				control_params >> value;
+				if (value == 0)
+				{
+					ga_p.VR = 0;
+					ga_p.cross_active_delete("VR");
+				}
+				else
+				{
+					ga_p.VR = 1;
+					ga_p.cross_active_insert("VR");
+				}
+				continue;
+			}
+		}
+		
+		ga_p.P_value = min(ga_p.P_value, ga_p.max_population);
+		ga_p.P_limiar = min(ga_p.P_limiar, ga_p.P_value);
 		ga_p.tx_elite = (ga_p.tx_elite*ga_p.max_population)/100;
 		ga_p.number_active_cross = ga_p.cross_active.size();
 	}
