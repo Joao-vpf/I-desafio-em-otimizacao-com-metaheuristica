@@ -198,7 +198,7 @@ class gene
 			if (cust_copy < this->fit)
 			{
 				path = path_copy;
-				utilities::Fx_fit(this->path, this->nodes, this->contain);
+				this->fit = utilities::Fx_fit(this->path, this->nodes, this->contain);
 			}
 		}
 	}
@@ -222,7 +222,7 @@ public:
 		contain.assign(n, 0);
 	}
 
-	void random_path(const int& initial)
+	void random_path(const int& initial, bool reapeat = 0)
 	{
 		/*
 			Objective:
@@ -236,8 +236,8 @@ public:
 		for (int i = 1; i < nodes; i++)
 		{
 			int idx = utilities::random_range(0, nodes);
-
-			while (contain[idx])
+			
+			while (!reapeat && contain[idx])
 			{
 				idx = utilities::random_range(0, nodes);
 			}
@@ -246,7 +246,7 @@ public:
 			repath[idx] = i;
 			contain[idx] = 1;
 		}
-		utilities::Fx_fit(this->path, this->nodes, this->contain);
+		this->fit = utilities::Fx_fit(this->path, this->nodes, this->contain);
 	}
 
 	gene operator + (gene mother)
@@ -285,8 +285,15 @@ public:
 
 		int idxA = utilities::random_range(1, nodes - 2);
 		int idxB = utilities::random_range(1, nodes - 2);
+
 		swap(this->path[idxA], this->path[idxB]);
-		utilities::Fx_fit(this->path,this->nodes, this->contain);
+		LD new_fit = utilities::Fx_fit(this->path,this->nodes, this->contain);
+
+		if (new_fit > fit)
+			swap(this->path[idxA], this->path[idxB]);
+		else
+			fit = new_fit;
+
 		opt_path();
 	}
 
@@ -409,7 +416,36 @@ class genetic
 		
 		while(mother == father)
 			mother = utilities::random_range(0, utilities::param.ga_p.max_population);
+	}
 
+	void trash_genes(vector<gene>& new_generation)
+	{
+		for (int i =  utilities::param.ga_p.tx_elite; i < population && i<2*utilities::param.ga_p.tx_elite; i++)
+		{
+			int idx = utilities::param.ga_p.fix_init;
+
+			if(idx == -1)
+				idx = utilities::random_range(0, n_cities);
+
+			new_generation[i].random_path(idx);
+		}
+
+		for (int i = 2*utilities::param.ga_p.tx_elite; i < population; i++)
+		{
+			int idx = utilities::param.ga_p.fix_init;
+
+			if(idx == -1)
+				idx = utilities::random_range(0, n_cities);
+
+			new_generation[i].random_path(idx, 1);
+		}
+		
+		for (int i =  utilities::param.ga_p.tx_elite; i <  utilities::param.ga_p.max_population; i++)
+		{
+			cout << new_generation[i].fit<< " new: ";
+			new_generation[i].mutation_swap();
+			cout << new_generation[i].fit<< endl;
+		}
 	}
 
 	void simulation()
@@ -418,32 +454,56 @@ class genetic
 			Objective:
 				Function with the objective of simulating the generations of the algorithm, choosing between the active crossover types and optimizers.
 		*/
+		
+		int cont=0;
+		int beta = 0;
+		LD last_best = INF;
 
 		for (int it = 1; it <= utilities::param.ga_p.max_generations; it++)
 		{	
 			sort(genes.begin(), genes.end(), order);
 			vector<gene> new_generation(population, gene(n_cities));
 
+			if (genes[0].fit == last_best)
+				cont++;
+			else
+				last_best = genes[0].fit, cont=0;
+
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
 				new_generation[i] = genes[i];
 			}
 
-			for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
-			{
-				int father = -1, mother = -1;
-				if(utilities::param.ga_p.balance > 0)
-				{
-					utilities::random_range(0,  n_cities /  utilities::param.ga_p.balance);
-					utilities::random_range(0, n_cities /  utilities::param.ga_p.balance);
-				}
-				else
-				{
-					roulette_wheel_selection(father, mother);
-				}
-				new_generation[i] = genes[father] + genes[mother];
+			if(false && cont == 1000 && beta <= 0)
+			{//! Trocar para beta
+				trash_genes(new_generation);
+				cont = 0;
+				beta = 5;
 			}
+			else
+			{
+				if(cont == 1000)
+				{
+					cont=0;
+					beta--;
+				}
+				for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
+				{
+					int father = -1, mother = -1;
+					if(utilities::param.ga_p.balance > 0)
+					{
+						utilities::random_range(0,  n_cities /  utilities::param.ga_p.balance);
+						utilities::random_range(0, n_cities /  utilities::param.ga_p.balance);
+					}
+					else
+					{
+						roulette_wheel_selection(father, mother);
+					}
+					new_generation[i] = genes[father] + genes[mother];
+				}
 
+			}
+			
 			for (int i =  utilities::param.ga_p.tx_elite; i <  utilities::param.ga_p.max_population; i++)
 			{
 				int rate = utilities::random_range(0, 100);

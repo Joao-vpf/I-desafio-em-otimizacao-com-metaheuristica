@@ -30,10 +30,10 @@ struct annealing_params{
             alfa - Temperature variation rate
     */
 
-	LD t0;
-    LD tf;
-    int l;
-    LD alfa;
+	LD t0 = 100000;
+    LD tf = 0.001;
+    int l = 100000;
+    LD alfa = 0.05;
 
 };
 
@@ -118,11 +118,13 @@ class params
 	*/
 public:
 	bool genetic;
+	vector<bool> hybrid;
+	annealing_params ann_p;
 	GA_Params ga_p;
 
 	params()
 	{
-		genetic = true;
+		hybrid.assign(2, 0);
 		srand(time(0));
 	}
 
@@ -133,17 +135,25 @@ public:
 				An alternate constructor that allows initializing the parameters from a text file.
 		*/
 
+		hybrid.assign(2, 0);
 		ifstream control_params(source);
 		string in_param;
 		srand(time(0));
+
 		while(control_params >> in_param)
 		{
 			if (in_param == "genetic") 
 			{
-				genetic = true;
+				hybrid[0] = true;
 				params::genetic_params(control_params);
 			}
+
+			if(in_param == "annealing")
+			{
+				hybrid[1] = true;
+			}
 		}
+
 	}
 	
 	void genetic_params(ifstream& control_params){
