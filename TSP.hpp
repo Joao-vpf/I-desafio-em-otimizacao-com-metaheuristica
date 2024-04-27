@@ -19,7 +19,6 @@ public:
 		*/
 
 		GA_Params best;
-		LD best_res =INF;
 		LD best_med = INF;
 
 		for (int elite = 1; elite <= 50; elite++)
@@ -28,11 +27,11 @@ public:
 		for (int opt_path_swap_it = 10; opt_path_swap_it<=50; opt_path_swap_it+=10)
 		for (int alpha = 1; alpha<100; alpha++)
 		for (int tx_mutation_AHCAVG = 5; tx_mutation_AHCAVG < 100; tx_mutation_AHCAVG++)
-		for (int fix_init = -1; fix_init < utilities::n_cities; fix_init++)
 		for (int bcr = 0; bcr<2; bcr++)
-		for (int AHCAVG = 0; AHCAVG<2; AHCAVG++)
-		for (int CX = 0; CX<2 && bcr+AHCAVG+CX>0; CX++)
+		for (int AHCAVG = 0; AHCAVG<2 && bcr+AHCAVG > 0; AHCAVG++)
+		for (int CX = 0; CX<2; CX++)
 		{
+			LD best_res =0;
 			for(int j=0; j<3; j++)
 			{
 				utilities::param.ga_p = GA_Params();
@@ -44,7 +43,6 @@ public:
 				utilities::param.ga_p.opt_path_swap_it = opt_path_swap_it;
 				utilities::param.ga_p.alpha = alpha;
 				utilities::param.ga_p.tx_mutation_AHCAVG = tx_mutation_AHCAVG;
-				utilities::param.ga_p.fix_init = fix_init;
 				if (bcr == 0)
 					utilities::param.ga_p.cross_active_delete("BCR");
 				else

@@ -1,0 +1,12 @@
+genetic
+genetic.tx_elite 7
+genetic.max_population 100
+genetic.roulette 60
+genetic.tx_elite 50
+genetic.alpha 70
+genetic.tx_mutation_AHCAVG 20
+genetic.fix_init -1
+genetic.cross_active.BCR -1
+genetic.cross_active.AHCAVG -1
+genetic.cross_active.CX -1
+end
