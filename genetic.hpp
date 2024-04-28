@@ -141,7 +141,7 @@ class gene
 				child.insert(i, item);
 			else
 			{
-				if(rand()%2==0)
+				if(utilities::random_range(0, 2))
 					while(!child.not_repeat_insert(i, utilities::random_range(0, nodes)));
 
 				else
@@ -221,6 +221,11 @@ class gene
 	
 	void er(gene& child, gene mother)
 	{
+		/* Edge Recombination crossover
+			Objective:
+				Function that performs the crossover with the Edge Recombination crossover method.
+		*/
+
 		vector<set<int>> adj(nodes);
 		int cont=0;
 		child.insert(cont, this->path[0]);
@@ -479,8 +484,7 @@ class genetic
 	vector<gene> genes;
 	bool _active = false;
 
-	
-	vector <LD> calculate_relative_fit()
+	vector <LD> calculate_relative_fit(ULL& max_probability)
 	{
 		
 		/*
@@ -494,11 +498,11 @@ class genetic
 		for (int i = 0; i < utilities::param.ga_p.max_population; i++) 
 		{
 			relative_fitness.push_back(max_fitness - genes[i].fit);
+			max_probability += max_fitness - genes[i].fit;
 		}
 
 		return relative_fitness;
 	}
-
 
 	void roulette_wheel_selection(int& father, int& mother)
 	{
@@ -507,9 +511,9 @@ class genetic
 				Function to choose all genes using the roulette wheel method.
 		*/
 
-		ULL random_value = rand();
-		ULL cumulative_probability = 0;
-		vector<LD> relative_fitness = calculate_relative_fit();
+		ULL cumulative_probability = 0, max_probability = 0;
+		vector<LD> relative_fitness = calculate_relative_fit(max_probability);
+		ULL random_value = utilities::random_range();
 		
 		for (int i = 0; i < utilities::param.ga_p.max_population; i++)
 		{
@@ -526,7 +530,7 @@ class genetic
 			father =  utilities::random_range(0, utilities::param.ga_p.max_population);
 		}
 
-		random_value = rand();
+		random_value = utilities::random_range();
 
 		for (int i = 0; i < utilities::param.ga_p.max_population; i++)
 		{
@@ -596,9 +600,7 @@ class genetic
 			genes = new_generation;
 
 			if (it%1000 == 0)
-			{
-				srand(time(0));
-				
+			{	
 				if(utilities::param.ga_p.verbose == 1)
 					print_verbose(it / 1000);
 			}
@@ -692,14 +694,21 @@ public:
 		return genes[0].fit;
 	}
 
-	vector<gene> current_path()
+	vector<vector<int>> current_all_path()
 	{
 		/*
 			Objective:
 				Function that returns the current genes.
 		*/
 
-		return genes;
+		vector<vector<int>> all_path;
+		
+		for (auto e:genes)
+		{
+			all_path.push_back(e.path);
+		}
+
+		return all_path;
 	}
 
 	vector<int> best_path()

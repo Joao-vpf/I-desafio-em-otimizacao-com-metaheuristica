@@ -2,8 +2,10 @@
 #include <iostream>
 #include <string>
 #include <time.h>
-#include <stdlib.h> 
+#include <random>
 #include <fstream>
+#include <cstdlib>
+#include <limits.h>
 #include <algorithm>
 #include <vector>
 #include <set>
@@ -18,6 +20,9 @@
 #define INF 1e16
 
 using namespace std;
+
+random_device rd;
+mt19937 gen(rd());
 
 struct annealing_params{
 	/*
@@ -135,7 +140,6 @@ public:
 	params()
 	{
 		hybrid.assign(2, 0);
-		srand(time(0));
 	}
 
 	params(string source)
@@ -148,7 +152,6 @@ public:
 		hybrid.assign(2, 0);
 		ifstream control_params(source);
 		string in_param;
-		srand(time(0));
 
 		while(control_params >> in_param)
 		{
@@ -163,7 +166,6 @@ public:
 				hybrid[1] = true;
 			}
 		}
-
 	}
 	
 	void genetic_params(ifstream& control_params){
@@ -441,24 +443,18 @@ public:
 		return fit;
 	}
 
-	static int random_range(int start, int end)
+	static int random_range(int start=0, int end=INT_MAX)
 	{
 		/*
 			Objective:
 				Find a random number between the start and end (excluding the end).
 		*/
 
-		if (start > end)
-		{
+		if(start > end) 
 			swap(start, end);
-		}
-
-		int range = end - start;
-
-		if (range > 0)
-			return start + rand() % range;
-
-		return start;
+		
+		uniform_int_distribution<> dis(start, end-1);
+		return dis(gen);
 	}
 
 	static void input_points(string source = INPUT_FILE)
