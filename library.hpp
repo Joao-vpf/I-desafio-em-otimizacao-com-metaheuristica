@@ -96,8 +96,8 @@ struct GA_Params
 		VR = 1;
 		opt_path_swap_it = 50;
 		alpha = 70;
-		cross_active = { "BCR", "AHCAVG","CX", "VR"};
-		number_active_cross = 4;
+		cross_active = { "BCR", "AHCAVG","CX", "VR", "ER"};
+		number_active_cross = 5;
 	}
 
 
@@ -321,7 +321,6 @@ public:
 				continue;
 			}
 
-			
 			if (in_param == "genetic.cross_active.VR")
 			{
 				control_params >> value;
@@ -334,6 +333,20 @@ public:
 				{
 					ga_p.VR = 1;
 					ga_p.cross_active_insert("VR");
+				}
+				continue;
+			}
+			
+			if (in_param == "genetic.cross_active.ER")
+			{
+				control_params >> value;
+				if (value == 0)
+				{
+					ga_p.cross_active_delete("ER");
+				}
+				else
+				{
+					ga_p.cross_active_insert("ER");
 				}
 				continue;
 			}

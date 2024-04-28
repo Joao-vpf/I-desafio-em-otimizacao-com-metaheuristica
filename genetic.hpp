@@ -110,7 +110,7 @@ class gene
 
 		for(int i=0; i<utilities::param.ga_p.P_value; i++)
 		{
-			indexs[i] = utilities::random_range(0, utilities::param.ga_p.max_population);
+			indexs[i] =  i;
 		}
 		
 		int i = 0;
@@ -219,6 +219,46 @@ class gene
 		}
 	}
 	
+	void er(gene& child, gene mother)
+	{
+		vector<set<int>> adj(nodes);
+		int cont=0;
+		child.insert(cont, this->path[0]);
+		
+		for(int i=0; i<nodes; i++)
+		{
+			adj[this->path[i]].insert((i+1<nodes ? this->path[i+1] : this->path[0]));
+			adj[this->path[i]].insert((i-1>-1 ? this->path[i-1] : this->path[nodes-1]));
+			adj[mother.path[i]].insert((i+1<nodes ? mother.path[i+1] : mother.path[0]));
+			adj[mother.path[i]].insert((i-1>-1 ? mother.path[i-1] : mother.path[nodes-1]));
+		}
+
+		while(cont<nodes-1)
+		{
+			bool ok=0;
+			for(auto e : adj[child.path[cont]])
+			{
+				if(child.not_repeat_insert(cont+1, e))
+				{
+					cont++;
+					ok=1;
+					break;
+				}
+			}
+
+			while(!ok)
+			{
+				int item = utilities::random_range(0, nodes);
+				if(child.not_repeat_insert(cont+1, item))
+				{
+					cont++;
+					ok=1;
+				}
+			} 
+		}
+
+		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
+	}
 
 	void opt_path()
 	{
@@ -328,6 +368,9 @@ public:
 		if (cross == "VR")
 			vr(child, genes);
 
+		if (cross == "ER")
+			er(child, mother);
+
 		return child;
 
 	}
@@ -355,6 +398,9 @@ public:
 
 		if (cross == "CX")
 			cx(child, mother);
+
+		if (cross == "ER")
+			er(child, mother);
 			
 		return child;
 	}
