@@ -106,11 +106,11 @@ class gene
 				Function that performs the crossover with the Voting Recombination Crossover method.
 		*/
 
-		vector<int> indexs(utilities::param.ga_p.P_value);
+		set<int> indexs;
 
-		for(int i=0; i<utilities::param.ga_p.P_value; i++)
+		while(int(indexs.size()) < utilities::param.ga_p.P_value)
 		{
-			indexs[i] =  i;
+			indexs.insert(utilities::random_range(0, utilities::param.ga_p.max_population));
 		}
 		
 		int i = 0;
