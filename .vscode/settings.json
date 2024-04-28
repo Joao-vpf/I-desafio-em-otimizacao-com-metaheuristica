@@ -1,6 +1,23 @@
 {
     "files.associations": {
         "vector": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "iosfwd": "cpp",
+        "optional": "cpp",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xlocmon": "cpp",
+        "xtr1common": "cpp",
+        "xutility": "cpp",
+        "ostream": "cpp",
+        "xlocale": "cpp",
+        "xstring": "cpp",
+        "cmath": "cpp",
+        "xtree": "cpp",
+        "format": "cpp",
+        "random": "cpp",
+        "set": "cpp",
+        "utility": "cpp"
     }
 }
