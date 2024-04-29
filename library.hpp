@@ -121,6 +121,12 @@ struct GA_Params
 	}
 };
 
+struct ABC_Params
+{
+	int max_population;
+	int max_generations;
+};
+
 class params
 {
 	/*
