@@ -5,6 +5,7 @@
 #include <random>
 #include <fstream>
 #include <cstdlib>
+#include <chrono>
 #include <limits.h>
 #include <algorithm>
 #include <vector>
@@ -21,8 +22,8 @@
 
 using namespace std;
 
-random_device rd;
-mt19937 gen(rd());
+unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+mt19937 gen(seed);
 
 struct annealing_params{
 	/*
@@ -513,6 +514,22 @@ public:
 		
 		uniform_int_distribution<> dis(start, end-1);
 		return dis(gen);
+	}
+
+	static LD random_range_01()
+	{
+		/*
+			Objective:
+				Find a random number between the 0 and 1.
+		*/
+
+		uniform_int_distribution<> dis(0, 100);
+		int value_gen = dis(gen); 
+		
+		if(!value_gen)
+			return 0;
+
+		return 100/dis(gen);
 	}
 
 	static void input_points(string source = INPUT_FILE)
