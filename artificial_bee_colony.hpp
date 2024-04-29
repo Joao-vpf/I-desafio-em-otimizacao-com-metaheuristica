@@ -37,32 +37,7 @@ class bee
         this->contain = a.contain;
     }
 
-    void random_path(const int& initial, bool reapeat = 0)
-	{
-		/*
-			Objective:
-				Method that creates a random path.
-		*/
 
-		path[0] = initial;
-		repath[initial] = 0;
-		contain[initial] = 1;
-		
-		for (int i = 1; i < nodes; i++)
-		{
-			int idx = utilities::random_range(0, nodes);
-			
-			while (!reapeat && contain[idx])
-			{
-				idx = utilities::random_range(0, nodes);
-			}
-
-			path[i] = idx;
-			repath[idx] = i;
-			contain[idx] = 1;
-		}
-		this->fit = utilities::Fx_fit(this->path, this->nodes, this->contain);
-	}
 
 };
 

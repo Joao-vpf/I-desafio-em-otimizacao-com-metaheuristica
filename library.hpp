@@ -390,6 +390,58 @@ public:
 	static params param;
 	static int n_cities;
 	static vector<point> city;
+	
+	static void random_path(const int& initial,const bool& reapeat, LD& fit, vector<int>& path, vector<bool>& contain)
+	{
+		/*
+			Objective:
+				Method that creates a random path.
+		*/
+
+		path[0] = initial;
+		contain[initial] = 1;
+		
+		for (int i = 1; i < n_cities; i++)
+		{
+			int idx = utilities::random_range(0, n_cities);
+			
+			while (!reapeat && contain[idx])
+			{
+				idx = utilities::random_range(0, n_cities);
+			}
+
+			path[i] = idx;
+			contain[idx] = 1;
+		}
+		fit = Fx_fit(path, n_cities, contain);
+	}
+
+	static void random_path(const int& initial,const bool& reapeat, LD& fit, vector<int>& path, vector<int>& repath, vector<bool>& contain)
+	{
+		/*
+			Objective:
+				Method that creates a random path.
+		*/
+
+		path[0] = initial;
+		repath[initial] = 0;
+		contain[initial] = 1;
+		
+		for (int i = 1; i < n_cities; i++)
+		{
+			int idx = utilities::random_range(0, n_cities);
+			
+			while (!reapeat && contain[idx])
+			{
+				idx = utilities::random_range(0, n_cities);
+			}
+
+			path[i] = idx;
+			repath[idx] = i;
+			contain[idx] = 1;
+		}
+		fit = Fx_fit(path, n_cities, contain);
+	}
 
 	static LD euclidian_distance(point a, point b)
 	{
