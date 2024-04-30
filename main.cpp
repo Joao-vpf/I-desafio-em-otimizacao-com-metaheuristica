@@ -12,6 +12,6 @@ int main()
 	//cout.tie(0);
 	utilities::input_points();
 	TSP a;
-	//a.run();
-	a.best_params_ga();
+	a.run();
+	//a.best_params_ga();
 }

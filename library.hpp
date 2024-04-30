@@ -83,6 +83,7 @@ struct GA_Params
 	int P_limiar;
 	bool VR;
 	vector<string> cross_active;
+	vector<int> probabilities = {40, 30, 5, 5, 20};
 	int number_active_cross;
 
 	GA_Params()
@@ -120,12 +121,6 @@ struct GA_Params
 		if (idx == cross_active.end())
 			cross_active.erase(idx);
 	}
-};
-
-struct ABC_Params
-{
-	int max_population;
-	int max_generations;
 };
 
 class params
@@ -294,10 +289,12 @@ public:
 				if (value == 0)
 				{
 					ga_p.cross_active_delete("BCR");
+					ga_p.probabilities[0] = 0;
 				}
 				else
 				{
 					ga_p.cross_active_insert("BCR");
+					ga_p.probabilities[0] = 40;
 				}
 				continue;
 			}
@@ -308,10 +305,12 @@ public:
 				if (value == 0)
 				{
 					ga_p.cross_active_delete("AHCAVG");
+					ga_p.probabilities[1] = 30;
 				}
 				else
 				{
 					ga_p.cross_active_insert("AHCAVG");
+					ga_p.probabilities[1] = 0;
 				}
 				continue;
 			}
@@ -322,10 +321,12 @@ public:
 				if (value == 0)
 				{
 					ga_p.cross_active_delete("CX");
+					ga_p.probabilities[2] = 5;
 				}
 				else
 				{
 					ga_p.cross_active_insert("CX");
+					ga_p.probabilities[2] = 0;
 				}
 				continue;
 			}
@@ -337,11 +338,13 @@ public:
 				{
 					ga_p.VR = 0;
 					ga_p.cross_active_delete("VR");
+					ga_p.probabilities[3] = 5;
 				}
 				else
 				{
 					ga_p.VR = 1;
 					ga_p.cross_active_insert("VR");
+					ga_p.probabilities[3] = 0;
 				}
 				continue;
 			}
@@ -352,10 +355,12 @@ public:
 				if (value == 0)
 				{
 					ga_p.cross_active_delete("ER");
+					ga_p.probabilities[4] = 10;
 				}
 				else
 				{
 					ga_p.cross_active_insert("ER");
+					ga_p.probabilities[4] = 0;
 				}
 				continue;
 			}

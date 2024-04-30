@@ -530,6 +530,14 @@ class genetic
 		for (int it = 1; it <= utilities::param.ga_p.max_generations; it++)
 		{	
 			sort(genes.begin(), genes.end(), order);
+			
+			if (it%1000 == 0)
+			{	 
+				seed = std::chrono::system_clock::now().time_since_epoch().count();
+				gen = mt19937(seed);
+				if(utilities::param.ga_p.verbose == 1)
+					print_verbose(it / 1000);
+			}
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
@@ -559,23 +567,13 @@ class genetic
 			for (int i =  utilities::param.ga_p.tx_elite; i <  utilities::param.ga_p.max_population; i++)
 			{
 				int rate = utilities::random_range(0, 100);
-				if (rate <= utilities::param.ga_p.roulette && new_generation[i].fit > genes[utilities::param.ga_p.tx_elite-1].fit)
+				if (rate <= utilities::param.ga_p.roulette)
 				{
 					new_generation[i].mutation_swap();
 				}
 			}
 
 			genes = new_generation;
-
-			if (it%1000 == 0)
-			{	 
-				seed = std::chrono::system_clock::now().time_since_epoch().count();
-				gen = mt19937(seed);
-				if(utilities::param.ga_p.verbose == 1)
-					print_verbose(it / 1000);
-			}
-
-
 		}
 	}
 
