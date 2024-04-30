@@ -160,8 +160,8 @@ class gene
 		*/
 
 		gene bastard(nodes);
-		bastard.random_path(mother.path[0]);
-		child.random_path(this->path[0]);
+		utilities::random_path(mother.path[0], 0, bastard.fit, bastard.path, bastard.repath, bastard.contain);
+		utilities::random_path(mother.path[0], 0, child.fit, child.path, child.repath, child.contain);
 		vector<vector<int>> cycles;
 		vector<bool> visited(nodes + 1, false);
 
@@ -317,33 +317,6 @@ public:
 		path.assign(n, -1);
 		repath.assign(n, -1);
 		contain.assign(n, 0);
-	}
-
-	void random_path(const int& initial, bool reapeat = 0)
-	{
-		/*
-			Objective:
-				Method that creates a random path.
-		*/
-
-		path[0] = initial;
-		repath[initial] = 0;
-		contain[initial] = 1;
-		
-		for (int i = 1; i < nodes; i++)
-		{
-			int idx = utilities::random_range(0, nodes);
-			
-			while (!reapeat && contain[idx])
-			{
-				idx = utilities::random_range(0, nodes);
-			}
-
-			path[i] = idx;
-			repath[idx] = i;
-			contain[idx] = 1;
-		}
-		this->fit = utilities::Fx_fit(this->path, this->nodes, this->contain);
 	}
 
 	gene cross_mutation(gene mother, vector<gene> genes)
@@ -618,21 +591,10 @@ class genetic
 
 		for (int i = 0; i < population; i++)
 		{
-			int j = 0;
-			
-			if(utilities::param.ga_p.fix_init!=-1)
-				genes[i].not_repeat_insert(j, utilities::param.ga_p.fix_init), j++;
-
-			while (j < n_cities)
-			{
-				int city = utilities::random_range(0, n_cities); 
-				if (genes[i].not_repeat_insert(j, city))
-				{
-					j++;
-				}
-			}
-
-			genes[i].fit = utilities::Fx_fit(genes[i].path, n_cities, genes[i].contain);
+			if (utilities::param.ga_p.fix_init == -1)
+				utilities::random_path(utilities::random_range(0, utilities::n_cities), 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);			
+			else
+				utilities::random_path(utilities::param.ga_p.fix_init, 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);	
 		}
 	}
 	
