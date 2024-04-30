@@ -18,6 +18,14 @@
         "format": "cpp",
         "random": "cpp",
         "set": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "*.tcc": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "limits": "cpp"
     }
 }

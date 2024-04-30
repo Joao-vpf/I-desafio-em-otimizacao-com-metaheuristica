@@ -17,6 +17,7 @@
 #define LL long long
 #define ULL unsigned long long
 #define LD long double
+#define MAXD numeric_limits<double>::max()
 #define INF 1e16
 
 using namespace std;
