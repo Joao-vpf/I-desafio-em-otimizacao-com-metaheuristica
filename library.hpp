@@ -17,7 +17,7 @@
 #define INPUT_FILE "input.txt"
 #define LL long long
 #define ULL unsigned long long
-#define LD long double
+#define LD double
 #define INF 1e16
 
 using namespace std;
@@ -444,7 +444,7 @@ public:
 		fit = Fx_fit(path, n_cities, contain);
 	}
 
-	static LD euclidian_distance(point a, point b)
+	static LD euclidian_distance(const point& a, const point& b)
 	{
 		/*
 			Objective:
@@ -454,7 +454,7 @@ public:
 		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
 	}
 
-	static LD Fx_fit(vector<int> path, int n, vector<bool> contain)
+	static LD Fx_fit(const vector<int>& path, const int& n, const vector<bool>& contain)
 	{
 		/*
 			Objective:
@@ -483,7 +483,7 @@ public:
 		return fit;
 	}
 
-	static LD Fx_fit(vector<int> path, int n)
+	static LD Fx_fit(const vector<int>& path, const int& n)
 	{
 		/*
 			Objective:

@@ -15,7 +15,7 @@ class gene
 
 	*/
 
-	void bcr(gene& child, gene mother)
+	void bcr(gene& child, const gene& mother)
 	{
 		/* Best Cost Route crossover
 			Objective:
@@ -49,7 +49,54 @@ class gene
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 
-	void arithmetic_average(gene& child, gene mother)
+	void vr(gene& child, const vector<gene>& genes)
+	{	
+		/* Voting Recombination Crossover
+			Objective:
+				Function that performs the crossover with the Voting Recombination Crossover method.
+		*/
+
+		set<int> indexs;
+
+		while(int(indexs.size()) < utilities::param.ga_p.P_value)
+		{
+			indexs.insert(utilities::random_range(0, utilities::param.ga_p.max_population));
+		}
+		
+		int i = 0;
+
+		if (utilities::param.ga_p.fix_init != -1)
+		{
+			i = 1;
+			child.insert(0, utilities::param.ga_p.fix_init); 
+		}
+
+
+		for(; i<nodes; i++)
+		{
+			vector<int> aux(nodes+1, utilities::param.ga_p.P_limiar); 
+			int item=-1;
+			
+			for(auto j : indexs)
+			{
+				aux[genes[j].path[i]]--;
+				if(!aux[genes[j].path[i]])
+				{
+					item = genes[j].path[i];
+					break;
+				}
+			}
+
+			if(item != -1)
+				child.insert(i, item);
+			else
+				child.insert(i, utilities::random_range(0,nodes));
+		}
+		
+		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
+	}
+
+	void arithmetic_average(gene& child, const gene& mother)
 	{
 		/* Arithmetic Average
 			Objective:
@@ -99,60 +146,7 @@ class gene
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 
-	void vr(gene& child, const vector<gene>& genes)
-	{	
-		/* Voting Recombination Crossover
-			Objective:
-				Function that performs the crossover with the Voting Recombination Crossover method.
-		*/
-
-		set<int> indexs;
-
-		while(int(indexs.size()) < utilities::param.ga_p.P_value)
-		{
-			indexs.insert(utilities::random_range(0, utilities::param.ga_p.max_population));
-		}
-		
-		int i = 0;
-
-		if (utilities::param.ga_p.fix_init != -1)
-		{
-			i = 1;
-			child.insert(0, utilities::param.ga_p.fix_init); 
-		}
-
-
-		for(; i<nodes; i++)
-		{
-			vector<int> aux(nodes+1, utilities::param.ga_p.P_limiar); 
-			int item=-1;
-			
-			for(auto j : indexs)
-			{
-				aux[genes[j].path[i]]--;
-				if(!aux[genes[j].path[i]])
-				{
-					item = genes[j].path[i];
-					break;
-				}
-			}
-
-			if(item != -1)
-				child.insert(i, item);
-			else
-			{
-				if(utilities::random_range(0, 2))
-					while(!child.not_repeat_insert(i, utilities::random_range(0, nodes)));
-
-				else
-					child.insert(i, utilities::random_range(0,nodes));
-			}
-		}
-		
-		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
-	}
-
-	void cx(gene& child, gene mother)
+	void cx(gene& child, const gene& mother)
 	{ 
 		/* Cycle Crossover
 			Objective:
@@ -219,7 +213,7 @@ class gene
 		}
 	}
 	
-	void er(gene& child, gene mother)
+	void er(gene& child, const gene& mother)
 	{
 		/* Edge Recombination crossover
 			Objective:
@@ -319,7 +313,7 @@ public:
 		contain.assign(n, 0);
 	}
 
-	gene cross_mutation(gene mother, vector<gene> genes)
+	gene cross_mutation(const gene& mother,const vector<gene>& genes)
 	{
 		/*
 			Objective:
@@ -382,7 +376,7 @@ public:
 			
 		return child;
 	}
-		
+
 	void mutation_swap()
 	{
 		/*
@@ -404,7 +398,7 @@ public:
 		opt_path();
 	}
 
-	bool not_repeat_insert(int i, int x)
+	bool not_repeat_insert(const int& i, const int& x)
 	{
 		/*
 			Objective:
@@ -420,7 +414,7 @@ public:
 		return true;
 	}
 
-	void insert(int i, int x)
+	void insert(const int& i, const int& x)
 	{
 		/*
 			Objective:
@@ -530,11 +524,12 @@ class genetic
 			Objective:
 				Function with the objective of simulating the generations of the algorithm, choosing between the active crossover types and optimizers.
 		*/
+	
+		vector<gene> new_generation(population, gene(n_cities));
 		
 		for (int it = 1; it <= utilities::param.ga_p.max_generations; it++)
 		{	
 			sort(genes.begin(), genes.end(), order);
-			vector<gene> new_generation(population, gene(n_cities));
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
@@ -573,7 +568,9 @@ class genetic
 			genes = new_generation;
 
 			if (it%1000 == 0)
-			{	
+			{	 
+				seed = std::chrono::system_clock::now().time_since_epoch().count();
+				gen = mt19937(seed);
 				if(utilities::param.ga_p.verbose == 1)
 					print_verbose(it / 1000);
 			}
@@ -598,7 +595,7 @@ class genetic
 		}
 	}
 	
-	void print_verbose(int x)
+	void print_verbose(const int& x)
 	{
 		/*
 			Objective:

@@ -36,13 +36,13 @@ public:
 
 		GA_Params best;
 		LD best_med = INF;
+		for (int opt_path_swap_it = 10; opt_path_swap_it < 60; opt_path_swap_it+=10)
 		for (int elite = 10; elite <= 50; elite+=10)
 		for (int alpha = 10; alpha<60; alpha+=10)
-		for (int tx_mutation_AHCAVG = 10; tx_mutation_AHCAVG < 80; tx_mutation_AHCAVG+=10)
 		for (int P_limiar = 2; P_limiar < 10; P_limiar++)
 		for (int P_value = 10; P_value < 50; P_value+=10)
 		for (int roulette = 10; roulette < 110; roulette+=10)
-		for (int opt_path_swap_it = 10; opt_path_swap_it < 60; opt_path_swap_it+=10)
+		for (int tx_mutation_AHCAVG = 10; tx_mutation_AHCAVG < 80; tx_mutation_AHCAVG+=10)
 		for (int bcr = 0; bcr<2; bcr++)
 		for (int AHCAVG = 0; AHCAVG<2; AHCAVG++)
 		for (int vr = 0; vr<2; vr++)
