@@ -132,7 +132,7 @@ public:
     {
 
         double sum_p = 0.0;
-        double rng = utilities::random_range(0,1);
+        double rng = utilities::random_range(0, 1);
 
         for (int i = 0; i < m; i++)
         {
@@ -152,10 +152,13 @@ public:
         for (int i = 0; i < l; l++)
         {
             int index = select_alpha();
-            
+
             cont_alpha[index]++;
+
             vector<int> solution = greedyRandomizedConstruction(alpha[index]);
+
             local_Search(solution);
+
             solution_alpha[index] += best_cost;
 
             update_probability(i);
