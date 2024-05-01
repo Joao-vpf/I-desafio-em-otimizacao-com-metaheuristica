@@ -12,7 +12,7 @@ public:
             t0 - Initial temperature.
             tf - Final temperature.
             l - Number of iterations (exchanges) to be performed on the current solution.
-            alfa - Temperature variation rate.
+            alpha - Temperature variation rate.
             s - Vector containing the best path.
             s_cost - Cost of the current solution.
     */
@@ -20,7 +20,7 @@ public:
     LD t0;
     LD tf;
     int l;
-    LD alfa;
+    LD alpha;
     vector<int> s;
     LD s_cost;
 
@@ -29,7 +29,7 @@ public:
         t0 = utilities::param.ann_p.t0;
         tf = utilities::param.ann_p.tf;
         l = utilities::param.ann_p.l;
-        alfa = utilities::param.ann_p.alfa;
+        alpha = utilities::param.ann_p.alpha;
         s = s_initial;
         s_cost = s_cost_initial;
     }
@@ -54,7 +54,7 @@ public:
             if(s_cost == ns_cost)
                 s = n_s;
 
-            t = alfa*t;
+            t = alpha*t;
         }
 
         return s_cost; 
