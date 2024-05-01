@@ -18,13 +18,13 @@ public:
     {
         best_solution = s_initial;
         best_cost = s_cost_initial;
-        m; // = utilities::param.grasp_p.alpha;
+        m = utilities::param.grasp_p.m;
         p_alpha = vector<double>(m, 1 / m);
         cont_alpha = vector<int>(m, 0);
         solution_alpha = vector<double>(m, 1 / m);
-        vector<double> alpha; // = utilities::param.grasp_p.alpha;
-        beta = 4;             // utilities::param.grasp_p.beta;
-        l = 1000;             // utilities::param.grasp_p.l;
+        vector<double> alpha = utilities::param.grasp_p.alpha;
+        beta = utilities::param.grasp_p.beta;
+        l = utilities::param.grasp_p.l;
     }
 
     vector<int> greedyRandomizedConstruction(double alpha)
