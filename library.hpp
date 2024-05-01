@@ -18,7 +18,7 @@
 #define INPUT_FILE "input.txt"
 #define LL long long
 #define ULL unsigned long long
-#define LD double
+#define LD long double
 #define INF 1e16
 
 using namespace std;
@@ -104,6 +104,7 @@ struct GA_Params
 	int tx_mutation_AHCAVG;
 	int fix_init;
 	int P_value;
+	int repetition_limit;
 	int P_limiar;
 	vector<int> cross_active = { 80, 80, 95, 95, 5};
 
@@ -119,6 +120,7 @@ struct GA_Params
 		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 60;
+		repetition_limit = 20;
 		P_value = 4;
 		P_limiar = 3;
 		opt_path_swap_it = 50;
@@ -327,7 +329,7 @@ public:
 				continue;
 			}
 			
-			if (in_param == "genetic.cross_active.CX")
+			if (in_param == "genetic.cross_active.PMX")
 			{
 				control_params >> value;
 				if(value>=0 && value<=100)

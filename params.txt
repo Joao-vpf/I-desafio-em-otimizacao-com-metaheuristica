@@ -1,19 +1,20 @@
 annealing
 genetic
-genetic.cross_active.CX 5
-genetic.cross_active.BCR 80
-genetic.cross_active.AHCAVG 80
-genetic.cross_active.VR 95
-genetic.cross_active.ER 95
-genetic.P_limiar 5
+genetic.cross_active.PMX 100
+genetic.cross_active.BCR 0
+genetic.cross_active.AHCAVG 0
+genetic.cross_active.VR 0
+genetic.cross_active.ER 0
+genetic.P_limiar 3
 genetic.P_value  20
 genetic.tx_elite 10
 genetic.tx_mutation_AHCAVG 60
-genetic.roulette 90
-genetic.opt_path_swap_it 50 
+genetic.roulette 80
+genetic.opt_path_swap_it 20 
 genetic.max_population 20
 genetic.max_generations 50000
 genetic.alpha 10
 genetic.fix_init -1
 genetic.verbose 1
+genetic.simple_verbose 1
 end

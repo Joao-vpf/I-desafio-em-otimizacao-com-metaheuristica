@@ -21,42 +21,57 @@ class gene
 			Objective:
 				Function that performs the crossover with the Best Cost Route crossover method.
 		*/
-		
-		child = mother;
-		int best = child.fit;
+
+		child = *this;
 		vector<int> new_path;
 		unordered_set<int> cut;
 		
-		while (int(cut.size()) < nodes/2)
+		if(utilities::random_range()%2 == 0)
 		{
-			cut.insert(utilities::random_range((utilities::param.ga_p.fix_init == -1 ? 0 : utilities::param.ga_p.fix_init), nodes));
-		}
+			child = mother;
+			vector<int> new_path;
+			unordered_set<int> cut;
 
-		for(auto e: cut)
+			while (int(cut.size()) < nodes/2)
+			{
+				cut.insert(this->path[utilities::random_range((utilities::param.ga_p.fix_init == -1 ? 0 : utilities::param.ga_p.fix_init), nodes)]);
+			}
+		}
+		else
+		{
+			while (int(cut.size()) < nodes/2)
+			{
+				cut.insert(mother.path[utilities::random_range((utilities::param.ga_p.fix_init == -1 ? 0 : utilities::param.ga_p.fix_init), nodes)]);
+			}
+		}
+		
+			
+		for(auto e : cut)
 		{
 			new_path = child.path;
-			new_path.erase(new_path.begin()+child.repath[e]);
-
+			new_path.erase(new_path.begin() + child.repath[e]);
 			for(int i=(utilities::param.ga_p.fix_init == -1 ? 0 : 1); i<nodes; i++)
 			{
 				LD new_fit=INF;
-				
-				new_path.emplace(new_path.begin()+i, e);
-				new_fit = utilities::Fx_fit(new_path, nodes, mother.contain);
+				new_path.emplace(new_path.begin() + i, e);
+				new_fit = utilities::Fx_fit(new_path, nodes,child.contain);
 
-				if(new_fit<best)
+				if(new_fit < child.fit)
 				{
-					best = new_fit;
 					child.path = new_path;
+					child.fit = new_fit;
 				}
-				
-				new_path.erase(new_path.begin()+i);
+				new_path.erase(new_path.begin() + i);
 			}
 			
-			for(int i=0; i<nodes; i++)
-				child.repath[child.path[i]] = i;
+			child.contain.assign(nodes, 0);
+			for (int i = 0; i < nodes; i++)
+				child.repath[child.path[i]] = i, child.contain[child.path[i]] = 1;
+
 		}
+
 	}
+
 
 	void vr(gene& child, const vector<gene>& genes)
 	{	
@@ -81,16 +96,15 @@ class gene
 			for(int j=utilities::param.ga_p.P_value-1; j>-1; j--)
 			{
 				aux[genes[j].path[i]]--;
-				if(!aux[genes[j].path[i]])
-				{
-					child.insert(i,genes[j].path[i]);
+				if(!aux[genes[j].path[i]] && child.not_repeat_insert(i,genes[j].path[i]))
 					break;
-				}
 			}
+		}
 
+		for (i=0; i<nodes; i++)
+		{
 			if(child.path[i] == -1)
-				child.insert(i, genes[utilities::random_range(0, utilities::param.ga_p.P_value)].path[i]);
-
+				while(!child.not_repeat_insert(i,utilities::random_range(0, nodes)));
 		}
 
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
@@ -146,71 +160,78 @@ class gene
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 
-	void cx(gene& child, const gene& mother)
+	void pmx(gene& child, const gene& mother)
 	{ 
-		/* Cycle Crossover
+		/* PMX Crossover
 			Objective:
-				Function that performs the crossover with the Cycle Crossover method.
+				Function that performs the crossover with the PMX Crossover method.
 		*/
 
-		gene bastard(nodes);
-		utilities::random_path(mother.path[0], 0, bastard.fit, bastard.path, bastard.repath, bastard.contain);
-		utilities::random_path(mother.path[0], 0, child.fit, child.path, child.repath, child.contain);
-		vector<vector<int>> cycles;
-		vector<bool> visited(nodes + 1, false);
+		int idx = utilities::random_range(0, nodes);
+		int idy = idx;
 
-		for (int i = 0; i < nodes; ++i)
+		while(idy == idx)
+			idy = utilities::random_range(0, nodes);
+
+		if(idx>idy)
+			swap(idx, idy);
+
+		if(false and utilities::random_range()%2 == 0)
 		{
-			if (!visited[this->path[i]])
-			{
-				vector<int> cycle = { static_cast<int>(i) };
-				visited[this->path[i]] = true;
+			for(int i=idx; i<=idy; i++)
+				child.insert(i, mother.path[i]);
 
-				int j = mother.repath[this->path[i]];
-				if (j == -1)
+			for(int i=idx; i<=idy; i++)
+			{
+				if (!child.contain[this->path[i]])
 				{
-					continue;
-				}
-				while (j != cycle[0] and !visited[j])
-				{
-					cycle.push_back(j);
-					visited[j] = true;
-					j = mother.repath[this->path[j]];
-					if (j == -1)
-					{
-						break;
+					int find = this->path[i];
+					int index = i;
+					while (index >= idx && index<=idy)
+					{						
+						find = mother.path[index];
+						index = this->repath[find];
 					}
+					child.insert(index, this->path[i]);
 				}
-				cycles.push_back(cycle);
 			}
-		}
 
-		size_t cycle_index = 0;
-		for (auto& cycle : cycles)
-		{
-			for (auto u : cycle)
+			for(int i=0; i<nodes; i++)
 			{
-				if (cycle_index % 2 == 0)
-				{
-					child.insert(u, this->path[u]);
-					bastard.insert(u, mother.path[u]);
-				}
-				else
-				{
-					child.insert(u, mother.path[u]);
-					bastard.insert(u, this->path[u]);
-				}
+				if(child.path[i] == -1)
+					child.insert(i, this->path[i]);
 			}
-			cycle_index++;
+
+			child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
+			return;
 		}
 
-		bastard.fit = utilities::Fx_fit(bastard.path, bastard.nodes, bastard.contain);
-		child.fit = utilities::Fx_fit(child.path, child.nodes, child.contain);
+		
+		for(int i=idx; i<=idy; i++)
+			child.insert(i, this->path[i]);
 
-		if (child.fit > bastard.fit)
+		for(int i=idx; i<=idy; i++)
 		{
-			child = bastard;
+			if (!child.contain[mother.path[i]])
+			{
+				int find = mother.path[i];
+				int index = i;
+				while (index >= idx && index<=idy)
+				{						
+					find = this->path[index];
+					index = mother.repath[find];
+				}
+				child.insert(index, mother.path[i]);
+			}
 		}
+
+		for(int i=0; i<nodes; i++)
+		{
+			if(child.path[i] == -1)
+				child.insert(i, mother.path[i]);
+		}
+
+		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 	
 	void er(gene& child, const gene& mother)
@@ -269,11 +290,11 @@ class gene
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
 			vector<int> path_copy = path;
-			int idxA = utilities::random_range(1, nodes - 2);
-			int idxB = utilities::random_range(1, nodes - 2);
+			int idxA = utilities::random_range(1, nodes);
+			int idxB = utilities::random_range(1, nodes);
 
 			while (idxB == idxA)
-				idxB = utilities::random_range(1, nodes - 2);
+				idxB = utilities::random_range(1, nodes);
 
 			if (idxA > idxB)
 				swap(idxA, idxB);
@@ -292,6 +313,9 @@ class gene
 				this->fit = utilities::Fx_fit(this->path, this->nodes, this->contain);
 			}
 		}
+
+		for (int i = 0; i < nodes; i++)
+			this->repath[this->path[i]] = i;
 	}
 
 public:
@@ -321,34 +345,34 @@ public:
 		*/
 
 		gene child(nodes);
-		
-		if (utilities::random_range(0, 100) < utilities::param.ga_p.cross_active[0])
+
+		if (utilities::random_range(1, 100) < utilities::param.ga_p.cross_active[0])
 		{
 			bcr(child, mother);
 			return child;
 		}
 		
-		if (utilities::random_range(0, 100) < utilities::param.ga_p.cross_active[2])
+		if (utilities::random_range(1, 100) < utilities::param.ga_p.cross_active[2])
 		{
 			er(child, mother);
 			return child;
 		}
-
-		if ( utilities::random_range(0, 100) < utilities::param.ga_p.cross_active[1])
+		
+		if ( utilities::random_range(1, 100) < utilities::param.ga_p.cross_active[1])
 		{
 			arithmetic_average(child, mother);
 			return child;
-		}
-				
-		if (utilities::random_range(0, 100) <utilities::param.ga_p.cross_active[3])
+		}	
+
+		if (utilities::random_range(1, 100) <utilities::param.ga_p.cross_active[3])
 		{
 			vr(child, genes);
 			return child;
 		}
 					
-		if(utilities::random_range(0, 100) <utilities::param.ga_p.cross_active[4])
+		if(utilities::random_range(1, 100) <utilities::param.ga_p.cross_active[4])
 		{
-			cx(child, mother);
+			pmx(child, mother);
 			return child;
 		}
 						
@@ -364,8 +388,8 @@ public:
 				Optimization method in the function that chooses two random index from the gene and exchanges their values.
 		*/
 
-		int idxA = utilities::random_range(1, nodes - 2);
-		int idxB = utilities::random_range(1, nodes - 2);
+		int idxA = utilities::random_range(1, nodes);
+		int idxB = utilities::random_range(1, nodes);
 
 		swap(this->path[idxA], this->path[idxB]);
 		LD new_fit = utilities::Fx_fit(this->path,this->nodes, this->contain);
@@ -373,9 +397,10 @@ public:
 		if (new_fit > fit)
 			swap(this->path[idxA], this->path[idxB]);
 		else
-			fit = new_fit;
+			fit = new_fit;	
 
 		opt_path();
+		set<int> st;
 	}
 
 	bool not_repeat_insert(const int& i, const int& x)
@@ -506,18 +531,25 @@ class genetic
 		*/
 	
 		vector<gene> new_generation(population, gene(n_cities));
-		
-		for (int it = 1; it <= utilities::param.ga_p.max_generations; it++)
+		int it = 1, limit =0;
+		LD ant=INF;
+
+		while(it<utilities::param.ga_p.max_generations && limit < utilities::param.ga_p.repetition_limit)
 		{	
 			sort(genes.begin(), genes.end(), order);
-			
-			if (it%1000 == 0)
-			{	 
-				seed = std::chrono::system_clock::now().time_since_epoch().count();
+
+			if(ant == genes[0].fit)
+			{
+				seed = chrono::system_clock::now().time_since_epoch().count();
 				gen = mt19937(seed);
-				if(utilities::param.ga_p.verbose == 1)
-					print_verbose(it / 1000);
+				limit++;
 			}
+			else
+				limit = 0;
+			
+			ant = min(genes[0].fit, ant);
+			if(utilities::param.ga_p.verbose == 1)
+				print_verbose(it);
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
@@ -551,6 +583,7 @@ class genetic
 			}
 
 			genes = new_generation;
+			it++;
 		}
 	}
 
