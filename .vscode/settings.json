@@ -26,6 +26,9 @@
         "unordered_map": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "unordered_set": "cpp",
+        "list": "cpp",
+        "xhash": "cpp"
     }
 }

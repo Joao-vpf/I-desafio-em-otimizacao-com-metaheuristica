@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <vector>
 #include <set>
+#include <unordered_set>
 #include <math.h>
 
 #define PARAMS_FILE "params.txt"
@@ -104,9 +105,7 @@ struct GA_Params
 	int fix_init;
 	int P_value;
 	int P_limiar;
-	bool VR;
-	vector<string> cross_active;
-	int number_active_cross;
+	vector<int> cross_active = { 80, 80, 95, 95, 5};
 
 	GA_Params()
 	{
@@ -122,27 +121,11 @@ struct GA_Params
 		roulette = 60;
 		P_value = 4;
 		P_limiar = 3;
-		VR = 1;
 		opt_path_swap_it = 50;
 		alpha = 70;
-		cross_active = { "BCR", "AHCAVG","CX", "VR", "ER"};
-		number_active_cross = 5;
+		cross_active = { 80, 80, 95, 95, 5};
 	}
 
-
-	void cross_active_delete(string code)
-	{
-		auto idx = find(cross_active.begin(), cross_active.end(), code);
-		if (idx != cross_active.end())
-			cross_active.erase(idx);
-	}
-
-	void cross_active_insert(string code)
-	{
-		auto idx = find(cross_active.begin(), cross_active.end(), code);
-		if (idx == cross_active.end())
-			cross_active.erase(idx);
-	}
 };
 
 class params
@@ -309,80 +292,47 @@ public:
 			if (in_param == "genetic.cross_active.BCR")
 			{
 				control_params >> value;
-				if (value == 0)
-				{
-					ga_p.cross_active_delete("BCR");
-				}
-				else
-				{
-					ga_p.cross_active_insert("BCR");
-				}
+				if(value>=0 && value<=100)
+					ga_p.cross_active[0] = value;
 				continue;
 			}
 
 			if (in_param == "genetic.cross_active.AHCAVG")
 			{
 				control_params >> value;
-				if (value == 0)
-				{
-					ga_p.cross_active_delete("AHCAVG");
-				}
-				else
-				{
-					ga_p.cross_active_insert("AHCAVG");
-				}
+				if(value>=0 && value<=100)
+					ga_p.cross_active[1] = value;
 				continue;
 			}
 
-			if (in_param == "genetic.cross_active.CX")
+			if (in_param == "genetic.cross_active.ER")
 			{
 				control_params >> value;
-				if (value == 0)
-				{
-					ga_p.cross_active_delete("CX");
-				}
-				else
-				{
-					ga_p.cross_active_insert("CX");
-				}
+				if(value>=0 && value<=100)
+					ga_p.cross_active[2] = value;
 				continue;
 			}
 
 			if (in_param == "genetic.cross_active.VR")
 			{
 				control_params >> value;
-				if (value == 0)
-				{
-					ga_p.VR = 0;
-					ga_p.cross_active_delete("VR");
-				}
-				else
-				{
-					ga_p.VR = 1;
-					ga_p.cross_active_insert("VR");
-				}
+				if(value>=0 && value<=100)
+					ga_p.cross_active[3] = value;
 				continue;
 			}
 			
-			if (in_param == "genetic.cross_active.ER")
+			if (in_param == "genetic.cross_active.CX")
 			{
 				control_params >> value;
-				if (value == 0)
-				{
-					ga_p.cross_active_delete("ER");
-				}
-				else
-				{
-					ga_p.cross_active_insert("ER");
-				}
+				if(value>=0 && value<=100)
+					ga_p.cross_active[4] = value;
 				continue;
 			}
 		}
 
-		ga_p.P_value = min(ga_p.P_value, ga_p.max_population);
-		ga_p.P_limiar = min(ga_p.P_limiar, ga_p.P_value);
+		ga_p.P_value = max(0,min(ga_p.P_value, ga_p.max_population));
+		ga_p.P_limiar = max(0,min(ga_p.P_limiar, ga_p.P_value));
 		ga_p.tx_elite = (ga_p.tx_elite*ga_p.max_population)/100;
-		ga_p.number_active_cross = ga_p.cross_active.size();
 	}
 };
 

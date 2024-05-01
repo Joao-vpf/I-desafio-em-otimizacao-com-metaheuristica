@@ -1,10 +1,10 @@
 annealing
 genetic
-genetic.cross_active.CX 0
-genetic.cross_active.BCR 1
-genetic.cross_active.AHCAVG 1
-genetic.cross_active.VR 0
-genetic.cross_active.ER 1
+genetic.cross_active.CX 5
+genetic.cross_active.BCR 80
+genetic.cross_active.AHCAVG 80
+genetic.cross_active.VR 95
+genetic.cross_active.ER 95
 genetic.P_limiar 5
 genetic.P_value  20
 genetic.tx_elite 10

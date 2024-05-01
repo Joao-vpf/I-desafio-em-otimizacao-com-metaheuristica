@@ -21,32 +21,41 @@ class gene
 			Objective:
 				Function that performs the crossover with the Best Cost Route crossover method.
 		*/
-
-		int cut = utilities::random_range(1, nodes);
-
-		for (int i = 0; i < cut; i++)
+		
+		child = mother;
+		int best = child.fit;
+		vector<int> new_path;
+		unordered_set<int> cut;
+		
+		while (int(cut.size()) < nodes/2)
 		{
-			child.insert(i, this->path[i]);
+			cut.insert(utilities::random_range((utilities::param.ga_p.fix_init == -1 ? 0 : utilities::param.ga_p.fix_init), nodes));
 		}
 
-		for (int i = 0; i < nodes && cut < nodes; i++)
+		for(auto e: cut)
 		{
-			if (!child.contain[mother.path[i]])
+			new_path = child.path;
+			new_path.erase(new_path.begin()+child.repath[e]);
+
+			for(int i=(utilities::param.ga_p.fix_init == -1 ? 0 : 1); i<nodes; i++)
 			{
-				child.insert(cut++, mother.path[i]);
-			}
-		}
+				LD new_fit=INF;
+				
+				new_path.emplace(new_path.begin()+i, e);
+				new_fit = utilities::Fx_fit(new_path, nodes, mother.contain);
 
-		while (cut < nodes)
-		{
-			int microgene_mutant = utilities::random_range(0, nodes);
-			if (!child.contain[microgene_mutant])
-			{
-				child.insert(cut++, microgene_mutant);
+				if(new_fit<best)
+				{
+					best = new_fit;
+					child.path = new_path;
+				}
+				
+				new_path.erase(new_path.begin()+i);
 			}
+			
+			for(int i=0; i<nodes; i++)
+				child.repath[child.path[i]] = i;
 		}
-
-		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 
 	void vr(gene& child, const vector<gene>& genes)
@@ -55,13 +64,6 @@ class gene
 			Objective:
 				Function that performs the crossover with the Voting Recombination Crossover method.
 		*/
-
-		set<int> indexs;
-
-		while(int(indexs.size()) < utilities::param.ga_p.P_value)
-		{
-			indexs.insert(utilities::random_range(0, utilities::param.ga_p.max_population));
-		}
 		
 		int i = 0;
 
@@ -74,25 +76,23 @@ class gene
 
 		for(; i<nodes; i++)
 		{
-			vector<int> aux(nodes+1, utilities::param.ga_p.P_limiar); 
-			int item=-1;
+			vector<int> aux(nodes+1, utilities::param.ga_p.P_limiar);
 			
-			for(auto j : indexs)
+			for(int j=utilities::param.ga_p.P_value-1; j>-1; j--)
 			{
 				aux[genes[j].path[i]]--;
 				if(!aux[genes[j].path[i]])
 				{
-					item = genes[j].path[i];
+					child.insert(i,genes[j].path[i]);
 					break;
 				}
 			}
 
-			if(item != -1)
-				child.insert(i, item);
-			else
-				child.insert(i, utilities::random_range(0,nodes));
+			if(child.path[i] == -1)
+				child.insert(i, genes[utilities::random_range(0, utilities::param.ga_p.P_value)].path[i]);
+
 		}
-		
+
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 
@@ -321,59 +321,40 @@ public:
 		*/
 
 		gene child(nodes);
-		int idx = utilities::random_range(0,  utilities::param.ga_p.number_active_cross);
 		
-		if (idx == -1)
-			return 0;
-
-		string cross =  utilities::param.ga_p.cross_active[idx];
-		
-		if ( utilities::random_range(0, 100) < 80)
+		if (utilities::random_range(0, 100) < utilities::param.ga_p.cross_active[0])
+		{
 			bcr(child, mother);
+			return child;
+		}
 		
-		else
-			if ( utilities::random_range(0, 100) < 80)
-				arithmetic_average(child, mother);
-
-			else
-				if (utilities::random_range(0, 100) < 95)
-					er(child, mother);
-				
-				else
-					vr(child, genes);
-
-		return child;
-
-	}
-
-	gene operator+ (gene mother)
-	{
-		/*
-			Objective:
-				Method that chooses which crossover will be made.
-		*/
-
-		gene child(nodes);
-		int idx = utilities::random_range(0,  utilities::param.ga_p.number_active_cross);
-		
-		if (idx == -1)
-			return 0;
-
-		string cross =  utilities::param.ga_p.cross_active[idx];
-		
-		if (cross == "BCR")
-			bcr(child, mother);
-		
-		if (cross == "AHCAVG")
-			arithmetic_average(child, mother);
-
-		if (cross == "CX")
-			cx(child, mother);
-
-		if (cross == "ER")
+		if (utilities::random_range(0, 100) < utilities::param.ga_p.cross_active[2])
+		{
 			er(child, mother);
-			
+			return child;
+		}
+
+		if ( utilities::random_range(0, 100) < utilities::param.ga_p.cross_active[1])
+		{
+			arithmetic_average(child, mother);
+			return child;
+		}
+				
+		if (utilities::random_range(0, 100) <utilities::param.ga_p.cross_active[3])
+		{
+			vr(child, genes);
+			return child;
+		}
+					
+		if(utilities::random_range(0, 100) <utilities::param.ga_p.cross_active[4])
+		{
+			cx(child, mother);
+			return child;
+		}
+						
+		bcr(child, mother);
 		return child;
+
 	}
 
 	void mutation_swap()
@@ -557,10 +538,7 @@ class genetic
 					roulette_wheel_selection(father, mother);
 				}
 
-				if (utilities::param.ga_p.VR == 0)
-					new_generation[i] = genes[father] + genes[mother];
-				else
-					new_generation[i] = genes[father].cross_mutation(genes[mother], genes);
+				new_generation[i] = genes[father].cross_mutation(genes[mother], genes);
 			}
 			
 			for (int i =  utilities::param.ga_p.tx_elite; i <  utilities::param.ga_p.max_population; i++)
