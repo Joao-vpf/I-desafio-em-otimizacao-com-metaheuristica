@@ -332,7 +332,7 @@ public:
 			bcr(child, mother);
 		
 		else
-			if ( utilities::random_range(0, 100) < 70)
+			if ( utilities::random_range(0, 100) < 80)
 				arithmetic_average(child, mother);
 
 			else
