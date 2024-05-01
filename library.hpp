@@ -147,7 +147,7 @@ public:
 
 	params()
 	{
-		hybrid.assign(2, 0);
+		hybrid.assign(3, 0);
 	}
 
 	params(string source)
@@ -157,7 +157,7 @@ public:
 				An alternate constructor that allows initializing the parameters from a text file.
 		*/
 
-		hybrid.assign(2, 0);
+		hybrid.assign(3, 0);
 		ifstream control_params(source);
 		string in_param;
 
@@ -173,6 +173,12 @@ public:
 			{
 				hybrid[1] = true;
 			}
+
+			if(in_param == "grasp")
+			{
+				hybrid[2] = true;
+			}
+
 		}
 	}
 	

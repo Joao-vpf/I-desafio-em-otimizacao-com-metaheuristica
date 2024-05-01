@@ -2,6 +2,7 @@
 #include "library.hpp"
 #include "genetic.hpp"
 #include "annealing.hpp"
+#include "grasp.hpp"
 
 class TSP
 {
@@ -10,21 +11,39 @@ public:
 	void run()
 	{
 		genetic ga(utilities::n_cities);
-		LD best= INF;
+		LD best = INF;
 		vector<int> path;
-		if(utilities::param.hybrid[0])
-		{	
+		if (utilities::param.hybrid[0])
+		{
 			ga.activate();
 			best = ga.best_fit();
 			path = ga.best_path();
 		}
 
-		if(utilities::param.hybrid[1])
+		if (utilities::param.hybrid[1])
 		{
 			annealing ann(path, best);
-			best = min(best,ann.solution());
+			LD best_ann = ann.solution();
+
+			if (best_ann < best)
+			{
+				best = best_ann;
+				path = ann.best_solution;
+			}
 		}
-		
-		cout << best <<endl;
+
+		if (utilities::param.hybrid[2])
+		{
+			grasp gra(path, best);
+			LD best_gra = gra.solution();
+
+			if (best_gra < best)
+			{
+				best = best_gra;
+				path = gra.best_solution;
+			}
+		}
+
+		cout << best << endl;
 	}
 };
