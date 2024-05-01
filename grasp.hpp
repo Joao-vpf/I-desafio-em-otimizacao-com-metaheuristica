@@ -117,7 +117,7 @@ public:
             double sum_q = 0.0;
             for (int i = 0; i < m; ++i)
             {
-                q[i] = MAXD - best_cost / a[i];
+                q[i] = INF - best_cost / a[i];
                 sum_q += q[i];
             }
 
@@ -146,7 +146,7 @@ public:
         }
     }
 
-    void solution()
+    LD solution()
     {
 
         for (int i = 0; i < l; l++)
@@ -163,5 +163,7 @@ public:
 
             update_probability(i);
         }
+
+        return best_cost;
     }
 };
