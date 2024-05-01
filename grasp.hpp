@@ -22,7 +22,7 @@ public:
         p_alpha = vector<double>(m, 1 / m);
         cont_alpha = vector<int>(m, 0);
         solution_alpha = vector<double>(m, 1 / m);
-        vector<double> alpha = utilities::param.grasp_p.alpha;
+        alpha = utilities::param.grasp_p.alpha;
         beta = utilities::param.grasp_p.beta;
         l = utilities::param.grasp_p.l;
     }
@@ -30,36 +30,47 @@ public:
     vector<int> greedyRandomizedConstruction(double alpha)
     {
         vector<int> solution;
-        vector<point> candidateSet = utilities::city;
-        vector<double> candidate_value;
+        vector<point> candidate_list = utilities::city;
+        vector<int> candidate_Position;
+        vector<LD> candidate_dist;
 
-        while (!candidateSet.empty())
+        for(int i = 0;i < utilities::n_cities; i++)candidate_Position.push_back(i);
+
+        int index = utilities::random_range(0,candidate_list.size());
+        solution.push_back(candidate_Position[index]);
+        candidate_Position.erase(candidate_Position.begin() + index);
+        candidate_list.erase(candidate_list.begin() + index);
+
+
+        while (!candidate_list.empty())
         {
             double d_min = numeric_limits<double>::infinity();
             double d_max = -1.0;
-            for (const auto &candidate : candidateSet)
+            for (int k = 0;k < candidate_list.size(); k++)
             {
-                double d = utilities::euclidian_distance(solution.empty() ? point{0, 0} : utilities::city[solution.back()], candidate);
-                candidate_value.push_back(d);
+                double d = utilities::euclidian_distance(utilities::city[solution.back()], candidate_list[k]);
+                candidate_dist.push_back(d);
                 d_min = min(d_min, d);
                 d_max = max(d_max, d);
             }
 
-            // Constrói a lista restrita de candidatos (RCL)
             vector<int> RCL;
 
             for (int i = 0; i < utilities::n_cities; i++)
             {
-                if (candidate_value[i] <= d_min + alpha * (d_max - d_min))
+                if (candidate_dist[i] <= d_min + alpha * (d_max - d_min))
                 {
-                    RCL.push_back(i);
+                    RCL.push_back(candidate_Position[i]);
                 }
             }
 
-            int randomIndex = rand() % RCL.size();
+            int randomIndex = utilities::random_range(0,RCL.size());
             solution.push_back(RCL[randomIndex]);
 
-            candidateSet.erase(candidateSet.begin() + randomIndex - 1);
+            candidate_dist.clear();
+            candidate_list.erase(candidate_list.begin() + randomIndex);
+            candidate_Position.erase(candidate_Position.begin() + randomIndex);
+
         }
 
         return solution;
@@ -94,8 +105,10 @@ public:
                 }
             }
         }
+        if(best_cost > local_Cost){
         best_solution = solution_local;
         best_cost = local_Cost;
+        }
     }
 
     void update_probability(int i)
@@ -141,23 +154,25 @@ public:
             {
                 return i;
             }
-
-            return m - 1;
         }
+
+        return m - 1;
     }
 
     LD solution()
     {
 
-        for (int i = 0; i < l; l++)
+        for (int i = 0; i < l; i++)
         {
             int index = select_alpha();
 
             cont_alpha[index]++;
-
             vector<int> solution = greedyRandomizedConstruction(alpha[index]);
-
+            for (int i = 0; i < best_solution.size(); ++i) {
+        	    cout << best_solution[i] << " ";
+    	    }
             local_Search(solution);
+            cout<<endl<<i<<": "<<best_cost<<endl;
 
             solution_alpha[index] += best_cost;
 

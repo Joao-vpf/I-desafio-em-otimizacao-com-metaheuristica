@@ -1,5 +1,4 @@
-annealing
-genetic
+grasp
 genetic.cross_active.CX 5
 genetic.cross_active.BCR 80
 genetic.cross_active.AHCAVG 80

@@ -40,7 +40,7 @@ struct grasp_params{
 			beta - Value used as a criterion to determine when to update the probabilities.
     */
 
-	int l = 1000;
+	int l = 100;
     int m = 5;
     vector<int> cont_alpha;
     vector<double> p_alpha;

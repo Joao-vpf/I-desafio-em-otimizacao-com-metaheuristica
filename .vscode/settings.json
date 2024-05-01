@@ -29,6 +29,7 @@
         "limits": "cpp",
         "unordered_set": "cpp",
         "list": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "span": "cpp"
     }
 }
