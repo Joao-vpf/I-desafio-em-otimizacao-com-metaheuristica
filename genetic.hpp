@@ -328,24 +328,19 @@ public:
 
 		string cross =  utilities::param.ga_p.cross_active[idx];
 		
-		if ( utilities::random_range(0, 100) < 70)
+		if ( utilities::random_range(0, 100) < 80)
 			bcr(child, mother);
 		
 		else
-			if ( utilities::random_range(0, 100) < 60)
+			if ( utilities::random_range(0, 100) < 70)
 				arithmetic_average(child, mother);
 
 			else
-				if (utilities::random_range(0, 100) < 90)
+				if (utilities::random_range(0, 100) < 95)
 					er(child, mother);
 				
 				else
-					if (utilities::random_range(0, 100) < 95)
-						vr(child, genes);
-					
-					else
-						cx(child, mother);
-
+					vr(child, genes);
 
 		return child;
 
