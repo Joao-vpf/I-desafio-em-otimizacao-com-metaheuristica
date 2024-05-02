@@ -3,12 +3,12 @@ genetic
 genetic.P_limiar 2
 genetic.P_value  20
 genetic.tx_elite 10
-genetic.roulette 100
+genetic.roulette 60
 genetic.opt_path_swap_it 80 
 genetic.max_population 20
 genetic.max_generations 50000
 genetic.alpha 10
 genetic.fix_init -1
-genetic.verbose 0
+genetic.verbose 1
 genetic.simple_verbose 1
 end
