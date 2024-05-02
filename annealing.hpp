@@ -34,30 +34,46 @@ public:
         s_cost = s_cost_initial;
     }
 
+    void perturbPath(std::vector<int> &path)
+    {
+        int idx1 = utilities::random_range(0, path.size() - 1);
+        int idx2 = utilities::random_range(0, path.size() - 1);
+        std::swap(path[idx1], path[idx2]);
+    }
+
     LD solution()
     {
         LD t = t0;
-        for(int i = 0; i < l && t>=tf; i++)
+        vector<int> local_s = best_solution;
+        LD local_cost = s_cost;
+
+        while (t >= tf)
         {
-            vector<int> n_s = best_solution;
-
-            random_shuffle(n_s.begin(),n_s.end());
-            LD ns_cost = utilities::Fx_fit(n_s,utilities::n_cities);
-            LD delta = ns_cost - s_cost;
-            
-            if (delta < 0 || exp(-delta / t) > ((LD)rand() / RAND_MAX))
+            for (int i = 0; i < l; i++)
             {
-                s_cost = ns_cost;
-                best_solution = n_s;
+                vector<int> n_s = local_s;
+
+                perturbPath(n_s);
+
+                LD ns_cost = utilities::Fx_fit(n_s, utilities::n_cities);
+                LD delta = ns_cost - local_cost;
+
+                if (delta < 0 || exp(-delta / t) > ((LD)rand() / RAND_MAX))
+                {
+                    local_cost = ns_cost;
+                    local_s = n_s;
+                }
+
+                if (local_cost <= s_cost)
+                {
+                    best_solution = local_s;
+                    s_cost = local_cost;
+                }
+
+                t = t * alpha;
             }
-
-            if(s_cost == ns_cost)
-                best_solution = n_s;
-
-            t = alpha*t;
         }
 
-        return s_cost; 
+        return s_cost;
     }
-
 };
