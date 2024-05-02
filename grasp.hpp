@@ -34,19 +34,22 @@ public:
         vector<int> candidate_Position;
         vector<LD> candidate_dist;
 
-        for(int i = 0;i < utilities::n_cities; i++)candidate_Position.push_back(i);
+        for (int i = 0; i < utilities::n_cities; i++)
+            candidate_Position.push_back(i);
 
-        int index = utilities::random_range(0,candidate_list.size());
+        int index = utilities::random_range(0, candidate_list.size());
         solution.push_back(candidate_Position[index]);
+
         candidate_Position.erase(candidate_Position.begin() + index);
         candidate_list.erase(candidate_list.begin() + index);
 
 
         while (!candidate_list.empty())
         {
+
             double d_min = numeric_limits<double>::infinity();
             double d_max = -1.0;
-            for (int k = 0;k < candidate_list.size(); k++)
+            for (int k = 0; k < candidate_list.size(); k++)
             {
                 double d = utilities::euclidian_distance(utilities::city[solution.back()], candidate_list[k]);
                 candidate_dist.push_back(d);
@@ -54,23 +57,23 @@ public:
                 d_max = max(d_max, d);
             }
 
-            vector<int> RCL;
+            vector<pair<int,int>> RCL;
 
-            for (int i = 0; i < utilities::n_cities; i++)
+            for (int i = 0; i < candidate_dist.size(); i++)
             {
                 if (candidate_dist[i] <= d_min + alpha * (d_max - d_min))
-                {
-                    RCL.push_back(candidate_Position[i]);
+                {   
+                    RCL.push_back(make_pair(candidate_Position[i],i));
                 }
             }
 
-            int randomIndex = utilities::random_range(0,RCL.size());
-            solution.push_back(RCL[randomIndex]);
-
+            int randomIndex = utilities::random_range(0, RCL.size());
+            solution.push_back(RCL[randomIndex].first);
+            
             candidate_dist.clear();
-            candidate_list.erase(candidate_list.begin() + randomIndex);
-            candidate_Position.erase(candidate_Position.begin() + randomIndex);
 
+            candidate_Position.erase(candidate_Position.begin() + RCL[randomIndex].second);
+            candidate_list.erase(candidate_list.begin() + RCL[randomIndex].second);
         }
 
         return solution;
@@ -105,9 +108,10 @@ public:
                 }
             }
         }
-        if(best_cost > local_Cost){
-        best_solution = solution_local;
-        best_cost = local_Cost;
+        if (best_cost > local_Cost)
+        {
+            best_solution = solution_local;
+            best_cost = local_Cost;
         }
     }
 
@@ -168,11 +172,10 @@ public:
 
             cont_alpha[index]++;
             vector<int> solution = greedyRandomizedConstruction(alpha[index]);
-            for (int i = 0; i < best_solution.size(); ++i) {
-        	    cout << best_solution[i] << " ";
-    	    }
+            
             local_Search(solution);
-            cout<<endl<<i<<": "<<best_cost<<endl;
+            cout << endl
+                 << i << ": " << best_cost << endl;
 
             solution_alpha[index] += best_cost;
 

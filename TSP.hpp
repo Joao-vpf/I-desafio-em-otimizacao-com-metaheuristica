@@ -49,6 +49,10 @@ public:
 				path = gra.best_solution;
 			}
 		}
+		
+		for (int i = 0; i < path.size(); ++i) {
+        std::cout << path[i] << " ";
+    }
 
 		cout<< endl << best << endl;
 	}
