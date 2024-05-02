@@ -55,6 +55,8 @@ public:
 		chrono::duration<double> time = end - start;
 		cout << "Tempo decorrido: " << time.count() << " segundos" << endl;
 		cout << best << endl;
+		cout << "path: ";
+		for(auto i :path)cout<<i<<" ";
 
 	}
 };

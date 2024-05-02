@@ -61,10 +61,10 @@ struct annealing_params{
             alpha - Temperature variation rate.
     */
 
-	LD t0 = 100000;
-    LD tf = 0.001;
-    int l = 100000;
-    LD alpha = 0.05;
+	LD t0 = 10000;
+    LD tf = 0.01;
+    int l = 1000;
+    LD alpha = 0.9;
 
 };
 
