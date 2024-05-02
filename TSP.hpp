@@ -10,6 +10,7 @@ class TSP
 public:
 	void run()
 	{
+		auto start = chrono::system_clock::now();
 		genetic ga(utilities::n_cities);
 		LD best = INF;
 		vector<int> path;
@@ -24,7 +25,7 @@ public:
 		{
 			annealing ann(path, best);
 			LD best_ann = ann.solution();
-
+			
 			if (best_ann < best)
 			{
 				best = best_ann;
@@ -44,6 +45,9 @@ public:
 			}
 		}
 
+    	auto end = chrono::system_clock::now();
+		chrono::duration<double> time = end - start;
+		cout << "Tempo decorrido: " << time.count() << " segundos" << endl;
 		cout << best << endl;
 	}
 };

@@ -72,7 +72,6 @@ class gene
 
 	}
 
-
 	void vr(gene& child, const vector<gene>& genes)
 	{	
 		/* Voting Recombination Crossover
@@ -170,7 +169,7 @@ class gene
 		int idx = utilities::random_range(0, nodes);
 		int idy = idx;
 
-		while(idy == idx)
+		while(abs(idx - idy) < 2)
 			idy = utilities::random_range(0, nodes);
 
 		if(idx>idy)
@@ -243,7 +242,7 @@ class gene
 
 		vector<set<int>> adj(nodes);
 		int cont=0;
-		child.insert(cont, this->path[0]);
+		child.insert(cont, (utilities::random_range()%2 ? mother.path[0] : this->path[0]));
 		
 		for(int i=0; i<nodes; i++)
 		{
@@ -337,7 +336,7 @@ public:
 		contain.assign(n, 0);
 	}
 
-	gene cross_mutation(const gene& mother,const vector<gene>& genes)
+	gene cross(const gene& mother,const vector<gene>& genes)
 	{
 		/*
 			Objective:
@@ -358,25 +357,13 @@ public:
 			return child;
 		}
 		
-		if ( utilities::random_range(1, 100) < utilities::param.ga_p.cross_active[1])
-		{
-			arithmetic_average(child, mother);
-			return child;
-		}	
-
 		if (utilities::random_range(1, 100) <utilities::param.ga_p.cross_active[3])
 		{
 			vr(child, genes);
 			return child;
 		}
-					
-		if(utilities::random_range(1, 100) <utilities::param.ga_p.cross_active[4])
-		{
-			pmx(child, mother);
-			return child;
-		}
 						
-		bcr(child, mother);
+		pmx(child, mother);
 		return child;
 
 	}
@@ -531,7 +518,8 @@ class genetic
 		*/
 	
 		vector<gene> new_generation(population, gene(n_cities));
-		int it = 1, limit =0;
+		utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0};
+		int it = 1, limit =0, alter = 0;
 		LD ant=INF;
 
 		while(it<utilities::param.ga_p.max_generations && limit < utilities::param.ga_p.repetition_limit)
@@ -543,9 +531,16 @@ class genetic
 				seed = chrono::system_clock::now().time_since_epoch().count();
 				gen = mt19937(seed);
 				limit++;
+				if(limit >= utilities::param.ga_p.repetition_limit/4)
+				{
+					if (alter > 2)
+						utilities::param.ga_p.cross_active = { utilities::random_range(40, 90) , utilities::random_range(0, 80), utilities::random_range(40, 90), utilities::random_range(10, 50), 0}, alter=0;
+					else
+						alter++;
+				}
 			}
 			else
-				limit = 0;
+				limit = 0, utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0}, alter = 0;
 			
 			ant = min(genes[0].fit, ant);
 			if(utilities::param.ga_p.verbose == 1)
@@ -570,10 +565,10 @@ class genetic
 					roulette_wheel_selection(father, mother);
 				}
 
-				new_generation[i] = genes[father].cross_mutation(genes[mother], genes);
+				new_generation[i] = genes[father].cross(genes[mother], genes);
 			}
 			
-			for (int i =  utilities::param.ga_p.tx_elite; i <  utilities::param.ga_p.max_population; i++)
+			for (int i = 0; i <  utilities::param.ga_p.max_population; i++)
 			{
 				int rate = utilities::random_range(0, 100);
 				if (rate <= utilities::param.ga_p.roulette)

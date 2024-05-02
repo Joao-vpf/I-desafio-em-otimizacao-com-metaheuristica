@@ -106,7 +106,7 @@ struct GA_Params
 	int P_value;
 	int repetition_limit;
 	int P_limiar;
-	vector<int> cross_active = { 80, 80, 95, 95, 5};
+	vector<int> cross_active = { 0, 0, 0, 0, 0};
 
 	GA_Params()
 	{
@@ -120,12 +120,12 @@ struct GA_Params
 		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 60;
-		repetition_limit = 20;
+		repetition_limit = 30;
 		P_value = 4;
 		P_limiar = 3;
 		opt_path_swap_it = 50;
 		alpha = 70;
-		cross_active = { 80, 80, 95, 95, 5};
+		cross_active = { 0, 0, 0, 0, 0};
 	}
 
 };
