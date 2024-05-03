@@ -571,6 +571,72 @@ public:
 			city.push_back(point(x, y));
 		}
 	}
+
+	static void opt_2(vector<int>& best_path, LD& best_fit, vector<bool> contain = {})
+	{
+		vector<int> save_path, path_copy;
+		LD cust_copy = INF;
+
+		path_copy = save_path = best_path;
+
+		for (int i =0; i< n_cities; i++)
+		{
+			for(int j = i+1; j< n_cities; j++)
+			{
+				int idxA = i;
+				int idxB = j;
+
+				while (idxA < idxB)
+				{
+					swap(path_copy[idxA], path_copy[idxB]);
+					idxA++;
+					idxB--;
+				}
+				
+				if (contain.empty())
+					cust_copy = utilities::Fx_fit(path_copy, n_cities);
+				else
+					cust_copy = utilities::Fx_fit(path_copy, n_cities, contain);
+
+				if (cust_copy < best_fit)
+				{
+					best_path = path_copy;
+					best_fit = cust_copy;
+				}
+				path_copy = save_path;
+			}
+		}   
+	}
+
+	static void opt_2s(vector<int>& best_path, LD& best_fit, vector<bool> contain = {})
+	{
+		vector<int> path_copy = best_path;
+		LD cust_copy = INF;
+		int idxA = utilities::random_range(1, n_cities);
+		int idxB = utilities::random_range(1, n_cities);
+
+		while (idxB == idxA)
+			idxB = utilities::random_range(1, n_cities);
+
+		if (idxA > idxB)
+			swap(idxA, idxB);
+
+		while (idxA < idxB)
+		{
+			swap(path_copy[idxA], path_copy[idxB]);
+			idxA++;
+			idxB--;
+		}
+		
+		
+		if (contain.empty())
+			cust_copy = utilities::Fx_fit(path_copy, n_cities);
+		else
+			cust_copy = utilities::Fx_fit(path_copy, n_cities, contain);
+
+		if (cust_copy < best_fit)
+			best_path = path_copy,best_fit = cust_copy;
+	}
 };
 
 struct hash_pair 
