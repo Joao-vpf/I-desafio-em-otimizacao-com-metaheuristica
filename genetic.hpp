@@ -169,7 +169,7 @@ class gene
 		int idx = utilities::random_range(0, nodes);
 		int idy = idx;
 
-		while(abs(idx - idy) < 2)
+		while(abs(idx - idy) == 0)
 			idy = utilities::random_range(0, nodes);
 
 		if(idx>idy)
@@ -278,7 +278,7 @@ class gene
 
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
-
+	
 	void opt_path()
 	{
 		/*
@@ -387,7 +387,6 @@ public:
 			fit = new_fit;	
 
 		opt_path();
-		set<int> st;
 	}
 
 	bool not_repeat_insert(const int& i, const int& x)
@@ -519,7 +518,7 @@ class genetic
 	
 		vector<gene> new_generation(population, gene(n_cities));
 		utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0};
-		int it = 1, limit =0, alter = 0;
+		int it = 1, limit =0;
 		LD ant=INF;
 
 		while(it<utilities::param.ga_p.max_generations && limit < utilities::param.ga_p.repetition_limit)
@@ -528,19 +527,14 @@ class genetic
 
 			if(ant == genes[0].fit)
 			{
-				seed = chrono::system_clock::now().time_since_epoch().count();
-				gen = mt19937(seed);
 				limit++;
-				if(limit >= utilities::param.ga_p.repetition_limit/4)
+				if(limit%2 == 0)
 				{
-					if (alter > 2)
-						utilities::param.ga_p.cross_active = { utilities::random_range(40, 90) , utilities::random_range(0, 80), utilities::random_range(40, 90), utilities::random_range(10, 50), 0}, alter=0;
-					else
-						alter++;
+					utilities::param.ga_p.cross_active = { utilities::random_range(40, 90) ,0, utilities::random_range(40, 90), utilities::random_range(10, 50), 0};
 				}
 			}
 			else
-				limit = 0, utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0}, alter = 0;
+				limit = 0, utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0};
 			
 			ant = min(genes[0].fit, ant);
 			if(utilities::param.ga_p.verbose == 1)

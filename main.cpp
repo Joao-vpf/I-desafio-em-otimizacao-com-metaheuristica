@@ -12,5 +12,6 @@ int main()
 	cout.tie(0);
 	utilities::input_points();
 	TSP a;
+	//a.best_params();
 	a.run();
 }

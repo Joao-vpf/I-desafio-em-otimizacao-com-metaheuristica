@@ -120,7 +120,7 @@ struct GA_Params
 		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 60;
-		repetition_limit = 30;
+		repetition_limit = 50;
 		P_value = 4;
 		P_limiar = 3;
 		opt_path_swap_it = 50;
@@ -505,6 +505,11 @@ public:
 
 	static void input_points(string source = INPUT_FILE)
 	{
+		/*
+			Objective:
+				Input points.
+		*/
+
 		ifstream input(source);
 		int n;
 		input >> n;
