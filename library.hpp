@@ -59,10 +59,10 @@ struct ACO_params
 	ACO_params()
 	{
 		fix_init = -1;
-		ants = 5;
+		ants = 10;
 		max_generations = 100; 
 		alpha = 1; 
-		beta = 20; 
+		beta = 2; 
 		decay = 0.05; 
 		local_search = true;
 		verbose = true;
