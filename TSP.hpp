@@ -2,6 +2,7 @@
 #include "library.hpp"
 #include "genetic.hpp"
 #include "annealing.hpp"
+#include "ACO.hpp"
 #include "grasp.hpp"
 
 class TSP
@@ -25,6 +26,8 @@ public:
 			ga.activate();
 			best = ga.best_fit();
 			path = ga.best_path();
+			ACO aco(path);
+			aco.active();
 		}
 
 		if (utilities::param.hybrid[1])
