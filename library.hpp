@@ -28,6 +28,15 @@ using namespace std;
 unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 mt19937 gen(seed);
 
+
+struct ABC_params{
+    int cycles_limit = 1000;
+    int colony_size = 100;
+    double scout_percent = 0.2;
+    double onlooker_percent = 0.5;
+	double employed_percent = 0.5;
+};
+
 struct ACO_params
 {
 	/*
@@ -181,6 +190,7 @@ public:
 	vector<bool> hybrid;
 	annealing_params ann_p;
 	grasp_params grasp_p;
+	ABC_params abc_p;
 	GA_Params ga_p;
 	ACO_params aco_p;
 
@@ -216,6 +226,11 @@ public:
 			if(in_param == "grasp")
 			{
 				hybrid[2] = true;
+			}
+
+			if(in_param == "ABC")
+			{
+				hybrid[4] = true;
 			}
 
 		}
@@ -381,7 +396,6 @@ public:
 	}
 };
 
-
 struct point {
 	/*
 		Objective:
@@ -391,7 +405,6 @@ struct point {
 	LD X, Y;
 	point(LD x, LD y) : X(x), Y(y) {}
 };
-
 
 class utilities
 {
