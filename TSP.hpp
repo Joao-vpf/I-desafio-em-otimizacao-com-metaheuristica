@@ -2,6 +2,7 @@
 #include "library.hpp"
 #include "genetic.hpp"
 #include "annealing.hpp"
+#include "ACO.hpp"
 #include "grasp.hpp"
 
 class TSP
@@ -25,6 +26,8 @@ public:
 			ga.activate();
 			best = ga.best_fit();
 			path = ga.best_path();
+			ACO aco(path);
+			aco.active();
 		}
 
 		if (utilities::param.hybrid[1])
@@ -51,12 +54,32 @@ public:
 			}
 		}
 		
-    auto end = chrono::system_clock::now();
+    	auto end = chrono::system_clock::now();
 		chrono::duration<double> time = end - start;
 		cout << "Tempo decorrido: " << time.count() << " segundos" << endl;
 		cout << best << endl;
 		cout << "path: ";
 		for(auto i :path)cout<<i<<" ";
 
+	}
+
+	void best_params()
+	{
+		LD best = INF, min_time = INF;
+		LD best_med =0, current_time = INF;
+		for(int j=0; j<5; j++)
+		{
+			auto start = chrono::system_clock::now();
+			genetic ga(utilities::n_cities);
+			ga.activate();
+			best_med += ga.best_fit();
+			auto end = chrono::system_clock::now();
+			chrono::duration<double> time = end - start;
+			if(time.count() < current_time) 
+				current_time = time.count();
+		}
+		best = best_med/5;
+		min_time = current_time;
+		cout  << "Melhor media de resposta: " << best << " Menor tempo de execucao: " <<  min_time <<endl; 
 	}
 };

@@ -5,6 +5,7 @@
 #include <random>
 #include <fstream>
 #include <cstdlib>
+#include <unordered_map>
 #include <chrono>
 #include <limits.h>
 #include <algorithm>
@@ -16,6 +17,7 @@
 #define PARAMS_FILE "params.txt"
 #define BEST_PARAMS_FILE "best_params.txt"
 #define INPUT_FILE "input.txt"
+#define unormap unordered_map
 #define LL long long
 #define ULL unsigned long long
 #define LD long double
@@ -26,6 +28,7 @@ using namespace std;
 unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 mt19937 gen(seed);
 
+
 struct ABC_params{
     int cycles_limit = 1000;
     int colony_size = 100;
@@ -34,7 +37,40 @@ struct ABC_params{
 	double employed_percent = 0.5;
 };
 
-struct grasp_params{
+struct ACO_params
+{
+	/*
+        Objective:
+            A struct responsible for storing parameters for the aco_params algorithm.
+
+        Attributes:
+    */
+
+   	int ants;
+	int max_generations;
+	int alpha;
+	int beta;
+	int decay;
+	int fix_init;
+	int max_opt_it;
+	bool local_search;
+	bool verbose;
+
+	ACO_params()
+	{
+		fix_init = -1;
+		ants = 5;
+		max_generations = 100; 
+		alpha = 1; 
+		beta = 20; 
+		decay = 0.05; 
+		local_search = true;
+		verbose = true;
+	}
+};
+
+struct grasp_params
+{
 	/*
         Objective:
             A struct responsible for storing parameters for the grasp algorithm.
@@ -57,7 +93,8 @@ struct grasp_params{
     int beta = 4;
 };
 
-struct annealing_params{
+struct annealing_params
+{
 	/*
         Objective:
             A struct responsible for storing parameters for the annealing algorithm.
@@ -128,7 +165,7 @@ struct GA_Params
 		tx_mutation_AHCAVG =  20;
 		balance = 0;
 		roulette = 60;
-		repetition_limit = 30;
+		repetition_limit = 50;
 		P_value = 4;
 		P_limiar = 3;
 		opt_path_swap_it = 50;
@@ -155,6 +192,7 @@ public:
 	grasp_params grasp_p;
 	ABC_params abc_p;
 	GA_Params ga_p;
+	ACO_params aco_p;
 
 	params()
 	{
@@ -517,6 +555,11 @@ public:
 
 	static void input_points(string source = INPUT_FILE)
 	{
+		/*
+			Objective:
+				Input points.
+		*/
+
 		ifstream input(source);
 		int n;
 		input >> n;
@@ -527,5 +570,21 @@ public:
 			input >> x >> y;
 			city.push_back(point(x, y));
 		}
+	}
+};
+
+struct hash_pair 
+{
+	template <class T1, class T2>
+	size_t operator()(const pair<T1, T2>& p) const
+	{
+		auto hash1 = hash<T1>{}(p.first);
+		auto hash2 = hash<T2>{}(p.second);
+
+		if (hash1 != hash2) {
+			return hash1 ^ hash2;              
+		}
+		
+		return hash1;
 	}
 };
