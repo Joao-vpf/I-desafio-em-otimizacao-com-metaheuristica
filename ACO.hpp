@@ -155,7 +155,7 @@ class ACO
 				Function to print the best current fit and the path of this ant.
 		*/
 
-		cout << "Generation " << x << ":\n";
+		cout << "ACO Generation " << x << ":\n";
 		cout << "Best: " << best_fit << " cust\n";
 		
 		if ( utilities::param.ga_p.simple_verbose == 0)
