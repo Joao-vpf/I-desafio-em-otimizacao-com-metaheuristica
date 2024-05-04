@@ -31,6 +31,7 @@ mt19937 gen(seed);
 
 struct ABC_params{
     int cycles_limit = 1000;
+	int employed_limit = 500;
     int colony_size = 100;
     double scout_percent = 0.2;
     double onlooker_percent = 0.5;
@@ -196,7 +197,7 @@ public:
 
 	params()
 	{
-		hybrid.assign(3, 0);
+		hybrid.assign(5, 0);
 	}
 
 	params(string source)
@@ -206,7 +207,7 @@ public:
 				An alternate constructor that allows initializing the parameters from a text file.
 		*/
 
-		hybrid.assign(3, 0);
+		hybrid.assign(5, 0);
 		ifstream control_params(source);
 		string in_param;
 

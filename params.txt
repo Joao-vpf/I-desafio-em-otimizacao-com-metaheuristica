@@ -1,15 +1,2 @@
-genetic
-genetic.P_limiar 2
-genetic.P_value  20
-genetic.tx_elite 10
-genetic.roulette 80
-genetic.opt_path_swap_it 80 
-genetic.max_population 87
-genetic.max_generations 5000
-genetic.alpha 10
-genetic.fix_init -1
-genetic.verbose 1
-genetic.simple_verbose 1
+ABC
 end
-grasp
-annealing
