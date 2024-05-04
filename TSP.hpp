@@ -4,6 +4,7 @@
 #include "annealing.hpp"
 #include "ACO.hpp"
 #include "grasp.hpp"
+#include "ABC.hpp"
 
 class TSP
 {
@@ -26,8 +27,8 @@ public:
 			ga.activate();
 			best = ga.best_fit();
 			path = ga.best_path();
-			ACO aco(path);
-			aco.active();
+			//ACO aco(path);
+			//aco.active();
 		}
 
 		if (utilities::param.hybrid[1])
@@ -51,6 +52,18 @@ public:
 			{
 				best = best_gra;
 				path = gra.best_solution;
+			}
+		}
+
+		if (utilities::param.hybrid[4])
+		{
+			ABC abc(path, best);
+			LD best_abc = abc.solution();
+
+			if (best_abc < best)
+			{
+				best = best_abc;
+				path = abc.best_solution;
 			}
 		}
 		

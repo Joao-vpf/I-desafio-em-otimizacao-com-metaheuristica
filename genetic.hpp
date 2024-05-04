@@ -288,29 +288,7 @@ class gene
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
-			vector<int> path_copy = path;
-			int idxA = utilities::random_range(1, nodes);
-			int idxB = utilities::random_range(1, nodes);
-
-			while (idxB == idxA)
-				idxB = utilities::random_range(1, nodes);
-
-			if (idxA > idxB)
-				swap(idxA, idxB);
-
-			while (idxA < idxB)
-			{
-				swap(path_copy[idxA], path_copy[idxB]);
-				idxA++;
-				idxB--;
-			}
-			
-			LD cust_copy = utilities::Fx_fit(path_copy, nodes, contain);
-			if (cust_copy < this->fit)
-			{
-				path = path_copy;
-				this->fit = utilities::Fx_fit(this->path, this->nodes, this->contain);
-			}
+			utilities::opt_2(path,fit,contain);
 		}
 
 		for (int i = 0; i < nodes; i++)
