@@ -257,7 +257,7 @@ class gene
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
-			utilities::opt_2(path, fit);
+			utilities::opt_2s(path, fit);
 		}
 
 		for (int i = 0; i < nodes; i++)
@@ -294,13 +294,16 @@ public:
 		gene child_save(nodes);
 
 		pmx(child, mother);
+	/*
+		if (utilities::random_range(0, 100)  < utilities::param.ga_p.cross_active[0])
+		{
+			bcr(child_save, mother);
 
-		bcr(child_save, mother);
+			if (child_save.fit < child.fit)
+				child = child_save;
 
-		if (child_save.fit < child.fit)
-			child = child_save;
-
-		child_save = gene(nodes);
+			child_save = gene(nodes);
+		}*/
 
 		er(child_save, mother);
 
@@ -310,7 +313,7 @@ public:
 		child_save = gene(nodes);
 
 		vr(child_save, genes);
-		
+
 		if (child_save.fit < child.fit)
 			child = child_save;
 

@@ -1,2 +1,13 @@
-ABC
+genetic
+genetic.P_limiar 5
+genetic.P_value  20
+genetic.tx_elite 10
+genetic.roulette 60
+genetic.opt_path_swap_it 100
+genetic.max_population 30
+genetic.max_generations 10000
+genetic.alpha 10
+genetic.fix_init -1
+genetic.verbose 1
+genetic.simple_verbose 1
 end
