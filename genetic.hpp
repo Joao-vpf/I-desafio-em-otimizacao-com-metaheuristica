@@ -524,14 +524,15 @@ class genetic
 			seed = std::chrono::system_clock::now().time_since_epoch().count();
 			gen = mt19937 (seed);
 
-			if(utilities::param.ga_p.verbose == 1)
-				print_verbose(it);
+			if(utilities::param.ga_p.verbose == 1 && it%100==0)
+				print_verbose(it/100);
 
 			vector<gene> new_generation(population, gene(n_cities));
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
 				new_generation[i] = genes[i];
+				new_generation[i].mutation_swap();
 			}
 
 			for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
@@ -548,17 +549,33 @@ class genetic
 					if(utilities::random_range()%2==0)
 						tournament_selection(father, mother);
 					else
-						roulette_wheel_selection(father, mother);
+					{
+						father = utilities::random_range(0,  population);
+						while(mother  == -1 || mother == father)
+						mother = utilities::random_range(0, population);
+					}
+					
 				}
 				
 				//cout << father << " " << mother <<endl;
 				new_generation[i] = genes[father].cross(genes[mother], genes);
 			}
 
-			for(int i=0; i<population; i++)
+			for(int i=utilities::param.ga_p.tx_elite; i<population; i++)
 			{
 				if(utilities::random_range(0, 100) < utilities::param.ga_p.roulette)
 					new_generation[i].mutation_swap();
+				else
+				{
+					int idxA = utilities::random_range(1, n_cities);
+					int idxB = utilities::random_range(1, n_cities);
+
+					swap(new_generation[i].path[idxA], new_generation[i].path[idxB]);
+					new_generation[i].fit = utilities::Fx_fit(new_generation[i].path,new_generation[i].nodes, new_generation[i].contain);
+					for(int l=0; l<n_cities; l++)
+						new_generation[i].repath[new_generation[i].path[l]] = l;
+
+				}
 			}
 			
 			genes = new_generation;
