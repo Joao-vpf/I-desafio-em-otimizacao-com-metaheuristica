@@ -1,3 +1,4 @@
+#pragma once
 #include "library.hpp"
 
 class ACO
