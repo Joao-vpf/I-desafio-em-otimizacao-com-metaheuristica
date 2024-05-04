@@ -300,6 +300,20 @@ public:
 		if (child_save.fit < child.fit)
 			child = child_save;
 
+		child_save = gene(nodes);
+
+		er(child_save, mother);
+
+		if (child_save.fit < child.fit)
+			child = child_save;
+
+		child_save = gene(nodes);
+
+		vr(child_save, genes);
+		
+		if (child_save.fit < child.fit)
+			child = child_save;
+
 		return child;
 
 	}
