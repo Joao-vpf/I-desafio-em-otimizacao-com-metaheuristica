@@ -57,12 +57,12 @@ struct ABC_params
             Objective:
                 Default constructor initializing parameters with default values.
         */
-        cycles_limit = 1000;
+        cycles_limit = 10000;
         employed_limit = 500;
-        colony_size = 100;
-        scout_percent = 0.2;
-        onlooker_percent = 0.5;
-        employed_percent = 0.5;
+        colony_size = 200;
+        scout_percent = 0.4;
+        onlooker_percent = 0.2;
+        employed_percent = 0.8;
     }
 };
 
