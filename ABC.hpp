@@ -89,19 +89,17 @@ public:
 
         for (int i = onlooker_count; i < colony_size; ++i) 
         {
-            // obs função a priori usa a solução inicial para todas. testar shuffle
-            hive[i].role = 'F';
+            random_shuffle(hive[i].path.begin(),hive[i].path.end());
+            hive[i].role = 'E';
         }
     }
 
     vector<int> update_path(const vector<int> path)
     {
         vector<int> new_path = path;
-        LD new_cost = utilities::Fx_fit(new_path,n_cities);
-        for(int i = 0;i<50;i++){
         int random_idx = utilities::random_range(0, path.size() - 1);
         swap(new_path[random_idx], new_path[random_idx + 1]);
-        }
+        
         return new_path;
     }
 

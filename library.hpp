@@ -31,12 +31,12 @@ mt19937 gen(seed);
 
 
 struct ABC_params{
-    int cycles_limit = 1000;
+    int cycles_limit = 10000;
 	int employed_limit = 500;
     int colony_size = 100;
-    double scout_percent = 0.2;
-    double onlooker_percent = 0.5;
-	double employed_percent = 0.5;
+    double scout_percent = 0.4;
+    double onlooker_percent = 0.2;
+	double employed_percent = 0.8;
 };
 
 
