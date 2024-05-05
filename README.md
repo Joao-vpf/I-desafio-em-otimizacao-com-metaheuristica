@@ -51,12 +51,16 @@ Além disso, há uma fase de "abelhas exploradoras", que é responsável pela in
 
 Ao longo das iterações do algoritmo, as abelhas empregadas, observadoras e exploradoras continuam a explorar o espaço de busca, compartilhando informações e ajustando suas posições com base nas melhores soluções encontradas até o momento.
 
+![ABC image](images/ABC.jpg)
+
 #### Ant Colony Optimization (ACO):
 A Otimização por Colônia de Formigas (ACO) é uma metaheurística baseada em inspirações tiradas do comportamento das formigas ao procurarem comida. Desenvolvida por Marco Dorigo no início da década de 1990, a ACO é usada para resolver problemas de otimização, especialmente aqueles relacionados a problemas de caminho mais curto e problemas de roteamento.
 
 Ele simula o comportamento coletivo das formigas ao procurarem caminhos entre a colônia e fontes de comida. Cada formiga, durante sua busca, deposita feromônios nos caminhos que percorre. A quantidade de feromônio depositada é proporcional à qualidade do caminho (ou à solução) encontrada. Os caminhos com mais feromônios são mais atraentes para outras formigas.
 
 Além disso, há uma evaporação gradual dos feromônios ao longo do tempo. Isso impede que os caminhos continuem sendo atraentes indefinidamente, incentivando a exploração de novos caminhos pela colônia de formigas.
+
+![ACO image](images/ACO.png)
 
 #### Simulated Annealing (SA):
 A metaheurística do recozimento simulado, ou Simulated Annealing (SA) em inglês, é uma técnica de otimização inspirada no processo físico de recozimento de materiais metálicos. Desenvolvida por Kirkpatrick, Gelatt e Vecchi em 1983, o SA é usado para encontrar soluções aproximadas para problemas de otimização complexos.
@@ -68,6 +72,8 @@ O algoritmo é guiado por uma função de custo (ou função de energia), que av
 A chave para o sucesso do SA está na manipulação da temperatura. A temperatura controla a probabilidade de aceitar soluções piores durante a busca. No início, a temperatura é alta, o que permite aceitar movimentos que levam a soluções piores com uma certa probabilidade. Isso ajuda o algoritmo a escapar de ótimos locais subótimos e explorar o espaço de busca de forma mais ampla. À medida que a busca avança, a temperatura é gradualmente reduzida, o que reduz a probabilidade de aceitar soluções piores. Isso permite que o algoritmo se concentre em refinar a solução em torno de ótimos locais locais.
 
 Uma vez que a temperatura atinge um valor mínimo, o algoritmo termina e retorna a melhor solução encontrada durante a busca.
+
+![Annealing image](images/Annealing.png)
 
 #### Genetic algorithm (GA):
 A metaheurística genética é uma técnica de otimização baseada na evolução biológica e na genética. Desenvolvida por John Holland na década de 1960 e popularizada por Goldberg, ela é inspirada nos processos de seleção natural e evolução das espécies.
@@ -81,6 +87,8 @@ Durante o cruzamento (ou crossover), os indivíduos selecionados são combinados
 A mutação introduz aleatoriedade no processo, alterando aleatoriamente alguns genes dos indivíduos. Isso ajuda a explorar novas regiões do espaço de busca e a evitar a estagnação prematura em ótimos locais subótimos.
 
 O processo de seleção, cruzamento e mutação é repetido ao longo de várias gerações até que uma condição de parada seja atingida, como um número máximo de gerações ou a convergência para uma solução satisfatória.
+
+![Genetic image](images/Genetic.png)
 
 #### Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)
 
