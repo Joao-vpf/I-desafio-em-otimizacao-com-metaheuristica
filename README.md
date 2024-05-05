@@ -19,7 +19,7 @@
       - [Crossovers](#Crossovers) 
       - [Técnicas de Seleção](#Técnicas-de-Seleção)  
       - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo) 
-    - [Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)](reactive-greedy-randomized-adaptive-search-procedure-reactive-grasp-1)
+    - [Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)](#reactive-greedy-randomized-adaptive-search-procedure-reactive-grasp-1)
       - [Parâmetros](#parâmetros-1) 
       - [Selecionador de Alfa](##selecionador-de-alfa) 
       - [Construtor de Soluções Guloso](##construtor-de-soluções-guloso) 
