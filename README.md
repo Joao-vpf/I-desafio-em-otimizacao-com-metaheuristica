@@ -126,11 +126,15 @@ Os conjuntos de dados foram selecionados a partir de duas fontes principais:
 
 Essas instâncias foram escolhidas por sua representatividade e desafio computacional, cobrindo uma variedade de tamanhos de problema que variam de pequenos conjuntos de cidades a conjuntos de dados VLSI mais complexos.
 
-### Resultados:
+# Resultados:
+
+## Tecnicas de otimização:
+
+- opt_1: Otimizador conhecido como Single Swap Mutation Operator, em que é escolhido de forma aleatoria dois pontos no caminho que são trocados.
+- opt_2: Otimizador conhecido como Inversion Mutation Operator, em que é percorrido todos os pares com n cidades e esses pares de posições são invertidos.
+- opt_2s: É o mesmo otimizador do opt_2, contudo se difere em que é escolhido de forma aleatoria dois pontos e todo o caminho entre eles é invertido.
 
 ## Metaheurísticas Escolhidas:
-
-### Base:
 
 #### Genetic algorithm (GA):
 A metaheurística genética utilizada tiveram algumas alterações e implementações extras para melhoria na eficiencia, organização e desempenho comparado ao algoritmo base. Podemos listar todos os parametros implemetentados que sÃo:
@@ -153,7 +157,7 @@ cross_active: Armazena quais cruzamentos estão ativos ("BCR" -> Cruzamento da M
 No algoritmo genético, podemos dividir o processo em cinco etapas: ordenação da população com base no fitness, seleção dos genes por meio do elitismo, aplicação do crossover entre dois indivíduos para gerar novos genes, mutação de indivíduos ou a sua otimização e, por fim, salvar os novos genes para a próxima geração.
 
 **Ordenação da população com base no fitness: ** Nessa etapa ocorre a ordenação da população em que aqueles com menor fitnees ficam em primeiro e os com maior fitness ficam por ultimo. <br>
-**Seleção dos genes por meio do elitismo: ** Nessa etapa ocorre a seleção com base na [tx_elite](-tx_elite)
+**Seleção dos genes por meio do elitismo: ** Nessa etapa ocorre a seleção com base na **tx_elite** em que a uma porcentagem da população é salva diretamente para a nova geração e durante isso esse individuo é otimizado usando a tecnica 2 de otimização.
 
 #### Metaheurísticas Descartadas no Projeto
 
