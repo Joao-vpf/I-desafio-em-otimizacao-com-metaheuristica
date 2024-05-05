@@ -164,9 +164,9 @@ public:
             {
                 vector<int> new_path = update_path(best_solution);
 
-                double new_distance = utilities::Fx_fit(new_path, n_cities);
+                double new_cost = utilities::Fx_fit(new_path, n_cities);
 
-                if (new_distance < best_cost)
+                if (new_cost < best_cost)
                 {
                     best_cost = new_cost;
                     best_solution = new_path;
