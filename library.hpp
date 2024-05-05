@@ -18,6 +18,7 @@
 #define BEST_PARAMS_FILE "best_params.txt"
 #define INPUT_FILE "input.txt"
 #define unormap unordered_map
+#define endl "\n"
 #define LL long long
 #define ULL unsigned long long
 #define LD long double
@@ -485,7 +486,7 @@ class utilities
         Objective:
             Utility class containing various useful functions for solving optimization problems.
 
-		Public Attributes:
+		Attributes:
 			param: Object of class params containing algorithm parameters.
 			n_cities: Number of cities.
 			city: Vector containing points representing cities in the Cartesian plane
@@ -685,7 +686,7 @@ public:
 		int n;
 		input >> n;
 		n_cities = n;
-		
+
 		while (n--)
 		{
 			LD x, y;
@@ -699,25 +700,27 @@ public:
 	}
 
 
-	static void opt_2(vector<int>& best_path, LD& best_fit, vector<bool> contain = {})
-	{
-		/*
-			Objective:
-				Implement the 2-opt heuristic for optimizing a path.
-			Parameters:
-				- best_path: Reference to the best path found.
-				- best_fit: Reference to the fitness of the best path found.
-				- contain: Optional vector indicating which cities should be included in the optimization.
-		*/
+		static void opt_2(vector<int>& best_path, LD& best_fit, bool mutation = false, vector<bool> contain = {})
+		{
+			/*
+				Objective:
+					Implement the 2-opt heuristic for optimizing a path.
+
+				Parameters:
+					- best_path: Reference to the best path found.
+					- best_fit: Reference to the fitness of the best path found.
+					- mutation: Flag indicating whether to apply mutation.
+					- contain: Optional vector indicating which cities should be included in the optimization.
+			*/
 
 		vector<int> save_path, path_copy;
 		LD cust_copy = INF;
 
 		path_copy = save_path = best_path;
 
-		for (int i =0; i< n_cities; i++)
+		for (int i = 0; i < n_cities; i++)
 		{
-			for(int j = i+1; j< n_cities; j++)
+			for (int j = i + 1; j < n_cities; j++)
 			{
 				int idxA = i;
 				int idxB = j;
@@ -734,24 +737,27 @@ public:
 				else
 					cust_copy = utilities::Fx_fit(path_copy, n_cities, contain);
 
-				if (cust_copy < best_fit)
-				{
-					best_path = path_copy;
-					best_fit = cust_copy;
-				}
+				if (!mutation && cust_copy < best_fit)
+					best_path = path_copy, best_fit = cust_copy;
+				else
+					if(mutation)
+					best_path = path_copy, best_fit = cust_copy;
+
 				path_copy = save_path;
 			}
 		}   
 	}
 
-	static void opt_2s(vector<int>& best_path, LD& best_fit, vector<bool> contain = {})
+	static void opt_2s(vector<int>& best_path, LD& best_fit, bool mutation = false, vector<bool> contain = {})
 	{
 		/*
 			Objective:
 				Implement the stochastic 2-opt heuristic for optimizing a path.
+
 			Parameters:
 				- best_path: Reference to the best path found.
 				- best_fit: Reference to the fitness of the best path found.
+				- mutation: Flag indicating whether to apply mutation.
 				- contain: Optional vector indicating which cities should be included in the optimization.
 		*/
 
@@ -773,15 +779,18 @@ public:
 			idxB--;
 		}
 		
-		
 		if (contain.empty())
 			cust_copy = utilities::Fx_fit(path_copy, n_cities);
 		else
 			cust_copy = utilities::Fx_fit(path_copy, n_cities, contain);
 
-		if (cust_copy < best_fit)
-			best_path = path_copy,best_fit = cust_copy;
+		if (!mutation && cust_copy < best_fit)
+			best_path = path_copy, best_fit = cust_copy;
+		else
+			if(mutation)
+			best_path = path_copy, best_fit = cust_copy;
 	}
+
 
 
 	static LD calculateR2(LD observed, LD predicted) 

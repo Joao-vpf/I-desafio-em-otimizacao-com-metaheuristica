@@ -1,5 +1,6 @@
 #pragma once
 #include "library.hpp"
+#include "ACO.hpp"
 
 class gene
 {
@@ -257,11 +258,10 @@ class gene
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
-			utilities::opt_2s(path, fit);
+			utilities::opt_2s(path, fit, utilities::random_range()%2);
 		}
 
-		for (int i = 0; i < nodes; i++)
-			this->repath[this->path[i]] = i;
+		recalculation_repath();
 	}
 
 public:
@@ -325,6 +325,12 @@ public:
 
 		return child;
 
+	}
+
+	void recalculation_repath()
+	{
+		for (int i = 0; i < nodes; i++)
+			this->repath[this->path[i]] = i;
 	}
 
 	void mutation_swap()
@@ -538,7 +544,8 @@ class genetic
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
 				new_generation[i] = genes[i];
-				new_generation[i].mutation_swap();
+				utilities::opt_2(new_generation[i].path, new_generation[i].fit);
+				new_generation[i].recalculation_repath();
 			}
 
 			for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
@@ -555,22 +562,9 @@ class genetic
 					if(utilities::random_range()%2==0)
 						tournament_selection(father, mother);
 					else
-					{
-						if(utilities::random_range(0, 100) < 80)
-						{
-							father = utilities::random_range(0,  population);
-							while(mother  == -1 || mother == father)
-							mother = utilities::random_range(0, population);
-						}
-						else
-						{
-							roulette_wheel_selection(father, mother);
-						}
-					}
-					
+						roulette_wheel_selection(father, mother);
 				}
 				
-				//cout << father << " " << mother <<endl;
 				new_generation[i] = genes[father].cross(genes[mother], genes);
 			}
 
@@ -584,10 +578,9 @@ class genetic
 					int idxB = utilities::random_range(1, n_cities);
 
 					swap(new_generation[i].path[idxA], new_generation[i].path[idxB]);
-					new_generation[i].fit = utilities::Fx_fit(new_generation[i].path,new_generation[i].nodes, new_generation[i].contain);
-					for(int l=0; l<n_cities; l++)
-						new_generation[i].repath[new_generation[i].path[l]] = l;
 
+					new_generation[i].fit = utilities::Fx_fit(new_generation[i].path,new_generation[i].nodes, new_generation[i].contain);
+					new_generation[i].recalculation_repath();
 				}
 			}
 			
@@ -609,6 +602,11 @@ class genetic
 				utilities::random_path(utilities::random_range(0, utilities::n_cities), 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);			
 			else
 				utilities::random_path(utilities::param.ga_p.fix_init, 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);	
+			ACO aco(genes[i].path);
+			genes[i].path = aco.get_best_path();
+			genes[i].fit = aco.get_best_fit();
+			for(int l = 0; l < n_cities; l++)
+				genes[i].repath[genes[i].path[l]] = l; 
 		}
 	}
 	

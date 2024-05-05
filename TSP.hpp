@@ -6,20 +6,42 @@
 #include "grasp.hpp"
 #include "ABC.hpp"
 
+
 class TSP
 {
+	/*
+		Objective:
+			Class for solving the Traveling Salesman Problem (TSP) using various optimization algorithms.
+	*/
+
 	void active_metrics(LD best)
 	{
-		if(utilities::param.metrics[0])
-		{
-			utilities::calculateMAE(best, utilities::input_predicted);
-		}
-	}
+		/*
+			Objective:
+				Activates and calculates metrics based on the best solution found.
 
+			Parameters:
+				- best: The best fitness value obtained.
+		*/
+
+		if(utilities::param.metrics[0])
+			cout << "MAE: "<< utilities::calculateMAE(best, utilities::input_predicted) << endl;
+
+		if(utilities::param.metrics[1])
+			cout << "MSE: "<< utilities::calculateMSE(best, utilities::input_predicted) <<endl;
+
+		if(utilities::param.metrics[2])
+			cout << "R2: "<< utilities::calculateR2(best, utilities::input_predicted) << endl;
+	}
 
 public:
 	void run()
 	{
+		/*
+			Objective:
+				Run the TSP solver using different hybrid optimization algorithms.
+
+		*/
 		auto start = chrono::system_clock::now();
 		genetic ga(utilities::n_cities);
 		LD best = INF;
@@ -35,8 +57,6 @@ public:
 			ga.activate();
 			best = ga.best_fit();
 			path = ga.best_path();
-			//ACO aco(path);
-			//aco.active();
 		}
 
 		if (utilities::param.hybrid[1])
@@ -63,6 +83,19 @@ public:
 			}
 		}
 
+		if (utilities::param.hybrid[3])
+		{
+			ACO aco(path);
+			aco.active();
+			LD best_aco_fit = aco.get_best_fit();
+			
+			if(best_aco_fit < best)
+			{
+				best = best_aco_fit;
+				path = aco.get_best_path();
+			}
+		}
+
 		if (utilities::param.hybrid[4])
 		{
 			ABC abc(path, best);
@@ -77,10 +110,11 @@ public:
 		
     	auto end = chrono::system_clock::now();
 		chrono::duration<double> time = end - start;
-		cout << "Tempo decorrido: " << time.count() << " segundos" << endl;
+		cout << "Elapsed Time: " << time.count() << " seconds" << endl;
 		cout << best << endl;
 		cout << "path: ";
 		for(auto i :path)cout<<i<<" ";
+		cout <<endl;
 
 		if(utilities::param.metrics[0] + utilities::param.metrics[1] + utilities::param.metrics[2])
 		{
@@ -90,6 +124,11 @@ public:
 
 	void best_params()
 	{
+		/*
+			Objective:
+				Finds the best average fitness and the shortest execution time among multiple runs of a genetic algorithm.
+
+		*/
 		LD best = INF, min_time = INF;
 		LD best_med =0, current_time = INF;
 		for(int j=0; j<5; j++)
@@ -105,6 +144,6 @@ public:
 		}
 		best = best_med/5;
 		min_time = current_time;
-		cout  << "Melhor media de resposta: " << best << " Menor tempo de execucao: " <<  min_time <<endl; 
+		cout  << "Best average fitness: " << best << " Shortest execution time: " <<  min_time <<endl; 
 	}
 };
