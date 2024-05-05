@@ -104,7 +104,6 @@ Essa abordagem reativa torna o algoritmo mais flexível e adaptável a diferente
 
 ### Metaheurísticas Escolhidas:
 
-#### Ant Colony Optimization (ACO):
 #### Genetic algorithm (GA):
 
 ### Instâncias Utilizadas:
@@ -128,5 +127,15 @@ Os conjuntos de dados foram selecionados a partir de duas fontes principais:
 Essas instâncias foram escolhidas por sua representatividade e desafio computacional, cobrindo uma variedade de tamanhos de problema que variam de pequenos conjuntos de cidades a conjuntos de dados VLSI mais complexos.
 
 ### Resultados:
+#### Metaheurísticas Descartadas no Projeto
+
+- **Artificial Bee Colony (ABC):**
+  - O ABC é uma técnica poderosa de otimização inspirada no comportamento das abelhas. Durante sua implementação, desenvolvemos um algoritmo simples e teórico. No entanto, nos testes realizados, o algoritmo não produziu resultados satisfatórios. Embora tenha apresentado um tempo de execução eficiente, observamos um erro considerável em comparação com as soluções conhecidas das instâncias utilizadas. Na busca por melhorias, não encontramos literatura adequada para otimizá-lo especificamente para problemas de TSP. Diante disso, optamos por descartar o ABC em favor de um algoritmo mais robusto com o qual já tínhamos familiaridade.
+
+- **Simulated Annealing (SA):**
+  - O SA é um algoritmo amplamente conhecido na área de otimização. Durante sua primeira implementação, sua teoria parecia simples e direta. No entanto, encontramos um desafio significativo: ele frequentemente ficava preso em ótimos locais subótimos devido à sua estrutura simples e à falta de aleatoriedade suficiente. Diante dessa limitação, decidimos descartá-lo em favor de um algoritmo mais robusto, capaz de oferecer maior flexibilidade na otimização e explorar uma gama mais ampla de soluções.
+
+- **Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP):**
+  - O Reactive GRASP surge de uma lógica simples que utiliza um método guloso para resolver o TSP. Sua variante "Reactive GRASP" introduz a ideia de ter um array de coeficientes alpha, juntamente com o uso de probabilidades, para evitar ficar preso em ótimos locais subótimos. Inicialmente, ele mostrou-se muito promissor, com uma estrutura robusta capaz de se aproximar consideravelmente do ótimo global e, em alguns casos, até alcançá-lo. No entanto, sua maior limitação revelou-se ser o tempo de execução, especialmente em instâncias grandes, devido principalmente à sua função de "busca local". Por esse motivo, optamos por um algoritmo que fornecesse resultados satisfatórios em um tempo de execução menor.
 
 ### Conclusão: 
