@@ -1,22 +1,27 @@
 #pragma once
 #include "library.hpp"
 
-struct bee
-{
+struct bee {
     vector<int> path;
     double cost;
     int cycle;
     char role;
 
-    bee(vector<int> initial_path, double initial_cost)
+    bee(vector<int> initial_path, double initial_cost) 
     {
+        /*
+            Objective:
+                Constructor for the bee struct.
+            Parameters:
+                - initial_path: Initial path of the bee.
+                - initial_cost: Initial cost of the path.
+        */
         path = initial_path;
         cost = initial_cost;
     }
 };
 
-class ABC
-{
+class ABC {
     int n_cities;
     int cycles_limit;
     int employed_limit;
@@ -29,8 +34,15 @@ public:
     vector<int> best_solution;
     LD best_cost;
 
-    ABC(vector<int> initial_solution, LD initial_cost)
+    ABC(vector<int> initial_solution, LD initial_cost) 
     {
+        /*
+            Objective:
+                Constructor for the ABC class.
+            Parameters:
+                - initial_solution: Initial solution of the ABC algorithm.
+                - initial_cost: Initial cost of the solution.
+        */
 
         n_cities = utilities::n_cities;
         cycles_limit = utilities::param.abc_p.cycles_limit;
@@ -43,36 +55,47 @@ public:
         best_cost = initial_cost;
     }
 
-    void initialize_hive(vector<bee> &hive)
+    void initialize_hive(vector<bee> &hive) 
     {
-        for (int i = 0; i < colony_size; ++i)
+        /*
+            Objective:
+                Initializes the hive with bees.
+            Parameters:
+                - hive: Reference to the vector representing the hive.
+        */
+
+        for (int i = 0; i < colony_size; ++i) 
         {
             bee bee(best_solution, best_cost);
             hive.push_back(bee);
         }
     }
 
-    void clt(vector<bee> &hive)
+    void clt(vector<bee> &hive) 
     {
-        int onlooker_count = colony_size * onlooker_percent;
-        int employed = colony_size * employed_percent;
+        /*
+            Objective:
+                Assigns roles (Onlooker or Forager) to the bees in the hive.
+            Parameters:
+                - hive: Reference to the vector representing the hive.
+        */
 
-        for (int i = 0; i < onlooker_count; ++i)
+        int onlooker_count = colony_size * onlooker_percent;
+
+        for (int i = 0; i < onlooker_count; ++i) 
         {
             hive[i].role = 'O';
         }
 
-        for (int i = onlooker_count; i < colony_size; ++i)
+        for (int i = onlooker_count; i < colony_size; ++i) 
         {
             // obs função a priori usa a solução inicial para todas. testar shuffle
-            random_shuffle(hive[i].path.begin(),hive[i].path.end());
-            hive[i].cost = utilities::Fx_fit(hive[i].path,n_cities);
-            hive[i].role = 'E';
+            hive[i].role = 'F';
         }
     }
 
     vector<int> update_path(const vector<int> path)
-    {  
+    {
         vector<int> new_path = path;
         LD new_cost = utilities::Fx_fit(new_path,n_cities);
         for(int i = 0;i<50;i++){
@@ -82,46 +105,68 @@ public:
         return new_path;
     }
 
-    void employed(bee &bee)
+    void employed(bee &bee) 
     {
+        /*
+            Objective:
+                Implements the employed bee phase.
+            Parameters:
+                - bee: Reference to the bee.
+        */
+
         vector<int> new_path = update_path(bee.path);
         double new_cost = utilities::Fx_fit(new_path, n_cities);
 
-        if (new_cost < bee.cost)
+        if (new_cost < bee.cost) 
         {
             bee.path = new_path;
             bee.cost = new_cost;
             bee.cycle = 0; // reset cycle so bee can continue to make progress
-        }
-        else
+        } 
+        else 
         {
             bee.cycle++;
         }
 
-        if (bee.cycle >= employed_limit)
+        if (bee.cycle >= employed_limit) 
         {
             bee.role = 'S';
         }
     }
 
-    void scouter_bee(bee &bee_s)
+    void scouter_bee(bee &bee_s) 
     {
+        /*
+            Objective:
+                Implements the scout bee phase.
+            Parameters:
+                - bee_s: Reference to the scout bee.
+        */
+
         random_shuffle(bee_s.path.begin(), bee_s.path.end());
         bee_s.cost = utilities::Fx_fit(bee_s.path, n_cities);
         bee_s.role = 'E';
         bee_s.cycle = 0;
     }
 
-    void outlooker_bee(vector<bee> &hive)
+    void outlooker_bee(vector<bee> &hive) 
     {
-        for (auto &bee : hive)
+        /*
+            Objective:
+                Implements the onlooker bee phase.
+            Parameters:
+                - hive: Reference to the vector representing the hive.
+        */
+
+        for (auto &bee : hive) 
         {
-            if (bee.role == 'O')
+            if (bee.role == 'O') 
             {
                 vector<int> new_path = update_path(best_solution);
-                double new_cost = utilities::Fx_fit(new_path, n_cities);
-            
-                if (new_cost < best_cost)
+
+                double new_distance = utilities::Fx_fit(new_path, n_cities);
+
+                if (new_distance < best_cost)
                 {
                     best_cost = new_cost;
                     best_solution = new_path;
@@ -131,16 +176,25 @@ public:
     }
 
     void bees_for_pollen(vector<bee> &hive, int scout_count)
-    {
-        vector<pair<int, LD>> results;
+     {
+        /*
+            Objective:
+                Sends bees for pollen collection and updates their roles.
+            Parameters:
+                - hive: Reference to the vector representing the hive.
+                - scout_count: Number of scout bees.
+        */
 
-        for (int i = 0; i < hive.size(); ++i)
+        vector<pair<int, LD>> results;
+        int m = hive.size();
+
+        for (int i = 0; i < m; ++i)
         {
             if (hive[i].role == 'E')
-            {   
+            {
                 employed(hive[i]);
 
-                if (hive[i].cost < best_cost)
+                if (hive[i].cost < best_cost) 
                 {
                     best_cost = hive[i].cost;
                     best_solution = hive[i].path;
@@ -148,20 +202,30 @@ public:
                 results.push_back({i, hive[i].cost});
             }
             else if (hive[i].role == 'S')
-            {  
+            {
                 scouter_bee(hive[i]);
             }
         }
+
         sort(results.begin(), results.end(), [](const auto &lb, const auto &rb)
              { return lb.second > rb.second; });
 
-        for (int j = 0; j < scout_count && j < results.size(); ++j) {
+        m = results.size();
+
+        for (int j = 0; j < scout_count && j < m; ++j) 
+        {
             hive[results[j].first].role = 'S';
         }
     }
 
-    LD solution()
+    LD solution() 
     {
+        /*
+            Objective:
+                Executes the ABC algorithm to find the best solution.
+            Returns:
+                Best cost found by the algorithm.
+        */
         vector<bee> hive;
         int scout_count = colony_size * scout_percent;
         initialize_hive(hive);
@@ -169,7 +233,7 @@ public:
 
         for (int i = 0; i < cycles_limit; i++)
         {
-            bees_for_pollen(hive,scout_count);
+            bees_for_pollen(hive, scout_count);
             outlooker_bee(hive);
 
         }

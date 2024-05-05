@@ -1,5 +1,6 @@
 #pragma once
 #include "library.hpp"
+#include "ACO.hpp"
 
 class gene
 {
@@ -169,42 +170,11 @@ class gene
 		int idx = utilities::random_range(0, nodes);
 		int idy = idx;
 
-		while(abs(idx - idy) == 0)
+		while(abs(idx - idy) <= 2)
 			idy = utilities::random_range(0, nodes);
 
 		if(idx>idy)
 			swap(idx, idy);
-
-		if(false and utilities::random_range()%2 == 0)
-		{
-			for(int i=idx; i<=idy; i++)
-				child.insert(i, mother.path[i]);
-
-			for(int i=idx; i<=idy; i++)
-			{
-				if (!child.contain[this->path[i]])
-				{
-					int find = this->path[i];
-					int index = i;
-					while (index >= idx && index<=idy)
-					{						
-						find = mother.path[index];
-						index = this->repath[find];
-					}
-					child.insert(index, this->path[i]);
-				}
-			}
-
-			for(int i=0; i<nodes; i++)
-			{
-				if(child.path[i] == -1)
-					child.insert(i, this->path[i]);
-			}
-
-			child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
-			return;
-		}
-
 		
 		for(int i=idx; i<=idy; i++)
 			child.insert(i, this->path[i]);
@@ -288,11 +258,10 @@ class gene
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
-			utilities::opt_2(path,fit,contain);
+			utilities::opt_2s(path, fit, utilities::random_range()%2);
 		}
 
-		for (int i = 0; i < nodes; i++)
-			this->repath[this->path[i]] = i;
+		recalculation_repath();
 	}
 
 public:
@@ -322,28 +291,46 @@ public:
 		*/
 
 		gene child(nodes);
+		gene child_save(nodes);
 
-		if (utilities::random_range(1, 100) < utilities::param.ga_p.cross_active[0])
-		{
-			bcr(child, mother);
-			return child;
-		}
-		
-		if (utilities::random_range(1, 100) < utilities::param.ga_p.cross_active[2])
-		{
-			er(child, mother);
-			return child;
-		}
-		
-		if (utilities::random_range(1, 100) <utilities::param.ga_p.cross_active[3])
-		{
-			vr(child, genes);
-			return child;
-		}
-						
 		pmx(child, mother);
+	
+		if (utilities::random_range(0, 100)  < utilities::param.ga_p.cross_active[0])
+		{
+			bcr(child_save, mother);
+
+			if (child_save.fit < child.fit)
+				child = child_save;
+
+			child_save = gene(nodes);
+		}
+
+		if (utilities::param.ga_p.cross_active[2])
+		{
+			er(child_save, mother);
+
+			if (child_save.fit < child.fit)
+				child = child_save;
+
+			child_save = gene(nodes);
+		}
+
+		if (utilities::param.ga_p.cross_active[3])
+		{
+			vr(child_save, genes);
+
+			if (child_save.fit < child.fit)
+				child = child_save;
+		}
+
 		return child;
 
+	}
+
+	void recalculation_repath()
+	{
+		for (int i = 0; i < nodes; i++)
+			this->repath[this->path[i]] = i;
 	}
 
 	void mutation_swap()
@@ -420,24 +407,22 @@ class genetic
 	vector<gene> genes;
 	bool _active = false;
 
-	vector <LD> calculate_relative_fit(ULL& max_probability)
+	void calculate_relative_fit(vector<LD>& relative_fitness, LD& max_probability)
 	{
-		
 		/*
 			Objective:
 				Function to calculate the relative fit to be used in the roulette method.
 		*/
 
 		LD max_fitness = INF;
+		max_probability = 0;
 
-		vector<LD> relative_fitness;
-		for (int i = 0; i < utilities::param.ga_p.max_population; i++) 
+		for (int i = 0; i < utilities::param.ga_p.max_population; i++)
 		{
-			relative_fitness.push_back(max_fitness - genes[i].fit);
-			max_probability += max_fitness - genes[i].fit;
+			LD relative_fit = max_fitness - genes[i].fit;
+			relative_fitness.push_back(relative_fit);
+			max_probability += relative_fit;
 		}
-
-		return relative_fitness;
 	}
 
 	void roulette_wheel_selection(int& father, int& mother)
@@ -447,14 +432,18 @@ class genetic
 				Function to choose all genes using the roulette wheel method.
 		*/
 
-		ULL cumulative_probability = 0, max_probability = 0;
-		vector<LD> relative_fitness = calculate_relative_fit(max_probability);
-		ULL random_value = utilities::random_range();
-		
+		LD max_probability = 0;
+		vector<LD> relative_fitness;
+
+		calculate_relative_fit(relative_fitness, max_probability);
+
+		LD random_value = utilities::random_range_double(0, max_probability);
+		LD cumulative_probability = 0;
+
 		for (int i = 0; i < utilities::param.ga_p.max_population; i++)
 		{
 			cumulative_probability += relative_fitness[i];
-			if (random_value <= cumulative_probability) 
+			if (random_value <= cumulative_probability)
 			{
 				father = i;
 				break;
@@ -463,15 +452,16 @@ class genetic
 
 		if (father == -1)
 		{
-			father =  utilities::random_range(0, utilities::param.ga_p.max_population);
+			father = utilities::random_range(0, utilities::param.ga_p.max_population);
 		}
 
-		random_value = utilities::random_range();
+		random_value = utilities::random_range_double(0, max_probability);
+		cumulative_probability = 0;
 
 		for (int i = 0; i < utilities::param.ga_p.max_population; i++)
 		{
 			cumulative_probability += relative_fitness[i];
-			if (random_value <= cumulative_probability) 
+			if (random_value <= cumulative_probability)
 			{
 				mother = i;
 				break;
@@ -480,11 +470,54 @@ class genetic
 
 		if (mother == -1)
 		{
-			mother =  utilities::random_range(0, utilities::param.ga_p.max_population);
-		}
-		
-		while(mother == father)
 			mother = utilities::random_range(0, utilities::param.ga_p.max_population);
+		}
+
+		while (mother == father)
+			mother = utilities::random_range(0, utilities::param.ga_p.max_population);
+	}
+
+	void tournament_selection(int& father, int& mother)
+	{
+		/*
+			Objective:
+				Function to choose two individuals using tournament selection method.
+		*/
+
+		const int tournament_size = 5; 
+		vector<int> tournament_contestants(tournament_size);
+
+		for (int i = 0; i < tournament_size; ++i)
+		{
+			tournament_contestants[i] = utilities::random_range(0, utilities::param.ga_p.max_population);
+		}
+
+		int tournament_winner = tournament_contestants[0]; 
+		for (int i = 1; i < tournament_size; ++i)
+		{
+			if (genes[tournament_contestants[i]].fit > genes[tournament_winner].fit)
+			{
+				tournament_winner = tournament_contestants[i];
+			}
+		}
+
+		father = tournament_winner; 
+
+		for (int i = 0; i < tournament_size; ++i)
+		{
+			tournament_contestants[i] = utilities::random_range(0, utilities::param.ga_p.max_population);
+		}
+
+		tournament_winner = tournament_contestants[0]; 
+		for (int i = 1; i < tournament_size; ++i)
+		{
+			if (genes[tournament_contestants[i]].fit > genes[tournament_winner].fit)
+			{
+				tournament_winner = tournament_contestants[i];
+			}
+		}
+
+		mother = tournament_winner; 
 	}
 
 	void simulation()
@@ -494,33 +527,25 @@ class genetic
 				Function with the objective of simulating the generations of the algorithm, choosing between the active crossover types and optimizers.
 		*/
 	
-		vector<gene> new_generation(population, gene(n_cities));
-		utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0};
 		int it = 1, limit =0;
-		LD ant=INF;
 
 		while(it<utilities::param.ga_p.max_generations && limit < utilities::param.ga_p.repetition_limit)
 		{	
 			sort(genes.begin(), genes.end(), order);
-
-			if(ant == genes[0].fit)
-			{
-				limit++;
-				if(limit%2 == 0)
-				{
-					utilities::param.ga_p.cross_active = { utilities::random_range(40, 90) ,0, utilities::random_range(40, 90), utilities::random_range(10, 50), 0};
-				}
-			}
-			else
-				limit = 0, utilities::param.ga_p.cross_active = {0 , 0, 0, 0, 0};
 			
-			ant = min(genes[0].fit, ant);
-			if(utilities::param.ga_p.verbose == 1)
-				print_verbose(it);
+			seed = std::chrono::system_clock::now().time_since_epoch().count();
+			gen = mt19937 (seed);
+
+			if(utilities::param.ga_p.verbose == 1 && it%100==0)
+				print_verbose(it/100);
+
+			vector<gene> new_generation(population, gene(n_cities));
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
 			{
 				new_generation[i] = genes[i];
+				utilities::opt_2(new_generation[i].path, new_generation[i].fit);
+				new_generation[i].recalculation_repath();
 			}
 
 			for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
@@ -529,26 +554,36 @@ class genetic
 				
 				if(utilities::param.ga_p.balance > 0)
 				{
-					father = utilities::random_range(0,  n_cities /  utilities::param.ga_p.balance);
-					mother = utilities::random_range(0, n_cities /  utilities::param.ga_p.balance);
+					father = utilities::random_range(0,  population /  utilities::param.ga_p.balance);
+					mother = utilities::random_range(0, population /  utilities::param.ga_p.balance);
 				}
 				else
 				{
-					roulette_wheel_selection(father, mother);
+					if(utilities::random_range()%2==0)
+						tournament_selection(father, mother);
+					else
+						roulette_wheel_selection(father, mother);
 				}
-
+				
 				new_generation[i] = genes[father].cross(genes[mother], genes);
 			}
-			
-			for (int i = 0; i <  utilities::param.ga_p.max_population; i++)
+
+			for(int i=utilities::param.ga_p.tx_elite; i<population; i++)
 			{
-				int rate = utilities::random_range(0, 100);
-				if (rate <= utilities::param.ga_p.roulette)
-				{
+				if(utilities::random_range(0, 100) < utilities::param.ga_p.opt_range)
 					new_generation[i].mutation_swap();
+				else
+				{
+					int idxA = utilities::random_range(1, n_cities);
+					int idxB = utilities::random_range(1, n_cities);
+
+					swap(new_generation[i].path[idxA], new_generation[i].path[idxB]);
+
+					new_generation[i].fit = utilities::Fx_fit(new_generation[i].path,new_generation[i].nodes, new_generation[i].contain);
+					new_generation[i].recalculation_repath();
 				}
 			}
-
+			
 			genes = new_generation;
 			it++;
 		}
@@ -567,6 +602,11 @@ class genetic
 				utilities::random_path(utilities::random_range(0, utilities::n_cities), 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);			
 			else
 				utilities::random_path(utilities::param.ga_p.fix_init, 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);	
+			ACO aco(genes[i].path);
+			genes[i].path = aco.get_best_path();
+			genes[i].fit = aco.get_best_fit();
+			for(int l = 0; l < n_cities; l++)
+				genes[i].repath[genes[i].path[l]] = l; 
 		}
 	}
 	
