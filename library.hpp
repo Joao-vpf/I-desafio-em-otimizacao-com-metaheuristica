@@ -127,13 +127,29 @@ struct grasp_params
 			beta - Value used as a criterion to determine when to update the probabilities.
     */
 
-	int l = 1000;
-    int m = 5;
+	int l;
+    int m;
     vector<int> cont_alpha;
     vector<double> p_alpha;
     vector<double> solution_alpha;
-    vector<double> alpha = {0.1,0.2,0.3,0.4,0.5};
-    int beta = 4;
+    vector<double> alpha;
+    int beta;
+
+	grasp_params()
+	{
+		/*
+            Objective:
+                Default constructor initializing parameters with default values.
+        */
+	   
+		l = 1000;
+		m = 5;
+		cont_alpha.assign(m, 0);
+		p_alpha.assign(m, 1.0 / m);
+		solution_alpha.assign(m, 0.0);
+		alpha = {0.1, 0.2, 0.3, 0.4, 0.5};
+		beta = 4;
+	}
 };
 
 struct annealing_params
@@ -149,11 +165,23 @@ struct annealing_params
             alpha - Temperature variation rate.
     */
 
-	LD t0 = 10000;
-    LD tf = 0.01;
-    int l = 1000;
-    LD alpha = 0.9;
+	LD t0;
+    LD tf;
+    int l;
+    LD alpha;
 
+	annealing_params()
+	{
+		/*
+            Objective:
+                Default constructor initializing parameters with default values.
+        */
+	   
+		t0 = 10000;
+		tf = 0.01;
+		l = 1000;
+		alpha = 0.9;
+	}
 };
 
 struct GA_Params
