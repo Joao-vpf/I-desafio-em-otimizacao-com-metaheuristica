@@ -258,7 +258,7 @@ class params
 			This structure is responsible for storing the parameters of the selected algorithm and the settings related to its execution.
 
 		Attributes:
-			genetic: Indicates whether the algorithm to be used is genetic or not.
+			markdown: Indicated markdown or not.
 			hybrid: Vector indicating which hybrid algorithms are activated.
 			metrics: Vector indicating which performance metrics are activated.
 			ann_p: Annealing parameters.
@@ -269,7 +269,7 @@ class params
 	*/
 
 public:
-	bool genetic;
+	bool markdown;
 	vector<bool> hybrid;
 	vector<bool> metrics;
 	annealing_params ann_p;
@@ -343,6 +343,11 @@ public:
 			if (in_param == "R^2")
 			{
 				metrics[2] = 1;
+			}
+
+			if (in_param == "output_markdown")
+			{
+				markdown = true;
 			}
 		}
 	}

@@ -25,13 +25,13 @@ class TSP
 		*/
 
 		if(utilities::param.metrics[0])
-			cout << "**MAE:** "<< utilities::calculateMAE(best, utilities::input_predicted) << endl;
+			cout << "**MAE:** "<< utilities::calculateMAE(best, utilities::input_predicted) << (utilities::param.markdown ?  " <br>" : "")  << endl;
 
 		if(utilities::param.metrics[1])
-			cout << "**MSE:** "<< utilities::calculateMSE(best, utilities::input_predicted) <<endl;
+			cout << "**MSE:** "<< utilities::calculateMSE(best, utilities::input_predicted) << (utilities::param.markdown ? " <br>" : "")  <<endl;
 
 		if(utilities::param.metrics[2])
-			cout << "**R2:** "<< utilities::calculateR2(best, utilities::input_predicted) << endl;
+			cout << "**R2:** "<< utilities::calculateR2(best, utilities::input_predicted) << (utilities::param.markdown ? " <br>" : "")  << endl;
 	}
 
 public:
@@ -111,11 +111,11 @@ public:
 		
     	auto end = chrono::system_clock::now();
 		chrono::duration<double> time = end - start;
-		cout << "**Elapsed Time:** " << time.count() << " seconds" << endl;
-		cout << "**Fit:** "<< best << endl;
+		cout << "**Elapsed Time:** " << time.count() << " seconds" << (utilities::param.markdown ? " <br>" : "") << endl;
+		cout << "**Fit:** "<< best  << (utilities::param.markdown ? " <br>" : "") << endl;
 		cout << "**path:** ";
 		for(auto i :path)cout<<i<<" ";
-		cout <<endl;
+		cout << (utilities::param.markdown ? " <br>" : "")  <<endl;
 
 		if(utilities::param.metrics[0] + utilities::param.metrics[1] + utilities::param.metrics[2])
 		{
