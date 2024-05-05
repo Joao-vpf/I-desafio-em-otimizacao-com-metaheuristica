@@ -12,9 +12,6 @@
     - [Simulated Annealing (SA)](#simulated-annealing-sa)
     - [Genetic Algorithm (GA)](#genetic-algorithm-ga)
     - [Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)](#reactive-greedy-randomized-adaptive-search-procedure-reactive-grasp)
-  - [Metaheurísticas Escolhidas](#metaheurísticas-escolhidas)
-    - [Ant Colony Optimization (ACO)](#ant-colony-optimization-aco)
-    - [Genetic Algorithm (GA)](#genetic-algorithm-ga)
   - [Resultados](#resultados)
   - [Conclusão](#conclusão)
 
@@ -102,10 +99,6 @@ O Reactive GRASP é particularmente eficaz em problemas onde as características
 
 Essa abordagem reativa torna o algoritmo mais flexível e adaptável a diferentes tipos de problemas de otimização. O Reactive GRASP tem sido aplicado com sucesso em uma variedade de problemas, incluindo problemas de escalonamento, problemas de roteamento, problemas de design e muitos outros em diferentes áreas, como logística, engenharia, computação e finanças.
 
-### Metaheurísticas Escolhidas:
-
-#### Genetic algorithm (GA):
-
 ### Instâncias Utilizadas:
 As instâncias utilizadas para testar nosso algoritmo foram obtidas da Universidade de Waterloo, localizada no Canadá.
 
@@ -183,8 +176,5 @@ No algoritmo genético, o processo é dividido em cinco etapas:
 
 - **Simulated Annealing (SA):**
   - O SA é um algoritmo amplamente conhecido na área de otimização. Durante sua primeira implementação, sua teoria parecia simples e direta. No entanto, encontramos um desafio significativo: ele frequentemente ficava preso em ótimos locais subótimos devido à sua estrutura simples e à falta de aleatoriedade suficiente. Diante dessa limitação, decidimos descartá-lo em favor de um algoritmo mais robusto, capaz de oferecer maior flexibilidade na otimização e explorar uma gama mais ampla de soluções.
-
-- **Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP):**
-  - O Reactive GRASP surge de uma lógica simples que utiliza um método guloso para resolver o TSP. Sua variante "Reactive GRASP" introduz a ideia de ter um array de coeficientes alpha, juntamente com o uso de probabilidades, para evitar ficar preso em ótimos locais subótimos. Inicialmente, ele mostrou-se muito promissor, com uma estrutura robusta capaz de se aproximar consideravelmente do ótimo global e, em alguns casos, até alcançá-lo. No entanto, sua maior limitação revelou-se ser o tempo de execução, especialmente em instâncias grandes, devido principalmente à sua função de "busca local". Por esse motivo, optamos por um algoritmo que fornecesse resultados satisfatórios em um tempo de execução menor.
 
 ### Conclusão: 
