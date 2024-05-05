@@ -1,27 +1,35 @@
 genetic
-genetic.cross_active.BCR 15
-genetic.cross_active.ER 0
-genetic.cross_active.VR 0
-genetic.P_limiar 5
+genetic.cross_active.BCR 10
+genetic.cross_active.ER 1
+genetic.cross_active.VR 1
+genetic.P_limiar 10
 genetic.P_value  20
 genetic.tx_elite 20
-genetic.opt_range 70
+genetic.opt_range 80
 genetic.opt_path_swap_it 100
-genetic.max_population 31
-genetic.max_generations 1000
+genetic.max_population 103
+genetic.max_generations 500
 genetic.alpha 10
 genetic.fix_init -1
-genetic.verbose 1
+genetic.verbose 0
 genetic.simple_verbose 1
 end
 grasp
+grasp.l 100
+end
 aco
-aco.verbose 1
+aco.verbose 0
 aco.alpha 1
 aco.beta 2
 aco.decay 0.07
+aco.max_generations 50
 end
 annealing
+end
+abc
+abc.cycles_limit 50
+end
 MAE
 MSE
 R^2
+output_markdown
