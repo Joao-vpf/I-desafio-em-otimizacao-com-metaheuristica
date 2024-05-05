@@ -107,6 +107,26 @@ Essa abordagem reativa torna o algoritmo mais flexível e adaptável a diferente
 #### Ant Colony Optimization (ACO):
 #### Genetic algorithm (GA):
 
+### Instâncias Utilizadas:
+As instâncias utilizadas para testar nosso algoritmo foram obtidas da Universidade de Waterloo, localizada no Canadá.
+
+Os conjuntos de dados foram selecionados a partir de duas fontes principais:
+
+1. **Problemas Nacionais do Caixeiro Viajante (National Traveling Salesman Problems)**:
+   - Fonte: [Página da Universidade de Waterloo sobre Problemas do Caixeiro Viajante em Nível Nacional](https://www.math.uwaterloo.ca/tsp/world/countries.html)
+   - Instâncias Utilizadas:
+     - Djibouti - 38 cidades
+     - Qatar - 194 cidades
+     - Uruguai - 734 cidades
+     - Luxemburgo - 980 cidades
+
+2. **Conjuntos de Dados VLSI (VLSI Data Sets)**:
+   - Fonte: [Página da Universidade de Waterloo sobre Conjuntos de Dados VLSI](https://www.math.uwaterloo.ca/tsp/vlsi/index.html#XQF131)
+   - Instâncias Utilizadas:
+     - xqf131 - 131 pontos
+
+Essas instâncias foram escolhidas por sua representatividade e desafio computacional, cobrindo uma variedade de tamanhos de problema que variam de pequenos conjuntos de cidades a conjuntos de dados VLSI mais complexos.
+
 ### Resultados:
 
 ### Conclusão: 
