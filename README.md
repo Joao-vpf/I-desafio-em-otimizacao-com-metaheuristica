@@ -125,9 +125,9 @@ Essas instâncias foram escolhidas por sua representatividade e desafio computac
 
 Otimizadores desempenham um papel crucial ao explorar a vizinhança e, quando necessário, introduzir mutações nos caminhos.
 
-- opt_1: Operador de Mutação por Troca Única, onde dois pontos aleatórios no caminho são trocados.
-- opt_2: Operador de Mutação por Inversão, onde todos os pares de cidades são percorridos e suas posições são invertidas.
-- opt_2s: Variação do opt_2, em que dois pontos são escolhidos aleatoriamente e todo o caminho entre eles é invertido.
+- **opt_1:** Operador de Mutação por Troca Única, onde dois pontos aleatórios no caminho são trocados.
+- **opt_2:** Operador de Mutação por Inversão, onde todos os pares de cidades são percorridos e suas posições são invertidas.
+- **opt_2s:** Variação do opt_2, em que dois pontos são escolhidos aleatoriamente e todo o caminho entre eles é invertido.
 
 ## Meta-heurísticas Escolhidas
 
@@ -136,39 +136,41 @@ Otimizadores desempenham um papel crucial ao explorar a vizinhança e, quando ne
 A meta-heurística genética implementada passou por ajustes e incluiu implementações extras para melhorar sua eficiência, organização e desempenho em comparação ao algoritmo base. Abaixo estão listados os parâmetros implementados:
 
 #### Parâmetros
-- max_generations: Número máximo de gerações.
-- max_population: Tamanho máximo da população.
-- opt_range: Define a probabilidade de um gene ser selecionado para mutação. (Quanto maior, maior a probabilidade de mutação)
-- opt_path_swap_it: Número de iterações no otimizador de caminho. (Mais iterações resultam em otimização adicional)
-- tx_elite: Taxa de elitismo na população.
-- verbose: Ativa ou desativa o modo verboso.
-- simple_verbose: Ativa ou desativa o modo de verbosidade simplificada.
-- alpha: Porcentagem do gene do pai em relação ao da mãe (apenas para o crossover AHCAVG).
-- balance: Define a porcentagem de elitismo para a nova geração (0 desativa o elitismo).
-- tx_mutation_AHCAVG: Taxa de mutação na média aritmética (apenas para o crossover AHCAVG).
-- fix_init: Número inicial fixo (usar -1 para desativar).
-- P_value: Quantos pais são considerados (apenas para o crossover VR).
-- P_limiar: Quantidade mínima para a cidade aparecer na mesma posição dos pais (apenas para o crossover VR).
-- cross_active: Lista de cruzamentos ativos ("BCR" -> Melhor Rota de Custo, "AHCAVG" -> Média Aritmética, "ER" -> Recombinação de Borda, "VR" -> Recombinação de Votação, "PMX" -> PMX).
+- **max_generations:** Número máximo de gerações.
+- **max_population:** Tamanho máximo da população.
+- **opt_range:** Define a probabilidade de um gene ser selecionado para mutação. (Quanto maior, maior a probabilidade de mutação)
+- **opt_path_swap_it:** Número de iterações no otimizador de caminho. (Mais iterações resultam em otimização adicional)
+- **tx_elite:** Taxa de elitismo na população.
+- **verbose:** Ativa ou desativa o modo verboso.
+- **simple_verbose:** Ativa ou desativa o modo de verbosidade simplificada.
+- **alpha:** Porcentagem do gene do pai em relação ao da mãe (apenas para o crossover AHCAVG).
+- **balance:** Define a porcentagem de elitismo para a nova geração (0 desativa o elitismo).
+- **tx_mutation_AHCAVG:** Taxa de mutação na média aritmética (apenas para o crossover AHCAVG).
+- **fix_init:** Número inicial fixo (usar -1 para desativar).
+- **P_value:** Quantos pais são considerados (apenas para o crossover VR).
+- **P_limiar:** Quantidade mínima para a cidade aparecer na mesma posição dos pais (apenas para o crossover VR).
+- **cross_active:** Lista de cruzamentos ativos ("BCR" -> Melhor Rota de Custo, "AHCAVG" -> Média Aritmética, "ER" -> Recombinação de Borda, "VR" -> Recombinação de Votação, "PMX" -> PMX).
 
 #### Crossovers:
 
-- PMX (Partially Mapped Crossover): Este é o principal método de crossover do algoritmo, oferecendo um dos melhores desempenhos em diversos datasets quando comparado a outras técnicas de crossover. É o único dos crossovers que sempre esta ativo.
+- **PMX (Partially Mapped Crossover)**: Este é o principal método de crossover do algoritmo, oferecendo um dos melhores desempenhos em diversos datasets quando comparado a outras técnicas de crossover. É o único dos crossovers que sempre esta ativo.
 
-- BCR (Best Cost Route Crossover): Este crossover é extremamente poderoso, funcionando de forma semelhante ao opt2. No entanto, sua implementação pode ser custosa em termos de desempenho, podendo causar lentidão significativa em testes extensos. Por esse motivo, é o único dos crossovers que possui uma taxa de utilização programável, variando de 0% a 100%.
+- **BCR (Best Cost Route Crossover)**: Este crossover é extremamente poderoso, funcionando de forma semelhante ao opt2. No entanto, sua implementação pode ser custosa em termos de desempenho, podendo causar lentidão significativa em testes extensos. Por esse motivo, é o único dos crossovers que possui uma taxa de utilização programável, variando de 0% a 100%.
 
-- VR (Voting Recombination Crossover): Este crossover é altamente eficiente para induzir mutações e detectar pequenas semelhanças entre os caminhos já encontrados.
+- **VR (Voting Recombination Crossover)**: Este crossover é altamente eficiente para induzir mutações e detectar pequenas semelhanças entre os caminhos já encontrados.
 
-- ER (Edge Recombination Crossover): Esta técnica de crossover consegue detectar semelhanças entre pontos adjacentes com facilidade, o que permite encontrar novas soluções vizinhas de forma eficaz.
+- **ER (Edge Recombination Crossover)**: Esta técnica de crossover consegue detectar semelhanças entre pontos adjacentes com facilidade, o que permite encontrar novas soluções vizinhas de forma eficaz.
 
 #### Técnicas de Seleção
 
 Foram implementadas três técnicas de seleção, sendo que a seleção aleatória está desativada por padrão devido à sua ineficiência ao explorar os caminhos vizinhos. As técnicas de torneio e roleta provaram ser mais eficientes e gerar descobertas melhores em vizinhos, garantindo um crossover mais eficaz e desempenho superior.
 
-- Seleção por Torneio: 
-- Seleção por Roleta: 
-- Seleção Aleatória (desativada por padrão): 
+- **Seleção por Torneio**: Neste método, vários indivíduos são selecionados aleatoriamente da população e competem entre si. O indivíduo com o melhor desempenho (ou fitness) é escolhido como pai ou mãe para a próxima geração. O tamanho do torneio (ou seja, o número de indivíduos selecionados para competir) é um parâmetro que pode ser ajustado para controlar a pressão seletiva.
 
+- **Seleção por Roleta**: Também conhecida como seleção proporcional de aptidão, este método atribui a cada indivíduo uma fatia de uma "roleta" proporcional ao seu fitness relativo. Em seguida, uma "seta" é girada aleatoriamente na roleta, com mais probabilidade de parar nas fatias maiores (ou seja, nos indivíduos com maior fitness). Isso permite que os indivíduos com melhor desempenho tenham uma maior probabilidade de serem selecionados como pais ou mães para a próxima geração.
+
+- **Seleção Aleatória (desativada por padrão)**: Este método simplesmente seleciona indivíduos aleatoriamente da população para reprodução, sem levar em consideração o seu fitness. No entanto, devido à sua natureza aleatória, a seleção aleatória geralmente não é tão eficaz quanto os métodos de torneio e roleta, especialmente ao explorar os caminhos vizinhos em busca de soluções ótimas. Por isso, esta técnica está desativada por padrão no algoritmo.
+  
 #### Ordem de Funcionamento do Algoritmo
 
 No algoritmo genético, o processo é dividido em cinco etapas:
