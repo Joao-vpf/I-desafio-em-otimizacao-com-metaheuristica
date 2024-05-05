@@ -20,6 +20,7 @@ public:
 		for(int i = 0;i<utilities::n_cities;i++){
 			path.push_back(i);
 		}
+
 		best=utilities::Fx_fit(path,utilities::n_cities);
 		
 		if (utilities::param.hybrid[0])
