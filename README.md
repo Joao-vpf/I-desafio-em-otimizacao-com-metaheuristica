@@ -128,36 +128,53 @@ Essas instâncias foram escolhidas por sua representatividade e desafio computac
 
 # Resultados:
 
-## Tecnicas de otimização:
+## Técnicas de Otimização
 
-- opt_1: Otimizador conhecido como Single Swap Mutation Operator, em que é escolhido de forma aleatoria dois pontos no caminho que são trocados.
-- opt_2: Otimizador conhecido como Inversion Mutation Operator, em que é percorrido todos os pares com n cidades e esses pares de posições são invertidos.
-- opt_2s: É o mesmo otimizador do opt_2, contudo se difere em que é escolhido de forma aleatoria dois pontos e todo o caminho entre eles é invertido.
+Otimizadores desempenham um papel crucial ao explorar a vizinhança e, quando necessário, introduzir mutações nos caminhos.
 
-## Metaheurísticas Escolhidas:
+- opt_1: Operador de Mutação por Troca Única, onde dois pontos aleatórios no caminho são trocados.
+- opt_2: Operador de Mutação por Inversão, onde todos os pares de cidades são percorridos e suas posições são invertidas.
+- opt_2s: Variação do opt_2, em que dois pontos são escolhidos aleatoriamente e todo o caminho entre eles é invertido.
 
-#### Genetic algorithm (GA):
-A metaheurística genética utilizada tiveram algumas alterações e implementações extras para melhoria na eficiencia, organização e desempenho comparado ao algoritmo base. Podemos listar todos os parametros implemetentados que sÃo:
+## Meta-heurísticas Escolhidas
 
+### Algoritmo Genético (GA)
+
+A meta-heurística genética implementada passou por ajustes e incluiu implementações extras para melhorar sua eficiência, organização e desempenho em comparação ao algoritmo base. Abaixo estão listados os parâmetros implementados:
+
+#### Parâmetros
 - max_generations: Número máximo de gerações.
-- max_population: Número máximo de genes na população.
-- opt_range: Define a probabilidade de um gene ser selecionado na faixa de otimização. (Quanto maior mais mutante)
-- opt_path_swap_it: Define o número de simulações no otimizador de caminho. (Mais iterações na otimização)
-- tx_elite: Define a taxa de elitismo na população.
-- verbose: Define se ativar ou não o modo verboso.
-- simple_verbose: Define se ativar ou não o modo de verbosidade simples.
-- alpha: Porcentagem do gene pai relativa ao gene da mãe. (Apenas para o crossover AHCAVG)
-- balance: Define em relação à boa porcentagem da população que será usada para a nova geração (0 define como nenhum elitismo para a geração).
-- tx_mutation_AHCAVG: Define a taxa de mutação na média aritmética. (Apenas para o crossover AHCAVG)
-- fix_init: Define se haverá um número inicial fixo (-1 define como não existente).
-- P_value: Define quantos pais foram considerados. (Apenas para o crossover VR)
-- P_limiar: Define a quantidade mínima necessária para a cidade e para aparecer na mesma posição dos pais. (Apenas para o crossover VR)
-cross_active: Armazena quais cruzamentos estão ativos ("BCR" -> Cruzamento da Melhor Rota de Custo, "AHCAVG" -> Média Aritmética desativada, "ER" -> Cruzamento de Recombinação de Borda, "VR" -> Cruzamento de Recombinação de Votação, "PMX" -> Cruzamento PMX).
+- max_population: Tamanho máximo da população.
+- opt_range: Define a probabilidade de um gene ser selecionado para mutação. (Quanto maior, maior a probabilidade de mutação)
+- opt_path_swap_it: Número de iterações no otimizador de caminho. (Mais iterações resultam em otimização adicional)
+- tx_elite: Taxa de elitismo na população.
+- verbose: Ativa ou desativa o modo verboso.
+- simple_verbose: Ativa ou desativa o modo de verbosidade simplificada.
+- alpha: Porcentagem do gene do pai em relação ao da mãe (apenas para o crossover AHCAVG).
+- balance: Define a porcentagem de elitismo para a nova geração (0 desativa o elitismo).
+- tx_mutation_AHCAVG: Taxa de mutação na média aritmética (apenas para o crossover AHCAVG).
+- fix_init: Número inicial fixo (usar -1 para desativar).
+- P_value: Quantos pais são considerados (apenas para o crossover VR).
+- P_limiar: Quantidade mínima para a cidade aparecer na mesma posição dos pais (apenas para o crossover VR).
+- cross_active: Lista de cruzamentos ativos ("BCR" -> Melhor Rota de Custo, "AHCAVG" -> Média Aritmética, "ER" -> Recombinação de Borda, "VR" -> Recombinação de Votação, "PMX" -> PMX).
 
-No algoritmo genético, podemos dividir o processo em cinco etapas: ordenação da população com base no fitness, seleção dos genes por meio do elitismo, aplicação do crossover entre dois indivíduos para gerar novos genes, mutação de indivíduos ou a sua otimização e, por fim, salvar os novos genes para a próxima geração.
+#### Técnicas de Seleção
 
-**Ordenação da população com base no fitness: ** Nessa etapa ocorre a ordenação da população em que aqueles com menor fitnees ficam em primeiro e os com maior fitness ficam por ultimo. <br>
-**Seleção dos genes por meio do elitismo: ** Nessa etapa ocorre a seleção com base na **tx_elite** em que a uma porcentagem da população é salva diretamente para a nova geração e durante isso esse individuo é otimizado usando a tecnica 2 de otimização.
+Foram implementadas três técnicas de seleção, sendo que a seleção aleatória está desativada por padrão devido à sua ineficiência ao explorar os caminhos vizinhos. As técnicas de torneio e roleta provaram ser mais eficientes e gerar descobertas melhores em vizinhos, garantindo um crossover mais eficaz e desempenho superior.
+
+- Seleção por Torneio
+- Seleção por Roleta
+-  Seleção Aleatória (desativada por padrão)
+
+#### Ordem de Funcionamento do Algoritmo
+
+No algoritmo genético, o processo é dividido em cinco etapas:
+
+- Ordenação da População com Base no Fitness: Os indivíduos são ordenados, com os de menor fitness primeiro e os de maior fitness por último.
+- Seleção dos Genes por Elitismo: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
+- Aplicação do Crossover entre Dois Indivíduos: Dois indivíduos são escolhidos usando uma das técnicas de seleção.
+- Mutação dos Indivíduos ou Otimização: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
+- Salvamento dos Novos Genes para a Próxima Geração: Os novos genes são salvos para serem utilizados na próxima iteração do algoritmo.
 
 #### Metaheurísticas Descartadas no Projeto
 
