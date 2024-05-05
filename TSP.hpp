@@ -25,13 +25,13 @@ class TSP
 		*/
 
 		if(utilities::param.metrics[0])
-			cout << "MAE: "<< utilities::calculateMAE(best, utilities::input_predicted) << endl;
+			cout << "**MAE:** "<< utilities::calculateMAE(best, utilities::input_predicted) << endl;
 
 		if(utilities::param.metrics[1])
-			cout << "MSE: "<< utilities::calculateMSE(best, utilities::input_predicted) <<endl;
+			cout << "**MSE:** "<< utilities::calculateMSE(best, utilities::input_predicted) <<endl;
 
 		if(utilities::param.metrics[2])
-			cout << "R2: "<< utilities::calculateR2(best, utilities::input_predicted) << endl;
+			cout << "**R2:** "<< utilities::calculateR2(best, utilities::input_predicted) << endl;
 	}
 
 public:
@@ -111,9 +111,9 @@ public:
 		
     	auto end = chrono::system_clock::now();
 		chrono::duration<double> time = end - start;
-		cout << "Elapsed Time: " << time.count() << " seconds" << endl;
-		cout << best << endl;
-		cout << "path: ";
+		cout << "**Elapsed Time:** " << time.count() << " seconds" << endl;
+		cout << "**Fit:** "<< best << endl;
+		cout << "**path:** ";
 		for(auto i :path)cout<<i<<" ";
 		cout <<endl;
 
