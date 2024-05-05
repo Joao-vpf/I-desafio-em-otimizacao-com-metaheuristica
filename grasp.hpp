@@ -49,7 +49,9 @@ public:
 
             double d_min = numeric_limits<double>::infinity();
             double d_max = -1.0;
-            for (int k = 0; k < candidate_list.size(); k++)
+            int m =  candidate_list.size();
+
+            for (int k = 0; k <m ; k++)
             {
                 double d = utilities::euclidian_distance(utilities::city[solution.back()], candidate_list[k]);
                 candidate_dist.push_back(d);
@@ -58,8 +60,9 @@ public:
             }
 
             vector<pair<int,int>> RCL;
+            m = candidate_dist.size();
 
-            for (int i = 0; i < candidate_dist.size(); i++)
+            for (int i = 0; i < m; i++)
             {
                 if (candidate_dist[i] <= d_min + alpha * (d_max - d_min))
                 {   

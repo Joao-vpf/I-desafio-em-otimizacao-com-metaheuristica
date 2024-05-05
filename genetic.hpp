@@ -294,7 +294,7 @@ public:
 		gene child_save(nodes);
 
 		pmx(child, mother);
-	/*
+	
 		if (utilities::random_range(0, 100)  < utilities::param.ga_p.cross_active[0])
 		{
 			bcr(child_save, mother);
@@ -303,19 +303,25 @@ public:
 				child = child_save;
 
 			child_save = gene(nodes);
-		}*/
+		}
 
-		er(child_save, mother);
+		if (utilities::param.ga_p.cross_active[2])
+		{
+			er(child_save, mother);
 
-		if (child_save.fit < child.fit)
-			child = child_save;
+			if (child_save.fit < child.fit)
+				child = child_save;
 
-		child_save = gene(nodes);
+			child_save = gene(nodes);
+		}
 
-		vr(child_save, genes);
+		if (utilities::param.ga_p.cross_active[3])
+		{
+			vr(child_save, genes);
 
-		if (child_save.fit < child.fit)
-			child = child_save;
+			if (child_save.fit < child.fit)
+				child = child_save;
+		}
 
 		return child;
 
@@ -550,9 +556,16 @@ class genetic
 						tournament_selection(father, mother);
 					else
 					{
-						father = utilities::random_range(0,  population);
-						while(mother  == -1 || mother == father)
-						mother = utilities::random_range(0, population);
+						if(utilities::random_range(0, 100) < 80)
+						{
+							father = utilities::random_range(0,  population);
+							while(mother  == -1 || mother == father)
+							mother = utilities::random_range(0, population);
+						}
+						else
+						{
+							roulette_wheel_selection(father, mother);
+						}
 					}
 					
 				}
@@ -563,7 +576,7 @@ class genetic
 
 			for(int i=utilities::param.ga_p.tx_elite; i<population; i++)
 			{
-				if(utilities::random_range(0, 100) < utilities::param.ga_p.roulette)
+				if(utilities::random_range(0, 100) < utilities::param.ga_p.opt_range)
 					new_generation[i].mutation_swap();
 				else
 				{

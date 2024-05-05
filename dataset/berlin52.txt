@@ -51,5 +51,6 @@
 595.0 360.0
 1340.0 725.0
 1740.0 245.0
+7544.3659
 
 https://www.researchgate.net/figure/The-optimal-solution-of-Berlin52_fig2_221901574

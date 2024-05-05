@@ -1,0 +1,3 @@
+Number_points
+Points
+Blank line or optimal distance

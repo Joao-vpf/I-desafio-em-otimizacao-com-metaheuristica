@@ -8,6 +8,14 @@
 
 class TSP
 {
+	void active_metrics(LD best)
+	{
+		if(utilities::param.metrics[0])
+		{
+			utilities::calculateMAE(best, utilities::input_predicted);
+		}
+	}
+
 
 public:
 	void run()
@@ -74,6 +82,10 @@ public:
 		cout << "path: ";
 		for(auto i :path)cout<<i<<" ";
 
+		if(utilities::param.metrics[0] + utilities::param.metrics[1] + utilities::param.metrics[2])
+		{
+			active_metrics(best);
+		}
 	}
 
 	void best_params()

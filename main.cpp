@@ -2,6 +2,7 @@
 #include "TSP.hpp"
 
 int utilities::n_cities;
+LD utilities::input_predicted;
 vector<point> utilities::city;
 params utilities::param(PARAMS_FILE);
 

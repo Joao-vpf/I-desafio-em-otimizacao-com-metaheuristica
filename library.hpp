@@ -29,22 +29,59 @@ unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 mt19937 gen(seed);
 
 
-struct ABC_params{
-    int cycles_limit = 1000;
-	int employed_limit = 500;
-    int colony_size = 100;
-    double scout_percent = 0.2;
-    double onlooker_percent = 0.5;
-	double employed_percent = 0.5;
+struct ABC_params {
+    /*
+        Objective:
+            A struct responsible for storing parameters for the ABC algorithm.
+
+        Attributes:
+            cycles_limit: Maximum number of cycles.
+            employed_limit: Maximum number of employed bees.
+            colony_size: Size of the colony.
+            scout_percent: Percentage of scouts.
+            onlooker_percent: Percentage of onlooker bees.
+            employed_percent: Percentage of employed bees.
+    */
+
+    int cycles_limit;
+    int employed_limit;
+    int colony_size;
+    double scout_percent;
+    double onlooker_percent;
+    double employed_percent;
+
+    ABC_params() 
+    {
+        /*
+            Objective:
+                Default constructor initializing parameters with default values.
+        */
+        cycles_limit = 1000;
+        employed_limit = 500;
+        colony_size = 100;
+        scout_percent = 0.2;
+        onlooker_percent = 0.5;
+        employed_percent = 0.5;
+    }
 };
+
 
 struct ACO_params
 {
-	/*
+    /*
         Objective:
-            A struct responsible for storing parameters for the aco_params algorithm.
+            A struct responsible for storing parameters for the ACO algorithm.
 
         Attributes:
+            ants: Number of ants to be used in the algorithm.
+            max_generations: Maximum number of generations.
+            alpha: Alpha parameter for pheromone influence.
+            beta: Beta parameter for heuristic influence.
+            decay: Decay rate for pheromones.
+            fix_init: Initial value for fixing the best route.
+            max_opt_it: Maximum number of optimization iterations.
+            local_search: Indicates whether local search should be performed.
+            verbose: Indicates whether verbose output should be enabled.
     */
 
    	int ants;
@@ -59,6 +96,11 @@ struct ACO_params
 
 	ACO_params()
 	{
+		/*
+            Objective:
+                Default constructor initializing parameters with default values.
+        */
+	   
 		fix_init = -1;
 		ants = 10;
 		max_generations = 100; 
@@ -123,7 +165,7 @@ struct GA_Params
 		Attributes:
 			max_generations = Maximum number of generations.
 			max_population = Maximum number of genes in the population.
-			roulette = Defines the probability of a gene being selected in the roulette of opt_roulette.
+			opt_range = Defines the probability of a gene being selected in the opt_range.
 			opt_path_swap_it = Defines the number of simulations in the path optimizer.
 			tx_elite = Defines the elitism rate in the population.
 			verbose = Defines whether to activate the verbose.
@@ -134,13 +176,12 @@ struct GA_Params
 			fix_init = Defines whether there will be an initial number as fixed (-1 defines as not existing).
 			P_value = Defines how many parents were considered.
 			P_limiar = Defines the minimum quantity required for the city and to appear in the same position as the parents.
-			VR = Boolean that indicates whether the Voting Recombination Crossover is active.
-			cross_active = Stores which crossovers are active ("BCR" -> Best Cost Route crossover, "AHCAVG" -> Arithmetic Average, "CX" -> Cycle Crossover).
+			cross_active = Stores which crossovers are active ("BCR" -> Best Cost Route crossover, "AHCAVG" -> Arithmetic Average *disabled*, "ER" -> Edge Recombination crossover, "VR" -> Voting Recombination Crossover , "PMX" -> PMX Crossover).
 	*/
 
 	int max_generations;
 	int max_population;
-	int roulette;
+	int opt_range;
 	int opt_path_swap_it;
 	int tx_elite;
 	bool verbose;
@@ -152,26 +193,26 @@ struct GA_Params
 	int P_value;
 	int repetition_limit;
 	int P_limiar;
-	vector<int> cross_active = { 0, 0, 0, 0, 0};
+	vector<int> cross_active;
 
 	GA_Params()
 	{
-		tx_elite = 7;
+		tx_elite = 10;
 		verbose = 0;
 		simple_verbose = 1;
 		fix_init = -1;
-		max_generations = 50000;
-		max_population = 100;
+		max_generations = 5000;
+		max_population = 20;
 		verbose = false;
-		tx_mutation_AHCAVG =  20;
+		tx_mutation_AHCAVG =  0;
 		balance = 0;
-		roulette = 60;
-		repetition_limit = 50;
-		P_value = 4;
+		opt_range = 50;
+		repetition_limit = 200;
+		P_value = 10;
 		P_limiar = 3;
-		opt_path_swap_it = 50;
-		alpha = 70;
-		cross_active = { 0, 0, 0, 0, 0};
+		opt_path_swap_it = 200;
+		alpha = 10;
+		cross_active = { 20, 0, 1, 1, 0};
 	}
 
 };
@@ -186,9 +227,11 @@ class params
 			genetic = Indicate whether the algorithm to be used is genetic or not.
 			ga_p = Contains the specific parameters of the genetic algorithm.
 	*/
+
 public:
 	bool genetic;
 	vector<bool> hybrid;
+	vector<bool> metrics;
 	annealing_params ann_p;
 	grasp_params grasp_p;
 	ABC_params abc_p;
@@ -202,12 +245,15 @@ public:
 
 	params(string source)
 	{
-		/*
-			Objective:
-				An alternate constructor that allows initializing the parameters from a text file.
-		*/
+        /*
+            Objective:
+                An alternate constructor that allows initializing the parameters from a text file.
+            Parameters:
+                - source: Path to the file containing the parameters.
+        */
 
 		hybrid.assign(5, 0);
+		metrics.assign(3, 0);
 		ifstream control_params(source);
 		string in_param;
 
@@ -228,16 +274,42 @@ public:
 			{
 				hybrid[2] = true;
 			}
+			
+			if (in_param == "ACO")
+			{
+				hybrid[3] = true;
+			}
 
 			if(in_param == "ABC")
 			{
 				hybrid[4] = true;
 			}
 
+			if (in_param == "MAE")
+			{
+				metrics[0] = 1;
+			}
+
+			if (in_param == "MSE")
+			{
+				metrics[1] = 1;
+			}
+
+			if (in_param == "R^2")
+			{
+				metrics[2] = 1;
+			}
 		}
 	}
 	
-	void genetic_params(ifstream& control_params){
+	void genetic_params(ifstream& control_params)
+	{
+		/*
+			Objective:
+				Parse and set the parameters for the genetic algorithm from a file.
+			Parameters:
+				- control_params: Reference to the ifstream containing the parameter values.
+		*/
 
 		string in_param;
 		int value;
@@ -247,7 +319,7 @@ public:
 			if(in_param == "genetic.tx_elite")
 			{
 				control_params >> value;
-				if(value > 1 and value < 101)
+				if(value > 1 && value < 101)
 					ga_p.tx_elite = value;
 				continue;
 			}
@@ -268,11 +340,11 @@ public:
 				continue;
 			}
 
-			if (in_param == "genetic.roulette")
+			if (in_param == "genetic.opt_range")
 			{
 				control_params >> value;
-				if (ga_p.roulette >= 0 and ga_p.roulette <= 100)
-					ga_p.roulette = value;
+				if (ga_p.opt_range >= 0 && ga_p.opt_range <= 100)
+					ga_p.opt_range = value;
 				continue;
 			}
 
@@ -303,7 +375,7 @@ public:
 			if (in_param == "genetic.alpha")
 			{
 				control_params >> value;
-				if (ga_p.balance >= 0 and ga_p.balance <= 100)
+				if (ga_p.balance >= 0 && ga_p.balance <= 100)
 				{
 					ga_p.alpha = value;
 				}
@@ -313,7 +385,7 @@ public:
 			if (in_param == "genetic.balance")
 			{
 				control_params >> value;
-				if (ga_p.balance >= 0 and ga_p.balance < 4)
+				if (ga_p.balance >= 0 && ga_p.balance < 4)
 					ga_p.balance = value;
 
 				continue;
@@ -322,7 +394,7 @@ public:
 			if (in_param == "genetic.tx_mutation_AHCAVG")
 			{
 				control_params >> value;
-				if (ga_p.tx_mutation_AHCAVG >= 0 and ga_p.tx_mutation_AHCAVG < 100)
+				if (ga_p.tx_mutation_AHCAVG >= 0 && ga_p.tx_mutation_AHCAVG < 100)
 					ga_p.tx_mutation_AHCAVG = value;
 				continue;
 			}
@@ -409,13 +481,20 @@ struct point {
 
 class utilities
 {
-	/*
-		Objective:
-			Class with useful functions.
+    /*
+        Objective:
+            Utility class containing various useful functions for solving optimization problems.
+
+		Public Attributes:
+			param: Object of class params containing algorithm parameters.
+			n_cities: Number of cities.
+			city: Vector containing points representing cities in the Cartesian plane
+			input_predicted: Input predicted.
 	*/
 
 public:
 	static params param;
+	static LD input_predicted;
 	static int n_cities;
 	static vector<point> city;
 	
@@ -424,6 +503,12 @@ public:
 		/*
 			Objective:
 				Method that creates a random path.
+			Parameters:
+				- initial: Initial index for the path.
+				- repeat: Flag indicating whether to allow repeated cities in the path.
+				- fit: Reference to the fitness value of the generated path.
+				- path: Reference to the generated path.
+				- contain: Vector indicating which cities are included in the path.
 		*/
 
 		path[0] = initial;
@@ -449,6 +534,13 @@ public:
 		/*
 			Objective:
 				Method that creates a random path.
+			Parameters:
+				- initial: Initial index for the path.
+				- repeat: Flag indicating whether to allow repeated cities in the path.
+				- fit: Reference to the fitness value of the generated path.
+				- path: Reference to the generated path.
+				- repath: Reference to the path represented by city indices.
+				- contain: Vector indicating which cities are included in the path.
 		*/
 
 		path[0] = initial;
@@ -476,6 +568,11 @@ public:
 		/*
 			Objective:
 				Calculate the Euclidean distance between two points.
+			Parameters:
+				- a: First point.
+				- b: Second point.
+			Returns:
+				Euclidean distance between points a and b.
 		*/
 
 		return sqrt((a.X - b.X) * (a.X - b.X) + (a.Y - b.Y) * (a.Y - b.Y));
@@ -485,7 +582,13 @@ public:
 	{
 		/*
 			Objective:
-				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveledm and contain (vector<bool>) what indicates whether element i is active.
+				Calculate the fitness value of a path based on the total distance traveled and city inclusion.
+			Parameters:
+				- path: Path represented by a vector of city indices.
+				- n: Number of cities.
+				- contain: Vector indicating which cities are included in the path.
+			Returns:
+				Fitness value of the path.
 		*/
 
 		LD fit = 0;
@@ -514,7 +617,12 @@ public:
 	{
 		/*
 			Objective:
-				Calculate the fitness value of a path (represented by a vector of points) based on the total distance traveled.
+				Calculate the fitness value of a path based on the total distance traveled.
+			Parameters:
+				- path: Path represented by a vector of city indices.
+				- n: Number of cities.
+			Returns:
+				Fitness value of the path.
 		*/
 
 		LD fit = 0;
@@ -533,7 +641,12 @@ public:
 	{
 		/*
 			Objective:
-				Find a random number between the start and end (excluding the end).
+				Find a random integer within a specified range.
+			Parameters:
+				- start: Start of the range (inclusive).
+				- end: End of the range (exclusive).
+			Returns:
+				Random integer within the specified range.
 		*/
 
 		if(start > end) 
@@ -547,7 +660,12 @@ public:
 	{
 		/*
 			Objective:
-				Find a random real.
+				Find a random real number within a specified range.
+			Parameters:
+				- start: Start of the range.
+				- end: End of the range.
+			Returns:
+				Random real number within the specified range.
 		*/
 
 		uniform_real_distribution<> dis(start, end);
@@ -558,23 +676,40 @@ public:
 	{
 		/*
 			Objective:
-				Input points.
+				Input points from a file.
+			Parameters:
+				- source: Path to the input file.
 		*/
 
 		ifstream input(source);
 		int n;
 		input >> n;
 		n_cities = n;
+		
 		while (n--)
 		{
 			LD x, y;
 			input >> x >> y;
 			city.push_back(point(x, y));
 		}
+
+		LD predicted;
+		input >> predicted;
+		input_predicted = predicted;
 	}
+
 
 	static void opt_2(vector<int>& best_path, LD& best_fit, vector<bool> contain = {})
 	{
+		/*
+			Objective:
+				Implement the 2-opt heuristic for optimizing a path.
+			Parameters:
+				- best_path: Reference to the best path found.
+				- best_fit: Reference to the fitness of the best path found.
+				- contain: Optional vector indicating which cities should be included in the optimization.
+		*/
+
 		vector<int> save_path, path_copy;
 		LD cust_copy = INF;
 
@@ -611,6 +746,15 @@ public:
 
 	static void opt_2s(vector<int>& best_path, LD& best_fit, vector<bool> contain = {})
 	{
+		/*
+			Objective:
+				Implement the stochastic 2-opt heuristic for optimizing a path.
+			Parameters:
+				- best_path: Reference to the best path found.
+				- best_fit: Reference to the fitness of the best path found.
+				- contain: Optional vector indicating which cities should be included in the optimization.
+		*/
+
 		vector<int> path_copy = best_path;
 		LD cust_copy = INF;
 		int idxA = utilities::random_range(1, n_cities);
@@ -638,13 +782,66 @@ public:
 		if (cust_copy < best_fit)
 			best_path = path_copy,best_fit = cust_copy;
 	}
+
+
+	static LD calculateR2(LD observed, LD predicted) 
+	{
+		/*
+			Objective:
+				Calculate the coefficient of determination (R^2).
+			Parameters:
+				- observed: Observed value.
+				- predicted: Predicted value.
+			Returns:
+				Coefficient of determination (R^2).
+		*/
+
+		LD rSquared = 1.0 - pow(observed - predicted, 2) / pow(observed, 2);
+		return rSquared;
+	}
+
+	static LD calculateMAE(LD observed, LD predicted) 
+	{
+		/*
+			Objective:
+				Calculate the mean absolute error (MAE).
+			Parameters:
+				- observed: Observed value.
+				- predicted: Predicted value.
+			Returns:
+				Mean absolute error (MAE).
+		*/
+
+		LD mae = std::abs(observed - predicted);
+		return mae;
+	}
+
+	static LD calculateMSE(LD observed, LD predicted) 
+	{
+		/*
+			Objective:
+				Calculate the mean squared error (MSE).
+			Parameters:
+				- observed: Observed value.
+				- predicted: Predicted value.
+			Returns:
+				Mean squared error (MSE).
+		*/
+
+		LD mse = pow(observed - predicted, 2);
+		return mse;
+	}
 };
 
 struct hash_pair 
-{
+{ 
 	template <class T1, class T2>
 	size_t operator()(const pair<T1, T2>& p) const
 	{
+		/*
+			Objective:
+				Hash function for pair objects.
+		*/
 		auto hash1 = hash<T1>{}(p.first);
 		auto hash2 = hash<T2>{}(p.second);
 
