@@ -242,7 +242,9 @@ public:
             vector<int> solution = greedyRandomizedConstruction(alpha[index]);
 
             local_Search(solution);
-            cout << endl << i << ": " << best_cost << endl;
+            
+            if(utilities::param.grasp_p.verbose)
+                cout << endl << i << ": " << best_cost << endl;
 
             solution_alpha[index] += best_cost;
 
