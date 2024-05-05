@@ -151,13 +151,23 @@ A meta-heurística genética implementada passou por ajustes e incluiu implement
 - P_limiar: Quantidade mínima para a cidade aparecer na mesma posição dos pais (apenas para o crossover VR).
 - cross_active: Lista de cruzamentos ativos ("BCR" -> Melhor Rota de Custo, "AHCAVG" -> Média Aritmética, "ER" -> Recombinação de Borda, "VR" -> Recombinação de Votação, "PMX" -> PMX).
 
+#### Crossovers:
+
+- PMX (Partially Mapped Crossover): Este é o principal método de crossover do algoritmo, oferecendo um dos melhores desempenhos em diversos datasets quando comparado a outras técnicas de crossover. É o único dos crossovers que sempre esta ativo.
+
+- BCR (Best Cost Route Crossover): Este crossover é extremamente poderoso, funcionando de forma semelhante ao opt2. No entanto, sua implementação pode ser custosa em termos de desempenho, podendo causar lentidão significativa em testes extensos. Por esse motivo, é o único dos crossovers que possui uma taxa de utilização programável, variando de 0% a 100%.
+
+- VR (Voting Recombination Crossover): Este crossover é altamente eficiente para induzir mutações e detectar pequenas semelhanças entre os caminhos já encontrados.
+
+- ER (Edge Recombination Crossover): Esta técnica de crossover consegue detectar semelhanças entre pontos adjacentes com facilidade, o que permite encontrar novas soluções vizinhas de forma eficaz.
+
 #### Técnicas de Seleção
 
 Foram implementadas três técnicas de seleção, sendo que a seleção aleatória está desativada por padrão devido à sua ineficiência ao explorar os caminhos vizinhos. As técnicas de torneio e roleta provaram ser mais eficientes e gerar descobertas melhores em vizinhos, garantindo um crossover mais eficaz e desempenho superior.
 
-- Seleção por Torneio
-- Seleção por Roleta
--  Seleção Aleatória (desativada por padrão)
+- Seleção por Torneio: 
+- Seleção por Roleta: 
+- Seleção Aleatória (desativada por padrão): 
 
 #### Ordem de Funcionamento do Algoritmo
 
@@ -165,7 +175,7 @@ No algoritmo genético, o processo é dividido em cinco etapas:
 
 - Ordenação da População com Base no Fitness: Os indivíduos são ordenados, com os de menor fitness primeiro e os de maior fitness por último.
 - Seleção dos Genes por Elitismo: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
-- Aplicação do Crossover entre Dois Indivíduos: Dois indivíduos são escolhidos usando uma das técnicas de seleção.
+- Aplicação do Crossover entre Dois Indivíduos: Dois indivíduos são escolhidos usando uma das [técnicas de seleção](####Crossovers).
 - Mutação dos Indivíduos ou Otimização: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
 - Salvamento dos Novos Genes para a Próxima Geração: Os novos genes são salvos para serem utilizados na próxima iteração do algoritmo.
 
