@@ -53,7 +53,7 @@ genetic.P_value  20
 genetic.tx_elite 20
 genetic.opt_range 80
 genetic.opt_path_swap_it 100
-genetic.max_population 31
+genetic.max_population 67
 genetic.max_generations 500
 genetic.alpha 10
 genetic.fix_init -1

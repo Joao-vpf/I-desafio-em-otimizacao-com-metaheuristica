@@ -130,5 +130,6 @@
 84 38
 84 6
 107 27
+564
 
 https://www.math.uwaterloo.ca/tsp/vlsi/xqf131.tour.html
