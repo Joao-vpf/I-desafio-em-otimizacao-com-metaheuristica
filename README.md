@@ -169,6 +169,37 @@ No algoritmo genético, o processo é dividido em cinco etapas:
 - Mutação dos Indivíduos ou Otimização: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
 - Salvamento dos Novos Genes para a Próxima Geração: Os novos genes são salvos para serem utilizados na próxima iteração do algoritmo.
 
+### Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)
+
+#### Parâmetros
+- l: Número de iterações.
+- m: Número de parâmetros alfa.
+- cont_alpha: Contador para cada parâmetro alfa.
+- p_alpha: Probabilidade de selecionar cada parâmetro alfa.
+- solution_alpha: Custo acumulado para cada parâmetro alfa.
+- alfa: Vetor de parâmetros alfa.
+- beta: Parâmetro beta para atualização de probabilidades.
+- best_solution: Melhor solução encontrada pelo algoritmo.
+- best_cost: Custo da melhor solução encontrada.
+
+#### Selecionador de Alfa
+- O alfa é selecionado com base em um vetor de probabilidade para todos os alfas. Essa probabilidade é atualizada a "beta" vezes. Dessa forma, alfas que produziram melhores respostas anteriormente têm mais chances de serem selecionados novamente.
+
+#### Construtor de Soluções Guloso
+- O construtor de soluções que utiliza a ideia do método guloso para resolver o TSP. É passado um alfa do vetor como parâmetro, que é utilizado para encontrar o limiar de pontos que serão aceitos nesse caminho. Desta forma, ele começa de um ponto aleatório e acrescenta um a um pontos que sejam menores que o limiar definido pelo alfa, respeitando a seguinte fórmula: (candidato <= candidatoMenosDistante + alfa * (candidatoMaisDistante - candidatoMenosDistante)).
+
+#### Busca Local
+- Foi implementada uma variação do operador de Mutação por Inversão opt_2, onde todos os pares de cidades são percorridos e suas posições são invertidas. Os pares são invertidos e, em seguida, é calculado o novo custo. Se for verificado que o custo do caminho é menor, a inversão é mantida; caso contrário, é revertida. Dessa forma, a cada iteração, é feita a busca por todas as soluções vizinhas da gerada pelo construtor de soluções, a fim de encontrar a melhor.
+
+#### Ordem de Funcionamento do Algoritmo
+
+No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
+
+1. É gerada uma nova solução pelo construtor de soluções.
+2. Inicia-se uma busca local por essa solução a fim de melhorá-la.
+3. Avalia a nova solução em comparação com a melhor encontrada anteriormente encontrada.
+4. Atualiza a probabilidade dos alfas para a próxima iteração.
+
 #### Metaheurísticas Descartadas no Projeto
 
 - **Artificial Bee Colony (ABC):**
