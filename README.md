@@ -13,6 +13,12 @@
     - [Genetic Algorithm (GA)](#genetic-algorithm-ga)
     - [Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)](#reactive-greedy-randomized-adaptive-search-procedure-reactive-grasp)
   - [Resultados](#resultados)
+    - [Técnicas de Otimização](Técnicas-de-Otimização)
+    - Algoritmo Genético (GA)
+      - [Parâmetros](Parâmetros)
+      - [Crossovers](Crossovers) 
+      - [Técnicas de Seleção](Técnicas-de-Seleção)  
+      - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo)  
   - [Conclusão](#conclusão)
 
 ## Equipe:
