@@ -3,7 +3,7 @@ genetic.cross_active.BCR 15
 genetic.P_limiar 3
 genetic.P_value  10
 genetic.tx_elite 10
-genetic.roulette 40
+genetic.roulette 60
 genetic.opt_path_swap_it 200
 genetic.max_population 20
 genetic.max_generations 3000

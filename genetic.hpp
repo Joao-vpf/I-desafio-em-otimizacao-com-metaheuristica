@@ -258,7 +258,12 @@ class gene
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
-			utilities::opt_2s(path, fit, utilities::random_range()%2);
+			utilities::opt_2s(path, fit, true);
+		}
+		
+		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
+		{
+			utilities::opt_2s(path, fit, false);
 		}
 
 		recalculation_repath();
@@ -484,7 +489,7 @@ class genetic
 				Function to choose two individuals using tournament selection method.
 		*/
 
-		const int tournament_size = 5; 
+		const int tournament_size = min(5, population); 
 		vector<int> tournament_contestants(tournament_size);
 
 		for (int i = 0; i < tournament_size; ++i)
@@ -559,10 +564,10 @@ class genetic
 				}
 				else
 				{
-					if(utilities::random_range()%2==0)
-						tournament_selection(father, mother);
-					else
+					if(utilities::random_range()%2 == 0)
 						roulette_wheel_selection(father, mother);
+					else
+						tournament_selection(father, mother);
 				}
 				
 				new_generation[i] = genes[father].cross(genes[mother], genes);
@@ -605,8 +610,7 @@ class genetic
 			ACO aco(genes[i].path);
 			genes[i].path = aco.get_best_path();
 			genes[i].fit = aco.get_best_fit();
-			for(int l = 0; l < n_cities; l++)
-				genes[i].repath[genes[i].path[l]] = l; 
+			genes[i].recalculation_repath();
 		}
 	}
 	

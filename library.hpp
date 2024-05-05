@@ -72,9 +72,9 @@ struct ACO_params
 
 	int ants;
 	int max_generations;
-	int alpha;
-	int beta;
-	int decay;
+	LD alpha;
+	LD beta;
+	LD decay;
 	int fix_init;
 	int max_opt_it;
 	bool local_search;
@@ -208,8 +208,14 @@ class params
 			This structure is responsible for storing the parameters of the selected algorithm and the settings related to its execution.
 
 		Attributes:
-			genetic = Indicate whether the algorithm to be used is genetic or not.
-			ga_p = Contains the specific parameters of the genetic algorithm.
+			genetic: Indicates whether the algorithm to be used is genetic or not.
+			hybrid: Vector indicating which hybrid algorithms are activated.
+			metrics: Vector indicating which performance metrics are activated.
+			ann_p: Annealing parameters.
+			grasp_p: GRASP parameters.
+			abc_p: ABC parameters.
+			ga_p: Genetic Algorithm parameters.
+			aco_p: Ant Colony Optimization parameters.
 	*/
 
 public:
@@ -229,12 +235,12 @@ public:
 
 	params(string source)
 	{
-		/*
-			Objective:
-				An alternate constructor that allows initializing the parameters from a text file.
-			Parameters:
-				- source: Path to the file containing the parameters.
-		*/
+        /*
+            Objective:
+                An alternate constructor that allows initializing the parameters from a text file.
+            Parameters:
+                - source: Path to the file containing the parameters.
+        */
 
 		hybrid.assign(5, 0);
 		metrics.assign(3, 0);
@@ -258,10 +264,11 @@ public:
 			{
 				hybrid[2] = true;
 			}
-
+			
 			if (in_param == "ACO")
 			{
 				hybrid[3] = true;
+				params::aco_params(control_params);
 			}
 
 			if (in_param == "ABC")
@@ -291,6 +298,7 @@ public:
 		/*
 			Objective:
 				Parse and set the parameters for the genetic algorithm from a file.
+
 			Parameters:
 				- control_params: Reference to the ifstream containing the parameter values.
 		*/
@@ -386,7 +394,8 @@ public:
 			if (in_param == "genetic.fix_init")
 			{
 				control_params >> value;
-				ga_p.fix_init = value;
+				if (value >= -1)
+					ga_p.fix_init = value;
 				continue;
 			}
 
@@ -447,14 +456,13 @@ public:
 			}
 		}
 
-		ga_p.P_value = max(0, min(ga_p.P_value, ga_p.max_population));
-		ga_p.P_limiar = max(0, min(ga_p.P_limiar, ga_p.P_value));
-		ga_p.tx_elite = (ga_p.tx_elite * ga_p.max_population) / 100;
+		ga_p.P_value = max(0,min(ga_p.P_value, ga_p.max_population));
+		ga_p.P_limiar = max(0,min(ga_p.P_limiar, ga_p.P_value));
+		ga_p.tx_elite = (ga_p.tx_elite*ga_p.max_population)/100;
 	}
 };
 
-struct point
-{
+struct point {
 	/*
 		Objective:
 			A structure to represent a point in the Cartesian plane with coordinates X and Y.
