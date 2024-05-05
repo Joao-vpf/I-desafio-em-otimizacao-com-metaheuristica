@@ -48,7 +48,7 @@ public:
         cycles_limit = utilities::param.abc_p.cycles_limit;
         employed_limit = utilities::param.abc_p.employed_limit;
         colony_size = utilities::param.abc_p.colony_size;
-        scout_percent = utilities::param.abc_p.onlooker_percent;
+        scout_percent = utilities::param.abc_p.scout_percent;
         onlooker_percent = utilities::param.abc_p.onlooker_percent;
         employed_percent = utilities::param.abc_p.employed_percent;
         best_solution = initial_solution;
@@ -89,24 +89,17 @@ public:
 
         for (int i = onlooker_count; i < colony_size; ++i) 
         {
-            hive[i].role = 'F';
+            random_shuffle(hive[i].path.begin(),hive[i].path.end());
+            hive[i].role = 'E';
         }
     }
 
-    vector<int> update_path(const vector<int> path) 
+    vector<int> update_path(const vector<int> path)
     {
-        /*
-            Objective:
-                Updates the path of a bee by swapping two random cities.
-            Parameters:
-                - path: Current path of the bee.
-            Returns:
-                Updated path after swapping two random cities.
-        */
-
         vector<int> new_path = path;
         int random_idx = utilities::random_range(0, path.size() - 1);
         swap(new_path[random_idx], new_path[random_idx + 1]);
+        
         return new_path;
     }
 
@@ -168,11 +161,12 @@ public:
             if (bee.role == 'O') 
             {
                 vector<int> new_path = update_path(best_solution);
-                double new_distance = utilities::Fx_fit(new_path, n_cities);
 
-                if (new_distance < best_cost) 
+                double new_cost = utilities::Fx_fit(new_path, n_cities);
+
+                if (new_cost < best_cost)
                 {
-                    best_cost = new_distance;
+                    best_cost = new_cost;
                     best_solution = new_path;
                 }
             }
@@ -194,7 +188,7 @@ public:
 
         for (int i = 0; i < m; ++i)
         {
-            if (hive[i].role == 'E') 
+            if (hive[i].role == 'E')
             {
                 employed(hive[i]);
 
@@ -204,11 +198,10 @@ public:
                     best_solution = hive[i].path;
                 }
                 results.push_back({i, hive[i].cost});
-            } 
-            else 
+            }
+            else if (hive[i].role == 'S')
             {
-                if (hive[i].role == 'S') 
-                    scouter_bee(hive[i]);
+                scouter_bee(hive[i]);
             }
         }
 
@@ -240,6 +233,7 @@ public:
         {
             bees_for_pollen(hive, scout_count);
             outlooker_bee(hive);
+
         }
 
         return best_cost;
