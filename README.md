@@ -173,11 +173,15 @@ Foram implementadas três técnicas de seleção, sendo que a seleção aleatór
 
 No algoritmo genético, o processo é dividido em cinco etapas:
 
-- Ordenação da População com Base no Fitness: Os indivíduos são ordenados, com os de menor fitness primeiro e os de maior fitness por último.
-- Seleção dos Genes por Elitismo: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
-- Aplicação do Crossover entre Dois Indivíduos: Dois indivíduos são escolhidos usando uma das [técnicas de seleção](#Crossovers).
-- Mutação dos Indivíduos ou Otimização: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
-- Salvamento dos Novos Genes para a Próxima Geração: Os novos genes são salvos para serem utilizados na próxima iteração do algoritmo.
+- **Ordenação da População com Base no Fitness:** Os indivíduos são classificados, com os de menor fitness sendo priorizados antes dos de maior fitness.
+
+- **Seleção dos Genes por Elitismo:** Uma porcentagem da população é preservada diretamente para a próxima geração, sendo otimizada com a técnica opt_2s.
+
+- **Aplicação do Crossover entre Dois Indivíduos:** Dois indivíduos são selecionados usando uma das [técnicas de seleção](#Técnicas-de-Seleção), seguido pela aplicação de um ou mais [crossovers](#Crossovers).
+
+- **Mutação dos Indivíduos ou Otimização:** O **opt_range** define o intervalo de otimização, determinando se um indivíduo fora da elite será otimizado ou sofrerá uma mutação, com base em alguma das [técnicas de seleção](#Técnicas-de-Seleção).
+
+- **Salvamento dos Novos Genes para a Próxima Geração:** Os novos genes são armazenados para uso na próxima iteração do algoritmo.
 
 #### Metaheurísticas Descartadas no Projeto
 
