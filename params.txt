@@ -4,11 +4,11 @@ genetic.cross_active.ER 0
 genetic.cross_active.VR 0
 genetic.P_limiar 5
 genetic.P_value  20
-genetic.tx_elite 50
-genetic.opt_range 50
-genetic.opt_path_swap_it 200
-genetic.max_population 23
-genetic.max_generations 3000
+genetic.tx_elite 20
+genetic.opt_range 70
+genetic.opt_path_swap_it 100
+genetic.max_population 31
+genetic.max_generations 1000
 genetic.alpha 10
 genetic.fix_init -1
 genetic.verbose 1

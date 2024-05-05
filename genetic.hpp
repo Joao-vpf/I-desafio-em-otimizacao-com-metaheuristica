@@ -279,7 +279,7 @@ public:
 		child.fit = utilities::Fx_fit(child.path, nodes, child.contain);
 	}
 	
-	void opt_path()
+	void opt_path(bool mutation)
 	{
 		/*
 			Objective:
@@ -288,14 +288,9 @@ public:
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
 		{
-			utilities::opt_2s(path, fit, true);
+			utilities::opt_2s(path, fit, mutation);
 		}
-		
-		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
-		{
-			utilities::opt_2s(path, fit, false);
-		}
-
+	
 		recalculation_repath();
 	}
 
@@ -360,25 +355,16 @@ public:
 	}
 
 
-	void mutation_swap()
+	void mutation_swap(bool mutation)
 	{
 		/*
 			Objective:
 				Perform mutation by swapping two random indices in the gene.
 		*/
 
-		int idxA = utilities::random_range(1, nodes);
-		int idxB = utilities::random_range(1, nodes);
+		utilities::opt1(path, fit, mutation);
 
-		swap(this->path[idxA], this->path[idxB]);
-		LD new_fit = utilities::Fx_fit(this->path,this->nodes, this->contain);
-
-		if (new_fit > fit)
-			swap(this->path[idxA], this->path[idxB]);
-		else
-			fit = new_fit;	
-
-		opt_path();
+		opt_path(mutation);
 	}
 
 	bool not_repeat_insert(const int& i, const int& x)
@@ -564,20 +550,23 @@ class genetic
 	
 		int it = 1;
 
-		while(it<utilities::param.ga_p.max_generations)
+		while(it <= utilities::param.ga_p.max_generations)
 		{	
 			sort(genes.begin(), genes.end(), order);
 			
 			seed = std::chrono::system_clock::now().time_since_epoch().count();
 			gen = mt19937 (seed);
 
-			if(utilities::param.ga_p.verbose == 1 && it%100==0)
-				print_verbose(it/100);
+			if(utilities::param.ga_p.verbose == 1 && it%10==0)
+				print_verbose(it/10);
 
 			vector<gene> new_generation(population, gene(n_cities));
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
+			{
 				new_generation[i] = genes[i];
+				new_generation[i].mutation_swap(false);
+			}
 
 			for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
 			{
@@ -602,17 +591,16 @@ class genetic
 			for(int i=utilities::param.ga_p.tx_elite; i<population; i++)
 			{
 				if(utilities::random_range(0, 100) < utilities::param.ga_p.opt_range)
-					new_generation[i].mutation_swap();
-				else
 				{
-					int idxA = utilities::random_range(1, n_cities);
-					int idxB = utilities::random_range(1, n_cities);
+					if(utilities::random_range()%2 == 0)
+						utilities::opt_2s(new_generation[i].path, new_generation[i].fit, true);
+					else
+						utilities::opt1(new_generation[i].path, new_generation[i].fit, true);
 
-					swap(new_generation[i].path[idxA], new_generation[i].path[idxB]);
-
-					new_generation[i].fit = utilities::Fx_fit(new_generation[i].path,new_generation[i].nodes, new_generation[i].contain);
 					new_generation[i].recalculation_repath();
 				}
+				else
+					new_generation[i].mutation_swap(false);
 			}
 			
 			genes = new_generation;

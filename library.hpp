@@ -303,11 +303,13 @@ public:
 			if (in_param == "annealing")
 			{
 				hybrid[1] = true;
+				params::ann_params(control_params);
 			}
 
 			if (in_param == "grasp")
 			{
 				hybrid[2] = true;
+				params::grasp_params(control_params);
 			}
 			
 			if (in_param == "aco")
@@ -316,9 +318,10 @@ public:
 				params::aco_params(control_params);
 			}
 
-			if (in_param == "ABC")
+			if (in_param == "abc")
 			{
 				hybrid[4] = true;
+				params::abc_params(control_params);
 			}
 
 			if (in_param == "MAE")
@@ -502,9 +505,7 @@ public:
 		}
 
 		ga_p.P_value = max(0,min(ga_p.P_value, ga_p.max_population));
-		ga_p.P_limiar = max(0,min(ga_p.P_limiar, ga_p
-
-.P_value));
+		ga_p.P_limiar = max(0,min(ga_p.P_limiar, ga_p.P_value));
 		ga_p.tx_elite = (ga_p.tx_elite*ga_p.max_population)/100;
 	}
 
@@ -595,7 +596,171 @@ public:
 			}
 		}
 	}
+
+	void abc_params(ifstream& control_params)
+	{
+		/*
+			Objective:
+				Parse and set the parameters for the Ant Colony Optimization algorithm from a file.
+
+			Parameters:
+				- control_params: Reference to the ifstream containing the parameter values.
+		*/
+
+		string in_param;
+		int value;
+		LD value_double;
+
+		while (control_params >> in_param && in_param != "end")
+		{
+			
+			if (in_param == "abc.cycles_limit")
+			{
+				control_params >> value;
+				if (value > 1)
+					abc_p.cycles_limit = value;
+				continue;
+			}
+
+			if (in_param == "abc.employed_limit")
+			{
+				control_params >> value;
+				if (value > 1)
+					abc_p.employed_limit = value;
+				continue;
+			}
+			
+			if (in_param == "abc.colony_size")
+			{
+				control_params >> value;
+				if (value > 1)
+					abc_p.colony_size = value;
+				continue;
+			}
+			
+			if (in_param == "abc.scout_percent")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					abc_p.scout_percent = value_double;
+				continue;
+			}
+			
+			if (in_param == "abc.onlooker_percent")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					abc_p.onlooker_percent = value_double;
+				continue;
+			}
+			
+			if (in_param == "abc.employed_percent")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					abc_p.employed_percent = value_double;
+				continue;
+			}
+		}
+	}
+
+	void ann_params(ifstream& control_params)
+	{
+		/*
+			Objective:
+				Parse and set the parameters for the Annealing algorithm from a file.
+
+			Parameters:
+				- control_params: Reference to the ifstream containing the parameter values.
+		*/
+
+		string in_param;
+		int value;
+		LD value_double;
+
+		while (control_params >> in_param && in_param != "end")
+		{
+			if (in_param == "annealing.t0")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					ann_p.t0 = value_double;
+				continue;
+			}
+
+			if (in_param == "annealing.tf")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					ann_p.tf = value_double;
+				continue;
+			}
+			
+			if (in_param == "annealing.l")
+			{
+				control_params >> value;
+				if (value > 1)
+					ann_p.l = value;
+				continue;
+			}
+			
+			if (in_param == "annealing.alpha")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					ann_p.alpha = value_double;
+				continue;
+			}
+		}
+	}
+
+	void grasp_params(ifstream& control_params)
+	{
+		/*
+			Objective:
+				Parse and set the parameters for the GRASP algorithm from a file.
+
+			Parameters:
+				- control_params: Reference to the ifstream containing the parameter values.
+		*/
+
+		string in_param;
+		int value;
+		LD value_double;
+
+		while (control_params >> in_param && in_param != "end")
+		{
+			if (in_param == "grasp.m")
+			{
+				control_params >> value;
+				if (value > 1)
+					grasp_p.m = value;
+				continue;
+			}
+
+			if (in_param == "grasp.beta")
+			{
+				control_params >> value;
+				if (value > 1)
+					grasp_p.beta = value;
+				continue;
+			}
+			
+			if (in_param == "grasp.l")
+			{
+				control_params >> value_double;
+				if (value_double > 1)
+					grasp_p.l = value_double;
+				continue;
+			}
+		}
+		
+		grasp_p.cont_alpha.assign(grasp_p.m, 0);
+		grasp_p.p_alpha.assign(grasp_p.m, 1.0 / grasp_p.m);
+		grasp_p.solution_alpha.assign(grasp_p.m, 0.0);
+	}
 };
+
 
 struct point 
 {
@@ -869,7 +1034,7 @@ public:
 					best_path = path_copy, best_fit = cust_copy;
 				else
 					if(mutation)
-					best_path = path_copy, best_fit = cust_copy;
+						best_path = path_copy, best_fit = cust_copy;
 
 				path_copy = save_path;
 			}
@@ -916,10 +1081,32 @@ public:
 			best_path = path_copy, best_fit = cust_copy;
 		else
 			if(mutation)
-			best_path = path_copy, best_fit = cust_copy;
+				best_path = path_copy, best_fit = cust_copy;
 	}
 
+	static void opt1(vector<int>& best_path, LD& best_fit, bool mutation = false, vector<bool> contain = {})
+	{
+		vector<int> path_copy = best_path;
+		LD cust_copy = INF;
+		int idxA = utilities::random_range(1, n_cities);
+		int idxB = utilities::random_range(1, n_cities);
 
+		while(idxA == idxB)
+			idxB = utilities::random_range(1, n_cities);
+
+		swap(path_copy[idxA], path_copy[idxB]);
+
+		if (contain.empty())
+			cust_copy = utilities::Fx_fit(path_copy,n_cities);
+		else
+			cust_copy = utilities::Fx_fit(path_copy,n_cities, contain);
+
+		if (!mutation && cust_copy < best_fit)
+			best_path = path_copy, best_fit = cust_copy;
+		else
+			if(mutation)
+				best_path = path_copy, best_fit = cust_copy;
+	}
 
 	static LD calculateR2(LD observed, LD predicted) 
 	{
