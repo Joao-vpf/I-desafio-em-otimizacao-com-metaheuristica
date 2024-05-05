@@ -228,9 +228,7 @@ class ACO
 public:
 
     ACO()
-   
-
- {
+    {
         /*
             Objective:
                 Constructor for initializing the ACO algorithm.

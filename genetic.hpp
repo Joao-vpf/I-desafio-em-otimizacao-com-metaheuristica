@@ -1,26 +1,49 @@
 #pragma once
 #include "library.hpp"
 #include "ACO.hpp"
-
 class gene
 {
 	/* 
 		Objective:
-		
-		Attributes:
-			nodes = Number of index in gene.
-			fit = Number indicating the value of the path.
-			path = Vector that stores the current path.
-			repath =  Vector that stores the city index.
-			contain = Vector that stores the contain city on path.
+			Represents a gene in a genetic algorithm.
 
+		Attributes:
+			nodes: Number of nodes in the gene.
+			fit: Fitness value of the gene.
+			path: Vector storing the current path of the gene.
+			repath: Vector storing the index of each city in the path.
+			contain: Vector indicating whether a city is included in the path.
 	*/
+
+public:
+	int nodes;
+	LD fit = 0;
+	vector<int> path, repath;
+	vector<bool> contain;
+
+	gene(int n)
+	{
+		/*
+			Objective:
+				Constructor for the gene class.
+			Parameters:
+				- n: Number of nodes in the gene.
+		*/
+
+		nodes = n;
+		path.assign(n, -1);
+		repath.assign(n, -1);
+		contain.assign(n, 0);
+	}
 
 	void bcr(gene& child, const gene& mother)
 	{
 		/* Best Cost Route crossover
 			Objective:
-				Function that performs the crossover with the Best Cost Route crossover method.
+				Perform crossover using the Best Cost Route method.
+			Parameters:
+				- child: Gene representing the child after crossover.
+				- mother: Gene representing the mother gene.
 		*/
 
 		child = *this;
@@ -30,9 +53,6 @@ class gene
 		if(utilities::random_range()%2 == 0)
 		{
 			child = mother;
-			vector<int> new_path;
-			unordered_set<int> cut;
-
 			while (int(cut.size()) < nodes/2)
 			{
 				cut.insert(this->path[utilities::random_range((utilities::param.ga_p.fix_init == -1 ? 0 : utilities::param.ga_p.fix_init), nodes)]);
@@ -46,7 +66,6 @@ class gene
 			}
 		}
 		
-			
 		for(auto e : cut)
 		{
 			new_path = child.path;
@@ -70,16 +89,18 @@ class gene
 				child.repath[child.path[i]] = i, child.contain[child.path[i]] = 1;
 
 		}
-
 	}
 
 	void vr(gene& child, const vector<gene>& genes)
 	{	
 		/* Voting Recombination Crossover
 			Objective:
-				Function that performs the crossover with the Voting Recombination Crossover method.
+				Perform crossover using the Voting Recombination method.
+			Parameters:
+				- child: Gene representing the child after crossover.
+				- genes: Vector of genes for voting.
 		*/
-		
+
 		int i = 0;
 
 		if (utilities::param.ga_p.fix_init != -1)
@@ -114,7 +135,10 @@ class gene
 	{
 		/* Arithmetic Average
 			Objective:
-				Function that performs the crossover with the Arithmetic Average method.
+				Perform crossover using the Arithmetic Average method.
+			Parameters:
+				- child: Gene representing the child after crossover.
+				- mother: Gene representing the mother gene.
 		*/
 
 		int father_gene = ((100 - utilities::param.ga_p.tx_mutation_AHCAVG) *  utilities::param.ga_p.alpha) / 100;
@@ -164,7 +188,10 @@ class gene
 	{ 
 		/* PMX Crossover
 			Objective:
-				Function that performs the crossover with the PMX Crossover method.
+				Perform crossover using the PMX method.
+			Parameters:
+				- child: Gene representing the child after crossover.
+				- mother: Gene representing the mother gene.
 		*/
 
 		int idx = utilities::random_range(0, nodes);
@@ -207,7 +234,10 @@ class gene
 	{
 		/* Edge Recombination crossover
 			Objective:
-				Function that performs the crossover with the Edge Recombination crossover method.
+				Perform crossover using the Edge Recombination method.
+			Parameters:
+				- child: Gene representing the child after crossover.
+				- mother: Gene representing the mother gene.
 		*/
 
 		vector<set<int>> adj(nodes);
@@ -253,7 +283,7 @@ class gene
 	{
 		/*
 			Objective:
-				Function that aims to update the path by simulating some internal changes.
+				Update the path by simulating internal changes.
 		*/
 
 		for (int i = 0; i < utilities::param.ga_p.opt_path_swap_it; i++)
@@ -269,30 +299,16 @@ class gene
 		recalculation_repath();
 	}
 
-public:
-	int nodes;
-	LD fit = 0;
-	vector<int> path, repath;
-	vector<bool> contain;
-
-	gene(int n)
-	{
-		/*
-			Objective:
-				Gene class constructor.
-		*/
-
-		nodes = n;
-		path.assign(n, -1);
-		repath.assign(n, -1);
-		contain.assign(n, 0);
-	}
-
 	gene cross(const gene& mother,const vector<gene>& genes)
 	{
 		/*
 			Objective:
-				Method that chooses which crossover will be made.
+				Choose which crossover method to perform.
+			Parameters:
+				- mother: Gene representing the mother gene.
+				- genes: Vector of genes for voting crossover.
+			Returns:
+				Gene representing the child after crossover.
 		*/
 
 		gene child(nodes);
@@ -334,15 +350,21 @@ public:
 
 	void recalculation_repath()
 	{
+		/*
+			Objective:
+				Recalculate the repath vector based on the current path vector.
+		*/
+
 		for (int i = 0; i < nodes; i++)
 			this->repath[this->path[i]] = i;
 	}
+
 
 	void mutation_swap()
 	{
 		/*
 			Objective:
-				Optimization method in the function that chooses two random index from the gene and exchanges their values.
+				Perform mutation by swapping two random indices in the gene.
 		*/
 
 		int idxA = utilities::random_range(1, nodes);
@@ -363,7 +385,12 @@ public:
 	{
 		/*
 			Objective:
-				Function that inserts in position i of the gene but prevents repeated values.
+				Insert an item at position i in the gene, avoiding repetition.
+			Parameters:
+				- i: Index at which to insert the item.
+				- x: Item to be inserted.
+			Returns:
+				True if the item was inserted successfully, false otherwise.
 		*/
 
 		if (contain[x])
@@ -379,7 +406,10 @@ public:
 	{
 		/*
 			Objective:
-				Function that inserts an item at position i of the gene.
+				Insert an item at position i in the gene.
+			Parameters:
+				- i: Index at which to insert the item.
+				- x: Item to be inserted.
 		*/
 
 		contain[x] = true;
@@ -532,9 +562,9 @@ class genetic
 				Function with the objective of simulating the generations of the algorithm, choosing between the active crossover types and optimizers.
 		*/
 	
-		int it = 1, limit =0;
+		int it = 1;
 
-		while(it<utilities::param.ga_p.max_generations && limit < utilities::param.ga_p.repetition_limit)
+		while(it<utilities::param.ga_p.max_generations)
 		{	
 			sort(genes.begin(), genes.end(), order);
 			
@@ -547,11 +577,7 @@ class genetic
 			vector<gene> new_generation(population, gene(n_cities));
 
 			for (int i = 0; i <  utilities::param.ga_p.tx_elite; i++)
-			{
 				new_generation[i] = genes[i];
-				utilities::opt_2(new_generation[i].path, new_generation[i].fit);
-				new_generation[i].recalculation_repath();
-			}
 
 			for (int i =  utilities::param.ga_p.tx_elite; i < population; i++)
 			{
@@ -607,10 +633,6 @@ class genetic
 				utilities::random_path(utilities::random_range(0, utilities::n_cities), 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);			
 			else
 				utilities::random_path(utilities::param.ga_p.fix_init, 0, genes[i].fit, genes[i].path, genes[i].repath, genes[i].contain);	
-			ACO aco(genes[i].path);
-			genes[i].path = aco.get_best_path();
-			genes[i].fit = aco.get_best_fit();
-			genes[i].recalculation_repath();
 		}
 	}
 	

@@ -219,28 +219,28 @@ struct GA_Params
 	int tx_mutation_AHCAVG;
 	int fix_init;
 	int P_value;
-	int repetition_limit;
+	int repetition_limit;// *disabled*
 	int P_limiar;
 	vector<int> cross_active;
 
 	GA_Params()
 	{
-		tx_elite = 10;
+		tx_elite = 50;
 		verbose = 0;
 		simple_verbose = 1;
 		fix_init = -1;
-		max_generations = 5000;
-		max_population = 20;
+		max_generations = 3000;
+		max_population = 23;
 		verbose = false;
 		tx_mutation_AHCAVG =  0;
 		balance = 0;
-		opt_range = 50;
+		opt_range = 60;
 		repetition_limit = 200;
-		P_value = 10;
+		P_value = 20;
 		P_limiar = 3;
 		opt_path_swap_it = 200;
 		alpha = 10;
-		cross_active = { 20, 0, 1, 1, 0};
+		cross_active = { 15, 0, 0, 0, 0};
 	}
 
 };
