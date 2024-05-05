@@ -175,7 +175,7 @@ No algoritmo genético, o processo é dividido em cinco etapas:
 
 - Ordenação da População com Base no Fitness: Os indivíduos são ordenados, com os de menor fitness primeiro e os de maior fitness por último.
 - Seleção dos Genes por Elitismo: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
-- Aplicação do Crossover entre Dois Indivíduos: Dois indivíduos são escolhidos usando uma das [técnicas de seleção](####Crossovers).
+- Aplicação do Crossover entre Dois Indivíduos: Dois indivíduos são escolhidos usando uma das [técnicas de seleção](#Crossovers).
 - Mutação dos Indivíduos ou Otimização: Uma porcentagem da população é salva diretamente para a próxima geração, otimizando-se com a técnica opt_2s.
 - Salvamento dos Novos Genes para a Próxima Geração: Os novos genes são salvos para serem utilizados na próxima iteração do algoritmo.
 
