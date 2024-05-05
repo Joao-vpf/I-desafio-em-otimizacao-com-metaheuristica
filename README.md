@@ -127,6 +127,28 @@ Os conjuntos de dados foram selecionados a partir de duas fontes principais:
 Essas instâncias foram escolhidas por sua representatividade e desafio computacional, cobrindo uma variedade de tamanhos de problema que variam de pequenos conjuntos de cidades a conjuntos de dados VLSI mais complexos.
 
 ### Resultados:
+
+## Metaheurísticas Escolhidas:
+
+### Base:
+
+#### Genetic algorithm (GA):
+A metaheurística genética utilizada tiveram algumas alterações e implementações extras para melhoria na eficiencia, organização e desempenho comparado ao algoritmo base. Podemos listar todos os parametros implemetentados que sÃo:
+- max_generations: Número máximo de gerações.
+- max_population: Número máximo de genes na população.
+- opt_range: Define a probabilidade de um gene ser selecionado na faixa de otimização.
+- opt_path_swap_it: Define o número de simulações no otimizador de caminho.
+- tx_elite: Define a taxa de elitismo na população.
+- verbose: Define se ativar ou não o modo verboso.
+- simple_verbose: Define se ativar ou não o modo de verbosidade simples.
+- alpha: Porcentagem do gene pai relativa ao gene da mãe.
+- balance: Define em relação à boa porcentagem da população que será usada para a nova geração (0 define como nenhum elitismo para a geração).
+- tx_mutation_AHCAVG: Define a taxa de mutação na média aritmética.
+- fix_init: Define se haverá um número inicial fixo (-1 define como não existente).
+- P_value: Define quantos pais foram considerados. (Apenas para o crossover VR)
+- P_limiar: Define a quantidade mínima necessária para a cidade e para aparecer na mesma posição dos pais. (Apenas para o crossover VR)
+cross_active: Armazena quais cruzamentos estão ativos ("BCR" -> Cruzamento da Melhor Rota de Custo, "AHCAVG" -> Média Aritmética desativada, "ER" -> Cruzamento de Recombinação de Borda, "VR" -> Cruzamento de Recombinação de Votação, "PMX" -> Cruzamento PMX).
+
 #### Metaheurísticas Descartadas no Projeto
 
 - **Artificial Bee Colony (ABC):**
