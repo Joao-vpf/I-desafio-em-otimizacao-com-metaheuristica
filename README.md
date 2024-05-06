@@ -279,10 +279,6 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 #### Tempo uy734:
 ![Tempo uy734](dataset_test/uy734_plot/tempos_execucao.png)
 
-#### Tempo lu980:
-![Tempo lu980](dataset_test/lu980_plot/tempos_execucao.png)
-
-
 ### Moda da resposta em relação a cada população:
 
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 | RESPOSTA |
