@@ -24,7 +24,8 @@
       - [Selecionador de Alfa](#selecionador-de-alfa) 
       - [Construtor de Soluções Guloso](#construtor-de-soluções-guloso) 
       - [Busca Local](#busca-local) 
-      - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo-1)  
+      - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo-1)
+    - [Metaheurísticas Descartadas no Projeto](#Metaheurísticas-Descartadas-no-Projeto)
   - [Conclusão](#conclusão)
 
 ## Equipe:
@@ -239,7 +240,7 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 3. Avalia a nova solução em comparação com a melhor encontrada anteriormente encontrada.
 4. Atualiza a probabilidade dos alfas para a próxima iteração.
 
-#### Metaheurísticas Descartadas no Projeto
+## Metaheurísticas Descartadas no Projeto
 
 - **Artificial Bee Colony (ABC):**
   - O ABC é uma técnica poderosa de otimização inspirada no comportamento das abelhas. Durante sua implementação, desenvolvemos um algoritmo simples e teórico. No entanto, nos testes realizados, o algoritmo não produziu resultados satisfatórios. Embora tenha apresentado um tempo de execução eficiente, observamos um erro considerável em comparação com as soluções conhecidas das instâncias utilizadas. Na busca por melhorias, não encontramos literatura adequada para otimizá-lo especificamente para problemas de TSP. Diante disso, optamos por descartar o ABC em favor de um algoritmo mais robusto com o qual já tínhamos familiaridade.
