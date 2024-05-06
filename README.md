@@ -317,7 +317,7 @@ O algoritmo foi testado em uma variedade de cenários, utilizando diferentes tam
 
 ## Conclusão: 
 
-Concluindo, neste trabalho exploramos duas poderosas meta-heurísticas para resolver o Problema do Caixeiro Viajante (TSP): o algoritmo genético (AG) e o Reactive GRASP. Ambas as abordagens mostraram sua eficácia na obtenção de soluções de alta qualidade para o TSP, um problema conhecido por sua complexidade.
+Concluindo, neste trabalho exploramos duas poderosas meta-heurísticas para resolver o Problema do Caixeiro Viajante (TSP): o Algoritmo Genético (AG) e o Reactive GRASP. Ambas as abordagens demonstraram sua eficácia na obtenção de soluções de alta qualidade para o TSP, um problema conhecido por sua complexidade.
 
 O AG revelou-se robusto e versátil, capaz de explorar amplamente o espaço de busca e encontrar soluções competitivas. Sua natureza baseada em populações e operadores genéticos permitiu uma busca global eficiente, adaptando-se bem a diferentes instâncias do problema.
 
@@ -325,5 +325,5 @@ Por outro lado, o Reactive GRASP destacou-se por sua capacidade de adaptação d
 
 Além disso, é importante destacar a possibilidade de aprofundar os estudos nos demais algoritmos testados, que têm muito potencial ainda não explorado.
 
-Em última análise, este estudo demonstra que tanto o algoritmo genético quanto o Reactive GRASP são ferramentas poderosas e complementares na resolução de problemas complexos como o TSP, oferecendo soluções de alta qualidade e abrindo caminho para pesquisas futuras em meta-heurísticas e otimização combinatória.
+Em última análise, este estudo demonstra que tanto o Algoritmo Genético quanto o Reactive GRASP são ferramentas poderosas e complementares na resolução de problemas complexos como o TSP, oferecendo soluções de alta qualidade e abrindo caminho para pesquisas futuras em meta-heurísticas e otimização combinatória.
 
