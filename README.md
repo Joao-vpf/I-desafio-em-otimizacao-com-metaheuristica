@@ -252,6 +252,9 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
   - O ACO é uma técnica de otimização inspirada no comportamento das formigas que demonstrou grande promessa em teoria. Durante sua implementação inicial, desenvolvemos um algoritmo simples e elegante, espelhando os princípios fundamentais do comportamento das formigas na natureza. No entanto, ao testá-lo em problemas do mundo real, encontramos algumas limitações significativas. Embora tenha mostrado eficiência em termos de tempo de execução, observamos que sua capacidade de encontrar soluções ótimas foi comprometida em várias instâncias de problemas. A falta de ajuste fino para contextos específicos, como o problema do Caixeiro Viajante (TSP), resultou em soluções menos competitivas em comparação com algoritmos concorrentes mais robustos. Diante dessa realidade, decidimos abandonar o ACO em favor de algoritmos mais sofisticados, capazes de lidar melhor com a complexidade dos problemas de otimização que enfrentamos.
  
 ## Testes
+
+### Tempo com cada população:
+
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 |
 |----------|----------|----------|----------|
 |dj38| 5.93696  | 11.636  | 17.621 |
@@ -260,6 +263,27 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 |qa194| 1834.21   | 926.236   | 1389.44  |
 |uy734| 912.432   | x   | 1920.54   |
 |lu980| 145.502   | x   | x   |
+
+#### Tempo dj38:
+![Tempo dj38](dataset_test/dj38_plot/tempos_execucao.png)
+
+#### Tempo berlin52:
+![Tempo berlin52](dataset_test/berlin52_plot/tempos_execucao.png)
+
+#### Tempo xqf131:
+![Tempo xqf131](dataset_test/xqf131_plot/tempos_execucao.png)
+
+#### Tempo qa194:
+![Tempo qa194](dataset_test/qa194_plot/tempos_execucao.png)
+
+#### Tempo uy734:
+![Tempo uy734](dataset_test/uy734_plot/tempos_execucao.png)
+
+#### Tempo lu980:
+![Tempo lu980](dataset_test/lu980_plot/tempos_execucao.png)
+
+
+### Moda da resposta em relação a cada população:
 
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 | RESPOSTA |
 |----------|----------|----------|----------|----------|
