@@ -320,8 +320,11 @@ POPULAÇÂO 31
 :-------------------------:
 ![](dataset_test/lu980_plot/teste_2_metricas.png)
 
+### Análise final dos testes:
 
-### Conclusão: 
+O algoritmo foi testado em uma variedade de cenários, utilizando diferentes tamanhos e representações, demonstrando uma eficiência notável e um desempenho consistente. Em grande parte dos casos, alcançou um coeficiente de determinação (R^2) superior a 0.85, além de apresentar valores aceitáveis de Erro Absoluto Médio (MAE) e Erro Quadrático Médio (MSE), dentro dos limites esperados para a resolução do problema.
+
+## Conclusão: 
 
 Concluindo, neste trabalho exploramos duas poderosas meta-heurísticas para resolver o Problema do Caixeiro Viajante (TSP): o algoritmo genético (AG) e o Reactive GRASP. Ambas as abordagens mostraram sua eficácia na obtenção de soluções de alta qualidade para o TSP, um problema conhecido por sua complexidade.
 
