@@ -243,6 +243,7 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 |berlin52| 14.0839  | 24.4022  | 35.7595  |
 |xqf131| 184.285  | 305.984  | 419.293  |
 |qa194| 1834.21   | 926.236   | 1389.44  |
+|uy734| 912.432   | x   | 1920.54   |
 
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 | RESPOSTA |
 |----------|----------|----------|----------|----------|
@@ -250,6 +251,7 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 |berlin52| 7661.01  | 7729.5  | 7777.33  |7544|
 |xqf131| 602.424  | 593.323  |  598.507  |564|
 |qa194| 9995.71   | 10193.7   | 10014.9  |9352|
+|uy734| 90801   | x   | 88365   |79114|
 
 ### Conclusão: 
 
