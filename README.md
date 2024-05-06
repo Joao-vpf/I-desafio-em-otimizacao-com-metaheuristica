@@ -185,6 +185,8 @@ A meta-heurística genética implementada passou por ajustes e incluiu implement
 
 - **ER (Edge Recombination Crossover)**: Esta técnica de crossover consegue detectar semelhanças entre pontos adjacentes com facilidade, o que permite encontrar novas soluções vizinhas de forma eficaz.
 
+- **AHCAVG (Arithmetic Average)**: Esse crossover foi abandonado devido à sua ineficiência em casos grandes. Além disso, esse estilo de crossover pode gerar casos inválidos que outros crossovers, como o PMX, podem não conseguir lidar de maneira adequada.
+
 #### Técnicas de Seleção
 
 Foram implementadas três técnicas de seleção, sendo que a seleção aleatória está desativada por padrão devido à sua ineficiência ao explorar os caminhos vizinhos. As técnicas de torneio e roleta provaram ser mais eficientes e gerar descobertas melhores em vizinhos, garantindo um crossover mais eficaz e desempenho superior.
