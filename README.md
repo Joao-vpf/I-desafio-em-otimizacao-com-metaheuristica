@@ -29,7 +29,7 @@
   - [Testes](#Testes)
     - [Tempo com cada população](#Tempo-com-cada-população)
     - [Moda da resposta em relação a cada população](#Moda-da-resposta-em-relação-a-cada-população)
-    - [Análise final dos testes](#Análise=final-dos-testes)
+    - [Análise final dos testes](#Análise-final-dos-testes)
   - [Conclusão](#conclusão)
 
 ## Equipe:
