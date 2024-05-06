@@ -51,6 +51,7 @@ O problema do Caixeiro Viajante é um desafio clássico de otimização, que bus
 
 #### Software:
 Foram utilizados Visual Studio Code e Visual Studio como IDES.
+Algoritmo foi executado em um sistema operacional Windows.
 
 #### Hardware
 Processador: Ryzen 5600g
