@@ -24,7 +24,8 @@
       - [Selecionador de Alfa](#selecionador-de-alfa) 
       - [Construtor de Soluções Guloso](#construtor-de-soluções-guloso) 
       - [Busca Local](#busca-local) 
-      - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo-1)  
+      - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo-1)
+    - [Metaheurísticas Descartadas no Projeto](#Metaheurísticas-Descartadas-no-Projeto)
   - [Conclusão](#conclusão)
 
 ## Equipe:
@@ -44,11 +45,14 @@ O problema do Caixeiro Viajante é um desafio clássico de otimização, que bus
 )](https://github.com/Lixomensch/I-desafio-em-otimizacao-com-metaheuristica/blob/main/Files/Edital/edital_Idesafio_Otimização%20com%20metaheurísticas.pdf)
 [![Static Badge](https://img.shields.io/badge/Instâncias%20Utilizadas%20-%20txt%20-%20red?style=for-the-badge&logo=files&logoColor=red
 )](https://github.com/Lixomensch/I-desafio-em-otimizacao-com-metaheuristica/tree/main/dataset)
+[![Static Badge](https://img.shields.io/badge/Testes%20Realizados%20-%20txt%20-%20red?style=for-the-badge&logo=files&logoColor=red
+)](https://github.com/Joao-vpf/I-desafio-em-otimizacao-com-metaheuristica/tree/main/dataset_test)
 
 ### Hardware e Software Utilizados:
 
 #### Software:
 Foram utilizados Visual Studio Code e Visual Studio como IDES.
+Algoritmo foi executado em um sistema operacional Windows.
 
 #### Hardware
 Processador: Ryzen 5600g
@@ -236,13 +240,16 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 3. Avalia a nova solução em comparação com a melhor encontrada anteriormente encontrada.
 4. Atualiza a probabilidade dos alfas para a próxima iteração.
 
-#### Metaheurísticas Descartadas no Projeto
+## Metaheurísticas Descartadas no Projeto
 
 - **Artificial Bee Colony (ABC):**
   - O ABC é uma técnica poderosa de otimização inspirada no comportamento das abelhas. Durante sua implementação, desenvolvemos um algoritmo simples e teórico. No entanto, nos testes realizados, o algoritmo não produziu resultados satisfatórios. Embora tenha apresentado um tempo de execução eficiente, observamos um erro considerável em comparação com as soluções conhecidas das instâncias utilizadas. Na busca por melhorias, não encontramos literatura adequada para otimizá-lo especificamente para problemas de TSP. Diante disso, optamos por descartar o ABC em favor de um algoritmo mais robusto com o qual já tínhamos familiaridade.
 
 - **Simulated Annealing (SA):**
   - O SA é um algoritmo amplamente conhecido na área de otimização. Durante sua primeira implementação, sua teoria parecia simples e direta. No entanto, encontramos um desafio significativo: ele frequentemente ficava preso em ótimos locais subótimos devido à sua estrutura simples e à falta de aleatoriedade suficiente. Diante dessa limitação, decidimos descartá-lo em favor de um algoritmo mais robusto, capaz de oferecer maior flexibilidade na otimização e explorar uma gama mais ampla de soluções.
+
+- **Otimização por Colônia de Formigas (ACO):**
+  - O ACO é uma técnica de otimização inspirada no comportamento das formigas que demonstrou grande promessa em teoria. Durante sua implementação inicial, desenvolvemos um algoritmo simples e elegante, espelhando os princípios fundamentais do comportamento das formigas na natureza. No entanto, ao testá-lo em problemas do mundo real, encontramos algumas limitações significativas. Embora tenha mostrado eficiência em termos de tempo de execução, observamos que sua capacidade de encontrar soluções ótimas foi comprometida em várias instâncias de problemas. A falta de ajuste fino para contextos específicos, como o problema do Caixeiro Viajante (TSP), resultou em soluções menos competitivas em comparação com algoritmos concorrentes mais robustos. Diante dessa realidade, decidimos abandonar o ACO em favor de algoritmos mais sofisticados, capazes de lidar melhor com a complexidade dos problemas de otimização que enfrentamos.
  
 ## Testes
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 |
