@@ -235,9 +235,8 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 
 - **Simulated Annealing (SA):**
   - O SA é um algoritmo amplamente conhecido na área de otimização. Durante sua primeira implementação, sua teoria parecia simples e direta. No entanto, encontramos um desafio significativo: ele frequentemente ficava preso em ótimos locais subótimos devido à sua estrutura simples e à falta de aleatoriedade suficiente. Diante dessa limitação, decidimos descartá-lo em favor de um algoritmo mais robusto, capaz de oferecer maior flexibilidade na otimização e explorar uma gama mais ampla de soluções.
-
-### Conclusão: 
-
+ 
+## Testes
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 |
 |----------|----------|----------|----------|
 |dj38| 5.93696  | 11.636  | 17.621 |
@@ -251,6 +250,9 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 |berlin52| 7661.01  | 7729.5  | 7777.33  |7544|
 |xqf131| 602.424  | 593.323  |  598.507  |564|
 |qa194| 9995.71   | 10193.7   | 10014.9  |9352|
+
+### Conclusão: 
+
 
 
 
