@@ -14,7 +14,7 @@
     - [Reactive Greedy Randomized Adaptive Search Procedure (Reactive GRASP)](#reactive-greedy-randomized-adaptive-search-procedure-reactive-grasp)
   - [Resultados](#resultados) 
     - [Técnicas de Otimização](#Técnicas-de-Otimização)  
-    - [Algoritmo Genético (GA)](#Algoritmo-Genético-(GA))  
+    - [Algoritmo Genético (GA)](algoritmo-genético-ga)  
       - [Parâmetros](#Parâmetros) 
       - [Crossovers](#Crossovers) 
       - [Técnicas de Seleção](#Técnicas-de-Seleção)  
