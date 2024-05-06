@@ -290,6 +290,37 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 |uy734| 90801   | x   | 88365   |79114|
 |lu980| 16415   | x   | x   |11340|
 
+#### Resposta dj38:
+POPULAÇÂO 31               |  POPULAÇÂO 67             | POPULAÇÂO 103 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](dataset_test/dj38_plot/teste_1_metricas.png) | ![](dataset_test/dj38_plot/teste_2_metricas.png) | ![](dataset_test/dj38_plot/teste_3_metricas.png)
+
+#### Resposta berlin52:
+POPULAÇÂO 31               |  POPULAÇÂO 67             | POPULAÇÂO 103 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](dataset_test/berlin52_plot/teste_1_metricas.png) | ![](dataset_test/berlin52_plot/teste_2_metricas.png) | ![](dataset_test/berlin52_plot/teste_3_metricas.png)
+
+#### Resposta xqf131:
+POPULAÇÂO 31               |  POPULAÇÂO 67             | POPULAÇÂO 103 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](dataset_test/xqf131_plot/teste_1_metricas.png) | ![](dataset_test/xqf131_plot/teste_2_metricas.png) | ![](dataset_test/xqf131_plot/teste_3_metricas.png)
+
+#### Resposta qa194:
+POPULAÇÂO 31               |  POPULAÇÂO 67             | POPULAÇÂO 103 
+:-------------------------:|:-------------------------:|:-------------------------:
+![](dataset_test/qa194_plot/teste_1_metricas.png) | ![](dataset_test/qa194_plot/teste_2_metricas.png) | ![](dataset_test/qa194_plot/teste_3_metricas.png)
+
+#### Tempo uy734:
+POPULAÇÂO 31               |  POPULAÇÂO 67             
+:-------------------------:|:-------------------------:
+![](dataset_test/uy734_plot/teste_1_metricas.png) | ![](dataset_test/uy734_plot/teste_2_metricas.png)
+
+#### Tempo lu980:
+POPULAÇÂO 31                         
+:-------------------------:
+![](dataset_test/lu980_plot/teste_2_metricas.png)
+
+
 ### Conclusão: 
 
 Concluindo, neste trabalho exploramos duas poderosas meta-heurísticas para resolver o Problema do Caixeiro Viajante (TSP): o algoritmo genético (AG) e o Reactive GRASP. Ambas as abordagens mostraram sua eficácia na obtenção de soluções de alta qualidade para o TSP, um problema conhecido por sua complexidade.
