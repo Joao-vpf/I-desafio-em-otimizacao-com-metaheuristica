@@ -26,6 +26,10 @@
       - [Busca Local](#busca-local) 
       - [Ordem de Funcionamento do Algoritmo](#Ordem-de-Funcionamento-do-Algoritmo-1)
     - [Metaheurísticas Descartadas no Projeto](#Metaheurísticas-Descartadas-no-Projeto)
+  - [Testes](#Testes)
+    - [Tempo com cada população](#Tempo_com_cada_população)
+    - [Moda da resposta em relação a cada população](#Moda_da_resposta_em_relação_a_cada_população)
+    - [Análise final dos testes](#Análise_final_dos_testes)
   - [Conclusão](#conclusão)
 
 ## Equipe:
