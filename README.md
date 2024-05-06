@@ -264,20 +264,11 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 |uy734| 912.432   | x   | 1920.54   |
 |lu980| 145.502   | x   | x   |
 
-#### Tempo dj38:
-![Tempo dj38](dataset_test/dj38_plot/tempos_execucao.png)
 
-#### Tempo berlin52:
-![Tempo berlin52](dataset_test/berlin52_plot/tempos_execucao.png)
 
-#### Tempo xqf131:
-![Tempo xqf131](dataset_test/xqf131_plot/tempos_execucao.png)
-
-#### Tempo qa194:
-![Tempo qa194](dataset_test/qa194_plot/tempos_execucao.png)
-
-#### Tempo uy734:
-![Tempo uy734](dataset_test/uy734_plot/tempos_execucao.png)
+Tempo dj38               | Tempo berlin52             | Tempo xqf131 | Tempo qa194 | uy734
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![Tempo dj38](dataset_test/dj38_plot/tempos_execucao.png) | ![Tempo berlin52](dataset_test/berlin52_plot/tempos_execucao.png) | ![Tempo xqf131](dataset_test/xqf131_plot/tempos_execucao.png) | ![Tempo qa194](dataset_test/qa194_plot/tempos_execucao.png) | ![Tempo uy734](dataset_test/uy734_plot/tempos_execucao.png)
 
 ### Moda da resposta em relação a cada população:
 
