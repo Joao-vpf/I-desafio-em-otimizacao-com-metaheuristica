@@ -47,6 +47,14 @@ O problema do Caixeiro Viajante é um desafio clássico de otimização, que bus
 
 ### Hardware e Software Utilizados:
 
+#### Software:
+Foram utilizados Visual Studio Code e Visual Studio como IDES.
+
+#### Hardware
+Processador: Ryzen 5600g
+Memoria Ram: 16Gb
+Ssd Nvme: 1Tb
+
 ### Metaheurísticas Testadas:
 
 #### Artificial Bee Colony (ABC):
