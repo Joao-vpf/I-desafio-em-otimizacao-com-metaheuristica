@@ -246,6 +246,9 @@ No algoritmo Reactive GRASP, o processo é dividido em quatro etapas:
 
 - **Simulated Annealing (SA):**
   - O SA é um algoritmo amplamente conhecido na área de otimização. Durante sua primeira implementação, sua teoria parecia simples e direta. No entanto, encontramos um desafio significativo: ele frequentemente ficava preso em ótimos locais subótimos devido à sua estrutura simples e à falta de aleatoriedade suficiente. Diante dessa limitação, decidimos descartá-lo em favor de um algoritmo mais robusto, capaz de oferecer maior flexibilidade na otimização e explorar uma gama mais ampla de soluções.
+
+- **Otimização por Colônia de Formigas (ACO):**
+  - O ACO é uma técnica de otimização inspirada no comportamento das formigas que demonstrou grande promessa em teoria. Durante sua implementação inicial, desenvolvemos um algoritmo simples e elegante, espelhando os princípios fundamentais do comportamento das formigas na natureza. No entanto, ao testá-lo em problemas do mundo real, encontramos algumas limitações significativas. Embora tenha mostrado eficiência em termos de tempo de execução, observamos que sua capacidade de encontrar soluções ótimas foi comprometida em várias instâncias de problemas. A falta de ajuste fino para contextos específicos, como o problema do Caixeiro Viajante (TSP), resultou em soluções menos competitivas em comparação com algoritmos concorrentes mais robustos. Diante dessa realidade, decidimos abandonar o ACO em favor de algoritmos mais sofisticados, capazes de lidar melhor com a complexidade dos problemas de otimização que enfrentamos.
  
 ## Testes
 | X | POPULAÇÂO 31 | POPULAÇÂO 67 | POPULAÇÂO 103 |
