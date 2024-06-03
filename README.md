@@ -1,4 +1,4 @@
-# I Desafio em Otimizacao com Metaheuristica PUC GO
+# I Desafio em Otimizacao com Metaheuristica PUC GO (Vencedor)
 # Sumário
 
 - [Equipe](#equipe)
